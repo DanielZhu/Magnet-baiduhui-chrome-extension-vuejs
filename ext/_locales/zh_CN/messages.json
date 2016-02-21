@@ -1,0 +1,8 @@
+{
+	"appName": {
+    "message": "BaiduHui Chrome Extension(Not Official)"
+  },
+  "appDesc": {
+    "message": "A simple extension for Google Chrome allows the user to use BaiduHui Services in the current window to this extension."
+  }
+}

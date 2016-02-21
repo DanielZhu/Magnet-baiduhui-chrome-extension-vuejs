@@ -1,0 +1,71 @@
+{
+  "name": "BaiduHui_Chrome_Extension(Not_Official)",
+  "version": "1.0.0",
+  "description": "百度惠Chrome插件（非官方）",
+  "main": "popup.html",
+  "scripts": {
+    "dev": "webpack --progress --profile --colors",
+    "dist": "NODE_ENV=development gulp",
+    "build": "NODE_ENV=production gulp",
+    "watch": "webpack-dev-server --hot --inline --progress --colors",
+    "server": "node server.js",
+    "test": "echo \"No unit tests and e2e tests yet\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/danielzhu"
+  },
+  "keywords": [
+    "Baidu",
+    "BaiduHui",
+    "WebApp",
+    "Vue",
+    "Webpack"
+  ],
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": "^4.2.1"
+  },
+  "devDependencies": {
+    "css-loader": "^0.23.0",
+    "cssnext-loader": "^1.0.1",
+    "del": "^2.0.2",
+    "exports-loader": "^0.6.2",
+    "extract-text-webpack-plugin": "^0.8.2",
+    "fastclick": "^1.0.6",
+    "file-loader": "^0.8.4",
+    "gulp": "^3.9.0",
+    "gulp-minify-css": "^1.2.1",
+    "gulp-notify": "^2.2.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^1.4.2",
+    "html-loader": "^0.3.0",
+    "jquery": "2.1.4",
+    "json-loader": "^0.5.3",
+    "lodash": "^3.10.1",
+    "markdown": "^0.5.0",
+    "md5": "^2.0.0",
+    "node-sass": "^3.4.1",
+    "object-assign": "^4.0.1",
+    "sass-loader": "^3.1.1",
+    "simplemde": "^1.8.1",
+    "style-loader": "^0.13.0",
+    "template-html-loader": "0.0.3",
+    "url-loader": "^0.5.7",
+    "vue-hot-reload-api": "^1.2.0",
+    "vue-html-loader": "^1.0.0",
+    "vue-loader": "^7.2.0",
+    "vue-resource": "^0.1.17",
+    "vue-validator": "^1.4.4",
+    "webpack": "^1.12.2",
+    "webpack-dev-server": "^1.12.0",
+    "webpack-zepto": "0.0.1",
+    "stylus": "0.52.4",
+    "stylus-loader": "^1.4.2"
+  },
+  "dependencies": {
+    "vue": "^1.0.4",
+    "vue-router": "^0.7.5"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "manifest_version": 2,
+
+  "name": "__MSG_appName__",
+  "short_name": "Manget · 百度惠Chrome插件（非官方）",
+  "description": "__MSG_appDesc__",
+  "version": "1.0.0",
+
+  "default_locale": "en",
+
+  "browser_action": {
+    "default_icon": "./src/assets/images/staydan_logo.png",
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "scripts": ["eventPage.js"],
+    "persistent": false
+  },
+  "icons": {
+    "16": "./src/assets/images/staydan_logo.png",
+    "32": "./src/assets/images/staydan_logo.png",
+    "48": "./src/assets/images/staydan_logo.png",
+    "128": "./src/assets/images/staydan_logo.png"
+  },
+  "options_page": "options.html",
+  "permissions": [
+    "tabs",
+    "bookmarks",
+    "<all_urls>"
+  ],
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+}
