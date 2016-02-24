@@ -52,10 +52,6 @@ module.exports = {
             test: /\.styl$/,
             loader: 'style-loader!css-loader!stylus-loader'
         }, {
-            test: /\.scss$/,
-            loader: ExtractTextPlugin.extract(
-                "style-loader", 'css-loader?sourceMap!sass-loader!cssnext-loader')
-        }, {
             test: /\.css$/,
             loader: ExtractTextPlugin.extract(
                 "style-loader", "css-loader?sourceMap!cssnext-loader")
@@ -82,7 +78,7 @@ module.exports = {
     },
     vue: {
         css: ExtractTextPlugin.extract("css"),
-        sass: ExtractTextPlugin.extract("css!sass-loader")
+        stylus: ExtractTextPlugin.extract("css!stylus-loader")
     },
     babel: {
         presets: ['es2015', 'stage-0'],

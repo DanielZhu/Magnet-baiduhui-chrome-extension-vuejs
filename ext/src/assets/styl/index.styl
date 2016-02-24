@@ -1,86 +1,84 @@
-html, body {
-    border: 0;
-    font-family: "Helvetica-Neue", "Helvetica", Arial, sans-serif;
-    line-height: 1.5;
-    margin: 0;
-    padding: 0;
-}
+html, body
+    border: 0
+    font-family: "Helvetica-Neue", "Helvetica", Arial, sans-serif
+    line-height: 1.5
+    margin: 0
+    padding: 0
 
 div, span, object, iframe, img, table, caption, thead, tbody,
 tfoot, tr, tr, td, article, aside, canvas, details, figure, hgroup, menu,
-nav, footer, header, section, summary, mark, audio, video {
-    border: 0;
-    margin: 0;
-    padding: 0;
-}
+nav, footer, header, section, summary, mark, audio, video
+    border: 0
+    margin: 0
+    padding: 0
 
 h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, address, cit, code,
 del, dfn, em, ins, q, samp, small, strong, sub, sup, b, i, hr, dl, dt, dd,
-ol, ul, li, fieldset, legend, label {
-    border: 0;
-    font-size: 100%;
-    vertical-align: baseline;
-    margin: 0;
-    padding: 0;
-}
+ol, ul, li, fieldset, legend, label
+    border: 0
+    font-size: 100%
+    vertical-align: baseline
+    margin: 0
+    padding: 0
 
 article, aside, canvas, figure, figure img, figcaption, hgroup,
-footer, header, nav, section, audio, video {
-    display: block;
-}
+footer, header, nav, section, audio, video
+    display: block
 
-table {
-    border-collapse: separate;
-    border-spacing: 0;
-    caption, th, td {
-        text-align: left;
-        vertical-align: middle;
-    }
-}
-li{
-    list-style: none;
-}
-a{
-    text-decoration: none;
-}
-a img {
-    border: 0;
-}
+table
+    border-collapse: separate
+    border-spacing: 0
+    caption, th, td
+        text-align: left
+        vertical-align: middle
 
-:focus {
-    outline: 0;
-}
-*{
-    -webkit-box-sizing: border-box;
-}
-textarea{
-    resize: none;
-    -webkit-appearance: none;
-}
-input{
-    -webkit-appearance: none;
-}
-select {
-    -webkit-appearance: none;
-    background-color: #fff;
-}
+li
+    list-style: none
+a
+    text-decoration: none
+a img
+    border: 0
+:focus
+    outline: 0
+*
+    -webkit-box-sizing: border-box
+textarea
+    resize: none
+    -webkit-appearance: none
+input
+    -webkit-appearance: none
+select
+    -webkit-appearance: none
+    background-color: #fff
 
+$popup-width = 600px
+$popup-height = 550px
 
 html
-    background-color: #eee
+  -ms-touch-action: none
 
-body
-    width: 600px
-    background-color: #fff
+body,ul,li
+  padding: 0
+  margin: 0
+  border: 0
+
+body, html
+    background-color: #eee
+    font-size: 12px
+    font-family: ubuntu, helvetica, arial
+    width: $popup-width
+    height: $popup-height
+    // overflow: hidden /* this is important to prevent the whole page to bounce */
     margin: 0 auto
 
 #app
     position: relative
-    width: 600px
+    width: $popup-width
+    height: 100%
     overflow-x: hidden
     background-color: #fff
 .home
-    position: relative;
+    position: relative
     width: 100%
     height: 100%
     margin: 0 auto
@@ -90,7 +88,7 @@ body
 .mask
     position: absolute
     width: 100%
-    height: 100vh
+    height: 100%
     margin: 0 auto
     text-align: center
     vertical-align: middle
@@ -108,7 +106,11 @@ body
         margin-top: -50px
         margin-left: -50px
 
-
-.clearfix:before, .clearfix:after { content: "\0020"; display: block; height: 0; overflow: hidden; }
-.clearfix:after { clear: both; }
+.clearfix:before, .clearfix:after
+    content: ''
+    display: block
+    height: 0
+    overflow: hidden
+.clearfix:after
+    clear: both
 
