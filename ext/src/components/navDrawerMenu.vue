@@ -35,27 +35,26 @@
         transition: all .3s ease
         &.show
             transform: translateX(200px)
-
-    .list-ul
-        margin: 0 24px
-        border-top: 1px solid #d4d4d4
-        overflow: hidden
-        padding-top: 9%
-        li
-            font-size: 14px
-            font-weight: 200
-            padding: 9% 0
-            text-align: left
-            text-indent: 1px
-            line-height: 15px
-            color: #7f8c8d
-            &:last-child
-                margin-bottom: 50px
-            &:before
-                color: #2c3e50
-        .line
+        .list-ul
+            margin: 0 24px
             border-top: 1px solid #d4d4d4
-        a
-            display: block
-            color: #313131
+            overflow: hidden
+            padding-top: 9%
+            li
+                font-size: 14px
+                font-weight: 200
+                padding: 9% 0
+                text-align: left
+                text-indent: 1px
+                line-height: 15px
+                color: #7f8c8d
+                &:last-child
+                    margin-bottom: 50px
+                &:before
+                    color: #2c3e50
+            .line
+                border-top: 1px solid #d4d4d4
+            a
+                display: block
+                color: #313131
 </style>

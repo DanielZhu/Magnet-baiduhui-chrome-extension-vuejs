@@ -1,0 +1,108 @@
+
+$menu-width = 150px
+$menu-height = $menu-width
+$menu-margin-left = $menu-width / -1
+$menu-li-width = $menu-width / 4
+$menu-li-a-bottom = $menu-width / 8
+
+$menu-switch-width = $menu-width * 2 * 0.2
+
+#lunette-menu
+    position: fixed
+    left: 50%
+    bottom: $menu-height * -1
+    width: $menu-width * 2
+    height: $menu-height * 2
+    background-color: #fff
+    color: #313131
+    transition: all .3s ease
+    margin-left: $menu-margin-left
+    border-radius: 50%
+    overflow: hidden
+    &.show
+        transform: translateX(200px)
+    .menu-switch
+        position: absolute
+        background-color: #fff
+        width: $menu-switch-width
+        height: $menu-switch-width
+        border-radius: 50%
+        top: $menu-height - $menu-switch-width * .5
+        left: 50%
+        margin-left: $menu-switch-width * -.5
+        .left-hyphen, .right-hyphen
+            display: inline-block
+            position: absolute
+            height: 2px
+            text-align: center
+            top: $menu-switch-width * .25
+            width: $menu-switch-width * .25
+            background-color: #F55858
+            margin-top: 0
+            transition: all .2s linear
+        .left-hyphen
+            left: $menu-switch-width * .25
+            transform-origin: 100% 50%
+        .right-hyphen
+            right: $menu-switch-width * .25
+            transform-origin: 0% 50%
+        &.active
+            .left-hyphen
+                margin-top: $menu-switch-width * .05
+                transform: rotateZ(15deg)
+            .right-hyphen
+                margin-top: $menu-switch-width * .05
+                transform: rotateZ(-15deg)
+    .list-ul
+        li
+            position: absolute
+            top: 0
+            left: 50%
+            width: $menu-width
+            height: $menu-height
+            font-size: 14px
+            font-weight: 200
+            text-align: left
+            text-indent: 1px
+            line-height: 15px
+            color: #7f8c8d
+            transform-origin: 100% 100%
+            a
+                display: flex
+                // width: $menu-width * 2
+                // height: $menu-height * 2
+                position: relative
+                justify-content: center
+                align-items: center
+                top: 67%
+                text-align: center
+                color: #fff
+                font-size: 25px
+                transform: skewX(-54deg) rotateZ(-70deg)
+            &:nth-child(odd)
+                background-color: red
+            &.icon-hui
+                transform: translateX($menu-width / -1) skewX(54deg)
+                background-color: #dd3067
+            &.icon-extension
+                transform: translateX($menu-width / -1) rotateZ(36deg) skewX(54deg)
+                background-color: #CA9C9E
+            &.icon-donate
+                transform: translateX($menu-width / -1) rotateZ(36 * 2deg) skewX(54deg)
+                background-color: #dd3067
+            &.icon-feedback
+                transform: translateX($menu-width / -1) rotateZ(36 * 3deg) skewX(54deg)
+                background-color: #CA9C9E
+            &.icon-other
+                transform: translateX($menu-width / -1) rotateZ(36 * 4deg) skewX(54deg)
+                background-color: #dd3067
+
+    .slide-transition
+        overflow: hidden
+        transition: all .2s linear
+        z-index: 40
+        left: -200px
+    .slide-enter
+        left: 0
+    .slide-leave
+        left: -200px

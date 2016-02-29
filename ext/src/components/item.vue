@@ -155,7 +155,7 @@
                     vertical-align: middle
                 .number
                     height: 15px
-                    margin-left: 2px
+                    margin-left: 5px
             .sns-interact
                 flex: 1
                 height: 55px
@@ -226,12 +226,12 @@
         </div>
         <div class="sns-tool">
             <div class="sns-numbers">
-                <img src="../assets/images/ding.png" class="icon"><span class="number">({{item.likeNum > 0 ? item.likeNum : 0}})</span>
+                <img src="../assets/images/ding.png" class="icon"><span class="number">{{item.likeNum > 0 ? item.likeNum : 0}}</span>
                 <div class="progress">
                     <div class="progress-bar-active" v-bind:style="{width: progressAt + '%' }"></div>
                     <div class="progress-anchor-at" v-bind:style="{left: progressAt + '%' }"></div>
                 </div>
-                <img src="../assets/images/cai.png" class="icon"><span class="number">({{item.unlikeNum > 0 ? item.unlikeNum : 0}})</span>
+                <img src="../assets/images/cai.png" class="icon"><span class="number">{{item.unlikeNum > 0 ? item.unlikeNum : 0}}</span>
             </div>
             <div class="sns-interact">
                 <div class="sns-interact-comment">

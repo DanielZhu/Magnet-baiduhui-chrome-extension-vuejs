@@ -104,7 +104,7 @@
                         width: 15px
                         height: auto
                         display: inline-block
-                        margin-left: 15px
+                        margin: 0 5px 0 15px
                         vertical-align: middle
                         &.icon-cai
                             margin-left: 0
@@ -305,14 +305,14 @@
                         <span class="update-time" v-text="item.revealTime | untilNow"></span>
                     </div>
                     <div class="sns-numbers">
-                        <img src="../assets/images/ding.png" class="icon"><span class="number">({{item.likeNum > 0 ? item.likeNum : 0}})</span>
+                        <img src="../assets/images/ding.png" class="icon"><span class="number">{{item.likeNum > 0 ? item.likeNum : 0}}</span>
                         <div class="progress">
                             <div class="progress-bar-active" v-bind:style="{width: item.progressAt + '%' }"></div>
                             <div class="progress-anchor-at" v-bind:style="{left: item.progressAt + '%' }"></div>
                         </div>
-                        <img src="../assets/images/cai.png" class="icon icon-cai"><span class="number">({{item.unlikeNum > 0 ? item.unlikeNum : 0}})</span>
-                        <img src="../assets/images/comment.png" class="icon"><span class="number">({{item.commentNum > 0 ? item.commentNum : 0}})</span>
-                        <img src="../assets/images/fav.png" class="icon"><span class="number">({{item.favorNum > 0 ? item.favorNum : 0}})</span>
+                        <img src="../assets/images/cai.png" class="icon icon-cai"><span class="number">{{item.unlikeNum > 0 ? item.unlikeNum : 0}}</span>
+                        <img src="../assets/images/comment.png" class="icon"><span class="number">{{item.commentNum > 0 ? item.commentNum : 0}}</span>
+                        <img src="../assets/images/fav.png" class="icon"><span class="number">{{item.favorNum > 0 ? item.favorNum : 0}}</span>
                     </div>
                     <div class="revealer">
                         <span class="name">{{item.revealerName}}</span>
@@ -433,6 +433,13 @@
             console.log('[Hui] Detail Page Ready...');
             this.init();
         },
+        watch: {
+            pageSlided: function (val, oldVal) {
+
+                $('.item-detail').height(val ? 'initial' : $(window).height());
+                $('.hui-list').height(val ? $(window).height() : 'initial');
+            }
+        },
         methods:{
             loadMore: function () {
                 this.reqParam.page.pageNo += 1;
@@ -454,6 +461,7 @@
                         }
                         $('.mask').addClass('hide');
                         self.isLoading = false;
+                        self.bindEvents();
                     }, 'json'
                 )
                 .fail(function (data, textStatus, jqXHR) {
@@ -465,12 +473,11 @@
             init: function () {
                 console.log('[Hui] Detail Page Initing...');
                 this.getHuiItems(this.reqParam);
-                this.bindEvents();
             },
 
             bindEvents: function () {
                 var _self = this;
-                $(window).on('scroll', function () {
+                $('html, body').on('scroll', function () {
                     if (_self.pageSlided) {
                         return;
                     }
@@ -492,12 +499,10 @@
                     top: offset.top - $('body').scrollTop(),
                     left: offset.left
                 };
-
-
                 console.log(pos);
             }
         },
-        components:{
+        components: {
             sdHead: require('../components/header.vue'),
             sdItem: require('../components/item.vue')
         }
