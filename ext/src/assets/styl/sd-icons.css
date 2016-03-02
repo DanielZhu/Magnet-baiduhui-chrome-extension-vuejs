@@ -1,0 +1,64 @@
+@charset "UTF-8";
+
+@font-face {
+  font-family: "sd-icons";
+  src:url("fonts/sd-icons.eot");
+  src:url("fonts/sd-icons.eot?#iefix") format("embedded-opentype"),
+    url("fonts/sd-icons.woff") format("woff"),
+    url("fonts/sd-icons.ttf") format("truetype"),
+    url("fonts/sd-icons.svg#sd-icons") format("svg");
+  font-weight: normal;
+  font-style: normal;
+
+}
+
+[data-icon]:before {
+  font-family: "sd-icons" !important;
+  content: attr(data-icon);
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+[class^="sd-icon-"]:before,
+[class*=" sd-icon-"]:before {
+  font-family: "sd-icons" !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.sd-icon-money:before {
+  content: "\61";
+}
+.sd-icon-jpy:before {
+  content: "\62";
+}
+.sd-icon-comment:before {
+  content: "\63";
+}
+.sd-icon-qrcode:before {
+  content: "\64";
+}
+.sd-icon-speaker:before {
+  content: "\65";
+}
+.sd-icon-cutlery:before {
+  content: "\66";
+}
+.sd-icon-chrome:before {
+  content: "\67";
+}
+.sd-icon-baidu:before {
+  content: "\68";
+}

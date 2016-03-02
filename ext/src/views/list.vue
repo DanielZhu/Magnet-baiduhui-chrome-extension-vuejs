@@ -1,263 +1,7 @@
 <style lang="stylus">
-    @import '../../node_modules/normalize.css/normalize.css'
-    @import '../assets/styl/index.styl'
-
-    .slide-paging
-        width: 1200px
-        position: relative
-        overflow-x: hidden
-
-    .page-transition
-        overflow: hidden
-        transition: all .2s linear
-        z-index: 40
-        transform: translate3d(0%, 0, 0)
-    .page-enter
-        transform: translate3d(-600px, 0, 0)
-    .page-leave
-        transform: translate3d(-600px, 0, 0)
-
-    .hui-list
-        position: relative
-        background-color: #fff
-        width: 600px
-        float: left
-        padding-top: 60px
-        z-index: 20
-        li
-            position: relative
-            border-bottom: 1px solid #eee
-            padding-bottom: 10px
-            &:hover
-                &:before
-                    //content: ''
-                    display: block
-                    background-image: url('../assets/images/half-transparent-cover.png')
-                    background-size: 100% 100%
-                    background-repeat: repeat-x
-                    position: absolute
-                    left: 0
-                    top: -30px
-                    width: 100%
-                    height: 30px
-                &:after
-                    //content: ''
-                    display: block
-                    background-image: url('../assets/images/half-transparent-cover.png')
-                    background-size: 100% 100%
-                    background-repeat: repeat-x
-                    position: absolute
-                    left: 0
-                    bottom: -30px
-                    width: 100%
-                    height: 30px
-                    transform: rotate(-180deg)
-                .sns
-                    display: block
-                    opacity: 1
-                    transition: all .3s ease-in
-            .sns-tool
-                box-sizing: border-box
-                display: inline-block
-                font-size: 12px
-                color: #9d9d9d
-                text-align: left
-                width: 100%
-                padding-left: 15px
-                .summary
-                    width: 120px
-                    display: inline-block
-                    .merchant-name
-                        text-align: left
-                    .update-time
-                        text-align: right
-                        float: right
-                .sns-numbers
-                    text-align: center
-                    display: inline-block
-                    .progress
-                        position: relative
-                        width: 80px
-                        height: 2px
-                        margin: 0 5px
-                        border-radius: 2px
-                        display: inline-block
-                        background-color: lightgray
-                        .progress-bar-active
-                            position: relative
-                            background-color: #EA6591
-                            height: 2px
-                            width: 50%
-                            transition: all .2s linear
-                        .progress-anchor-at
-                            position: absolute
-                            top: -8px
-                            left: 50%
-                            width: 4px
-                            margin-left: -4px
-                            border-width: 4px
-                            border-style: solid
-                            border-color: transparent
-                            border-top-color: #EA6591
-                            transition: all .2s linear
-                    .icon
-                        width: 15px
-                        height: auto
-                        display: inline-block
-                        margin: 0 5px 0 15px
-                        vertical-align: middle
-                        &.icon-cai
-                            margin-left: 0
-                    .number
-                        height: 15px
-                .revealer
-                    float: right
-                    padding-right: 20px
-                    display: inline-block
-                    text-align: right
-                    color: #7392B5
-            .hui-item
-                position: relative
-                width: 100%
-                display: flex
-                display: -webkit-flex
-                .cover-img
-                    margin: 15px
-                    width: 120px
-                    height: 120px
-                    z-index: 1
-                    background-color: #fff
-                    border: 1px solid #eee
-                    img
-                        position: relative
-                        width: 100%
-                .item-brief
-                    flex: 1
-                    position: relative
-                    .info
-                        position: absolute
-                        left: 0
-                        top: 0
-                        width: 100%
-                        padding-top: 15px
-                        bottom: 15px
-                        .feed-info
-                            width: 100%
-                            line-height: 35px
-                            height: 35px
-                            vertical-align: middle
-                            text-align: left
-                            margin-right: 10px
-                            white-space: nowrap
-                            .title
-                                width: calc(100% - 100px)
-                                font-size: 15px
-                                line-height: 35px
-                                display: inline-block
-                                text-overflow: ellipsis
-                                overflow: hidden
-                                font-weight: bold
-                            .feed-logo
-                                height: 35px
-                                border: 1px solid #eee
-                        .reason
-                            line-height: 34px
-                            padding-left: 0
-                        .price-cut
-                            position: relative
-                            height: 45px
-                            margin: 5px 0 0 0
-                            background-color: #f6f6f6
-                            border: none
-                            text-align: left
-                            display: flex
-                            display: -webkit-flex
-                            -webkit-align-items: center
-                            .highlight-area
-                                position: relative
-                                top: 0
-                                left: 0
-                                background-color: #F9DEE7
-                                width: 40%
-                                padding-left: 20px
-                                height: 45px
-                                line-height: 45px
-                                white-space: nowrap
-                            .reason-item
-                                display: inline-block
-                                margin: 0 5px
-                            .price
-                                color: #DD3067
-                                font-size: 22px
-                                min-width: 60px
-                            .formatted-rcmd-reason
-                                height: 45px
-                                line-height: 45px
-                                flex: 1
-                                padding-right: 15px
-                                em
-                                    padding: 0 3px
-                                span
-                                    color: #DD3067
-                            .highlight
-                                background-color: #fff
-                                border: 1px solid #DD3067
-                                font-size: 12px
-                                line-height: 20px
-                                padding: 0 5px
-                        .short-reason
-                            color: #9d9d9d
-                            text-align: left
-                            font-size: 12px
-                            position: absolute
-                            bottom: 0px
-            .sns
-                position: absolute
-                opacity: 0
-                right: 0
-                top: 0
-                width: 20%
-                height: 100%
-                background-color: rgba(0, 0, 0, .7)
-                text-align: center
-                .fav-layer
-                    position: absolute
-                    top: ((150 - 40)/2) px
-                    left: 50%
-                    .icon-fav
-                        width: 55px
-                        height: 40px
-                        margin-left: -22.5px
-                        margin-top: -20px
-                .toolbar
-                    position: absolute
-                    bottom: 0
-                    left: 0
-                    width: 100%
-                    height: 40px
-                    margin: 0
-                    padding: 0
-                    background-color: #DD7797
-                    display: inline
-                    color: #fff
-                    box-sizing: border-box
-                    line-height: 40px
-                    font-size: 18px
-                    .see-outside
-                        width: 100%
-                        height: 40px
-                        float: right
-                        background-color: #86A4D5
-                        box-sizing: border-box
-                        display: inline-block
-    .pull-left
-        text-align: left
-    .pull-right
-        text-align: right
-    .loading-more
-        text-align: center
-        color: #666
-        padding: 20px 0
+    @import '../assets/styl/normalize.css'
+    @import '../assets/styl/sd-icons.css'
+    @import '../assets/styl/list.styl'
 </style>
 <template>
 <sd-head :show.sync="showSlideNav" :back.sync="pageSlided"></sd-head>
@@ -292,11 +36,11 @@
                     </div>
                 </div>
                 <div class="sns">
-                    <div class="fav-layer">
-                        <img src="../assets/images/fav-heart.png" class="icon-fav">
+                    <div class="qr-preview">
+                        <img src="../assets/images/qrcode.png">
                     </div>
                     <div class="toolbar">
-                        <div class="see-outside" v-on:click="showDetail(item.id, item.coverImg)">查看详情</div>
+                        <div class="see-outside" v-on:click="showDetail(item.id, item.coverImg)"><i class="icon sd-icon-qrcode"></i>查看详情</div>
                     </div>
                 </div>
                 <div class="sns-tool">
@@ -402,7 +146,7 @@
                 // var value = '2016-01-31 00:07:00';
                 var date = new Date(value);
                 var originTs = date.getTime();
-                var nowTs = (new Date()).getTime();
+                var nowTs = new Date().getTime();
                 var delta = (nowTs -  originTs) / 1000;
                 var showTime = '';
 
@@ -423,7 +167,7 @@
                     showTime = Math.round(delta / (24 * 60 * 60)) + '天前';
                 }
                 else {
-                    showTime = date.getYear() + '-' + date.getFullMonth() + '-' + date.getDay();
+                    showTime = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
                 }
 
                 return showTime;
