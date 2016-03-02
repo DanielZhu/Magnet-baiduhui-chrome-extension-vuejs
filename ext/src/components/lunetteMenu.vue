@@ -1,3 +1,7 @@
+<style lang="stylus" scoped>
+    @import '../assets/styl/components/lunetteMenu.styl'
+</style>
+
 <template>
     <div id="lunette-menu" class="lunette-menu-list" transition="menu-anim" :class="{'menu-anim-enter': menuExpanded}">
         <ul class="list-ul">
@@ -42,7 +46,3 @@
         }
     };
 </script>
-
-<style lang="stylus" scoped>
-    @import '../assets/styl/components/lunetteMenu.styl'
-</style>
