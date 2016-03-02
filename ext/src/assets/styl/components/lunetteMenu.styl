@@ -7,6 +7,56 @@ $menu-li-a-bottom = $menu-width / 8
 
 $menu-switch-width = $menu-width * 2 * 0.2
 
+@keyframes breathing {
+  0% {
+    opacity: 0
+  }
+  50% {
+    opacity: 1
+  }
+  100% {
+    opacity: 0
+  }
+}
+
+.menu-switch
+    position: fixed
+    background-color: #fff
+    width: $menu-switch-width
+    height: $menu-switch-width
+    border-radius: 50%
+    left: 50%
+    bottom: $menu-switch-width * -.5
+    margin-left: $menu-switch-width * -.5
+    border: 2px solid #F55858
+    z-index: 50
+    .left-hyphen, .right-hyphen
+        animation: breathing 2s both
+        animation-iteration-count: infinite
+        display: inline-block
+        position: absolute
+        height: 2px
+        text-align: center
+        top: $menu-switch-width * .25
+        width: $menu-switch-width * .23
+        background-color: #F55858
+        margin-top: 0
+        transition: all .2s linear
+    .left-hyphen
+        left: $menu-switch-width * .24
+        transform-origin: 100% 50%
+        transform: rotateZ(-15deg)
+    .right-hyphen
+        right: $menu-switch-width * .24
+        transform-origin: 0% 50%
+        transform: rotateZ(15deg)
+    &.active
+        .left-hyphen
+            margin-top: $menu-switch-width * .05
+            transform: rotateZ(15deg)
+        .right-hyphen
+            margin-top: $menu-switch-width * .05
+            transform: rotateZ(-15deg)
 #lunette-menu
     position: fixed
     left: 50%
@@ -21,38 +71,6 @@ $menu-switch-width = $menu-width * 2 * 0.2
     overflow: hidden
     &.show
         transform: translateX(200px)
-    .menu-switch
-        position: absolute
-        background-color: #fff
-        width: $menu-switch-width
-        height: $menu-switch-width
-        border-radius: 50%
-        top: $menu-height - $menu-switch-width * .5
-        left: 50%
-        margin-left: $menu-switch-width * -.5
-        .left-hyphen, .right-hyphen
-            display: inline-block
-            position: absolute
-            height: 2px
-            text-align: center
-            top: $menu-switch-width * .25
-            width: $menu-switch-width * .25
-            background-color: #F55858
-            margin-top: 0
-            transition: all .2s linear
-        .left-hyphen
-            left: $menu-switch-width * .25
-            transform-origin: 100% 50%
-        .right-hyphen
-            right: $menu-switch-width * .25
-            transform-origin: 0% 50%
-        &.active
-            .left-hyphen
-                margin-top: $menu-switch-width * .05
-                transform: rotateZ(15deg)
-            .right-hyphen
-                margin-top: $menu-switch-width * .05
-                transform: rotateZ(-15deg)
     .list-ul
         li
             position: absolute
@@ -71,14 +89,15 @@ $menu-switch-width = $menu-width * 2 * 0.2
                 display: flex
                 // width: $menu-width * 2
                 // height: $menu-height * 2
-                position: relative
+                position: absolute
                 justify-content: center
                 align-items: center
-                top: 67%
+                right: 50%
+                bottom: -16px
                 text-align: center
                 color: #fff
                 font-size: 25px
-                transform: skewX(-54deg) rotateZ(-70deg)
+                transform: translate3d(32px, -32px, 0) skewX(-54deg) rotateZ(-72deg)
             &:nth-child(odd)
                 background-color: red
             &.icon-hui
@@ -97,12 +116,11 @@ $menu-switch-width = $menu-width * 2 * 0.2
                 transform: translateX($menu-width / -1) rotateZ(36 * 4deg) skewX(54deg)
                 background-color: #dd3067
 
-    .slide-transition
-        overflow: hidden
-        transition: all .2s linear
-        z-index: 40
-        left: -200px
-    .slide-enter
-        left: 0
-    .slide-leave
-        left: -200px
+.menu-anim-transition
+    transform-origin: 50% 100%
+    transition: all 150ms linear
+    transform: scale(0.1)
+.menu-anim-enter
+    transform: scale(1)
+.menu-anim-leave
+    transform: scale(0.1)

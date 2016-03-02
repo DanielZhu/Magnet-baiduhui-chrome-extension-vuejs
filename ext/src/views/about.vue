@@ -7,7 +7,7 @@
     <div class="about-container">
 
     </div>
-    <sd-Lunette-menu :show.sync="showLunetteMenu"></sd-Lunette-menu>
+    <sd-Lunette-menu :menuExpanded.sync="showLunetteMenu"></sd-Lunette-menu>
 </template>
 
 <script>
