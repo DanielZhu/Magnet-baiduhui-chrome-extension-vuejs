@@ -62,3 +62,54 @@
 .sd-icon-baidu:before {
   content: "\68";
 }
+.sd-icon-thumbs-o-up:before {
+  content: "\69";
+}
+.sd-icon-thumbs-o-down:before {
+  content: "\6a";
+}
+.sd-icon-bubble-comment-streamline-talk:before {
+  content: "\6b";
+}
+.sd-icon-commenting-o:before {
+  content: "\6c";
+}
+.sd-icon-heart-o:before {
+  content: "\6d";
+}
+.sd-icon-up-open-big:before {
+  content: "\6f";
+}
+.sd-icon-right-open-big:before {
+  content: "\70";
+}
+.sd-icon-left-open-big:before {
+  content: "\71";
+}
+.sd-icon-down-open-big:before {
+  content: "\72";
+}
+.sd-icon-angle-down:before {
+  content: "\6e";
+}
+.sd-icon-angle-left:before {
+  content: "\73";
+}
+.sd-icon-angle-right:before {
+  content: "\74";
+}
+.sd-icon-angle-up:before {
+  content: "\75";
+}
+.sd-icon-info:before {
+  content: "\76";
+}
+.sd-icon-bars:before {
+  content: "\77";
+}
+.sd-icon-menu:before {
+  content: "\78";
+}
+.sd-icon-external-link:before {
+  content: "\79";
+}
