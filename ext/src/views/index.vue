@@ -6,7 +6,7 @@
     </div>
 </template>
 <script>
-    export default {
+    module.exports = {
         ready (){
             setTimeout(() => {
                 // this.$route.router.go({ name: 'list'});

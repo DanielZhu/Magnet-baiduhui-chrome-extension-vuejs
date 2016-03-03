@@ -75,16 +75,21 @@
 </template>
 
 <script>
-    module.exports = {
-        data: function () {
-            showLunetteMenu: true
-        },
-        methods: {
+/**
+ * Magnet 帮助页
+ *
+ * @author Daniel Zhu<enterzhu@gmail.com>
+ */
+module.exports = {
+    data: function () {
+        showLunetteMenu: true
+    },
+    methods: {
 
-        },
-        components: {
-            sdHead: require('../components/header.vue'),
-            sdLunetteMenu: require('../components/lunetteMenu.vue'),
-        }
-    };
+    },
+    components: {
+        sdHead: require('../components/header.vue'),
+        sdLunetteMenu: require('../components/lunetteMenu.vue'),
+    }
+};
 </script>

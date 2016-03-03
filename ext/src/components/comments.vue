@@ -87,25 +87,30 @@
 </template>
 
 <script>
-    module.exports = {
-        replace: true,
-        props: ['list'],
-        data: function () {
-            return {
-                hasErr: false,
-                // content:'',
-                // userId:localStorage.userId || '',
-                // authorTxt:'<br/><br/><a class="form" href="https://github.com/shinygang/Vue-cnodejs">I‘m webapp-cnodejs-vue</a>',
-            };
-        },
-        ready: function () {
-            // var _self = this;
-            // if(_self.replyTo){
-            //     _self.content = '@'+_self.replyTo+' ';
-            // }
-        },
-        methods: {
+/**
+ * Magnet 评论模块
+ *
+ * @author Daniel Zhu<enterzhu@gmail.com>
+*/
+module.exports = {
+    replace: true,
+    props: ['list'],
+    data: function () {
+        return {
+            hasErr: false,
+            // content:'',
+            // userId:localStorage.userId || '',
+            // authorTxt:'<br/><br/><a class="form" href="https://github.com/shinygang/Vue-cnodejs">I‘m webapp-cnodejs-vue</a>',
+        };
+    },
+    ready: function () {
+        // var _self = this;
+        // if(_self.replyTo){
+        //     _self.content = '@'+_self.replyTo+' ';
+        // }
+    },
+    methods: {
 
-        }
     }
+}
 </script>

@@ -7,10 +7,15 @@
     </section>
 </template>
 <script>
-    module.exports = {
-        replace: true,
-        props: ['show']
-    }
+/**
+ * Magnet 侧边抽屉模块
+ *
+ * @author Daniel Zhu<enterzhu@gmail.com>
+*/
+module.exports = {
+    replace: true,
+    props: ['show']
+}
 </script>
 
 <style lang="stylus">

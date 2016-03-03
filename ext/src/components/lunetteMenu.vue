@@ -38,11 +38,16 @@
     </div>
 </template>
 <script>
-    module.exports = {
-        replace: true,
-        props: ['menuExpanded'],
-        methods: {
+/**
+ * Magnet 半圆导航模块
+ *
+ * @author Daniel Zhu<enterzhu@gmail.com>
+ */
+module.exports = {
+    replace: true,
+    props: ['menuExpanded'],
+    methods: {
 
-        }
-    };
+    }
+};
 </script>
