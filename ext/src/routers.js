@@ -17,7 +17,7 @@ export default function(router){
         '/list':{               //首页
             name:'list',
             component: function(resolve){
-                require(['./views/list.vue'],resolve);
+                require(['./views/index.vue'],resolve);
             }
         },
         '/about':{               //关于
