@@ -19,17 +19,6 @@ module.exports = {
 </script>
 
 <style lang="stylus">
-
-    .slide-transition
-        overflow: hidden
-        transition: all .2s linear
-        z-index: 40
-        left: -200px
-    .slide-enter
-        left: 0
-    .slide-leave
-        left: -200px
-
     .nav-drawer-list
         position: fixed
         top: 0

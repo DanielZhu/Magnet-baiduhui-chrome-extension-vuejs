@@ -5,22 +5,37 @@
     position relative
     overflow-x hidden
 
+@keyframes page-in-visible {
+    0% {
+        transform: translateX(0)
+    }
+    100% {
+        transform: translateX(-600px)
+    }
+}
+@keyframes page-in-away {
+    0% {
+        transform: translateX(-600px)
+    }
+    100% {
+        transform: translateX(0)
+    }
+}
 .page-transition
     overflow hidden
     transition all .2s linear
     z-index 40
-    transform translate3d(0%, 0, 0)
+    transform translateX(0)
 .page-enter
-    transform translate3d(-600px, 0, 0)
+    animation page-in-visible .4s forwards
 .page-leave
-    transform translate3d(-600px, 0, 0)
+    animation page-in-away .4s forwards
 
 .hui-list
     position relative
     background-color #fff
     width 600px
     float left
-    padding-top 60px
     z-index 20
     li
         position relative
