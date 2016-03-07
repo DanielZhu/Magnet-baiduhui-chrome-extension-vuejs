@@ -34,17 +34,17 @@ module.exports = {
     methods: {
         in: function () {
             var self = this;
-            this.showing = true;
+            // this.showing = true;
             setTimeout(function () {
                 self.countdownShow = true
-                self.out();
+                // self.out();
             }, 500);
         },
 
         out: function () {
             var self = this;
             setTimeout(function (e) {
-                self.showing = false;
+                // self.showing = false;
                 self.countdownShow = false
             }, 3000);
         }

@@ -86,6 +86,7 @@ module.exports = {
             pageSlided: false,
             showSlideNav: false,
             isLoading: false,
+            isUsingPersistData: true,
             list: [],
             reqParam: {
                 condition: {},
@@ -100,11 +101,12 @@ module.exports = {
                 show: false,
                 msg: '加载中',
                 type: 'error',
+                hideDelay: 3000,
                 // 因为Vuejs还不能对绑定对象中的变量进行实时监控，所以当子控件的绑定属性值在子控件中被改变时，父控件感知不到，于是需要在外部进行销毁操作
                 hideToast: function () {
                     setTimeout(function () {
                         self.toast.show = false;
-                    }, 3000);
+                    }, self.toast.hideDelay);
                 }
             }
         }
@@ -220,29 +222,40 @@ module.exports = {
         getHuiItems: function (params) {
             var self = this;
             self.isLoading = true;
-            $.post('http://localhost/api/api.php/hui/list',
-                JSON.stringify(params.page),
-                function (data, textStatus, jqXHR) {
+            $.ajaxSetup({
+                url: 'http://localhost/api/api.php/hui/list',
+                timeout: 5000,
+                type: 'POST',
+                data: JSON.stringify(params.page),
+                success: function (data) {
                     var item = {};
                     for (var i = 0; i < data.data.result.length; i++) {
                         item = data.data.result[i];
                         data.data.result[i].progressAt = item.likeNum / (item.likeNum + item.unlikeNum) * 100;
                     }
                     var freshItemCount = self.persistTop20.call(self, data.data.result)
-                    self.toast.show = true;
-                    self.toast.type = 'info';
-                    self.toast.msg = freshItemCount + '个新优惠';
-                    self.toast.hideToast();
+
+                    if (self.toast.show) {
+                        var oldFreshNum = ~~self.toast.msg.slice(0, self.toast.msg.indexOf('个'));
+                        self.toast.msg = (oldFreshNum + freshItemCount) + '个新优惠';
+                        self.toast.hideDelay += 3000;
+                    }
+                    else {
+                        self.toast.type = 'info';
+                        self.toast.show = true;
+                        self.toast.msg = freshItemCount + '个新优惠';
+                        self.toast.hideToast();
+                    }
                     console.log('[Magnet] freshItemCount: ' + freshItemCount);
                     $('.mask').addClass('hide');
                     self.isLoading = false;
-                    self.bindEvents();
-                }, 'json'
-            )
-            .fail(function (data, textStatus, jqXHR) {
-                self.isLoading = false;
-                console.log(data);
+                },
+                error: function (data, textStatus, jqXHR) {
+                    self.isLoading = false;
+                    console.log(data);
+                }
             });
+            $.ajax();
         },
 
         init: function () {
@@ -251,6 +264,7 @@ module.exports = {
             this.list = (huiListPersist && JSON.parse(huiListPersist.data)) || [];
 
             this.getHuiItems(this.reqParam);
+            this.bindEvents();
         },
 
         persistTop20: function (newList) {
@@ -258,34 +272,40 @@ module.exports = {
             var huiListPersist = storage.get('hui_list');
             var persistedList = (huiListPersist && JSON.parse(huiListPersist.data)) || [];
             console.log('persistedList: ' + persistedList.length);
-            var sortByUpdateTime = function (item0, item1) {
-                var result = new Date(item0.updateTime).getTime() - new Date(item1.updateTime).getTime();
+            // var sortByUpdateTime = function (item0, item1) {
+            //     var result = new Date(item0.updateTime).getTime() - new Date(item1.updateTime).getTime();
 
-                return result < 0;
-            };
+            //     return result < 0;
+            // };
 
             // 归总排序，取前41筛选，保留余量
-            var entiryList = this.list.concat(newList);
-            console.log('[Magnet] entiryList: ' + entiryList.length);
-            entiryList.sort(sortByUpdateTime);
+            // var entiryList = this.list.concat(newList);
+            // console.log('[Magnet] entiryList: ' + entiryList.length);
+            // entiryList.sort(sortByUpdateTime);
 
             // 去重
-            var uniqueList = [];
-            var uniqueListIds = [];
-            entiryList.forEach(function (item, i) {
-                if (uniqueListIds.indexOf(item.id) === -1) {
-                    uniqueListIds.push(item.id);
-                    uniqueList.push(item);
-                }
-            });
-            console.log('[Magnet] uniqueListIds: ' + JSON.stringify(uniqueListIds));
-            console.log('[Magnet] uniqueList after unique: ' + uniqueList.length);
+            // var uniqueList = [];
+            // var uniqueListIds = [];
+            // newList.forEach(function (item, i) {
+            //     if (uniqueListIds.indexOf(item.id) === -1) {
+            //         uniqueListIds.push(item.id);
+            //         uniqueList.push(item);
+            //     }
+            // });
+            // console.log('[Magnet] uniqueListIds: ' + JSON.stringify(uniqueListIds));
+            // console.log('[Magnet] uniqueList after unique: ' + uniqueList.length);
 
-            this.list = uniqueList;
-            storage.set('hui_list', JSON.stringify(uniqueList.slice(0, 20)));
+            if (this.isUsingPersistData) {
+                this.list = newList;
+                this.isUsingPersistData = false;
+            }
+            else {
+                this.list = this.list.concat(newList);
+            }
+            storage.set('hui_list', JSON.stringify(this.list.slice(0, 20)));
 
             // 返回更新量
-            return this.calcUpdatedCount(uniqueList, persistedList);
+            return this.calcUpdatedCount(newList, persistedList);
         },
 
         calcUpdatedCount: function (newList, oldList) {
@@ -309,14 +329,17 @@ module.exports = {
 
         bindEvents: function () {
             var _self = this;
-            $('html, body').on('scroll', function () {
-                if (_self.pageSlided) {
+
+            $(window).on('scroll',function() {
+                // console.log($(window).scrollTop());
+                if (_self.pageSlided || _self.isLoading) {
                     return;
                 }
                 var scrollH = $.type($('body').scrollTop()) === 'number' ? $('body').scrollTop() : $(document).scrollTop();
                 var viewportHeight = $(window).height();
 
                 if (scrollH + viewportHeight >= $('body').height()) {
+                    console.log('[Magnet] Loading more');
                     _self.loadMore();
                 }
             });
