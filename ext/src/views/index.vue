@@ -92,7 +92,7 @@ module.exports = {
                 condition: {},
                 page: {
                     pageNo: 1,
-                    pageSize: 20
+                    pageSize: 10
                 }
             },
             activeId: 0,
@@ -272,29 +272,6 @@ module.exports = {
             var huiListPersist = storage.get('hui_list');
             var persistedList = (huiListPersist && JSON.parse(huiListPersist.data)) || [];
             console.log('persistedList: ' + persistedList.length);
-            // var sortByUpdateTime = function (item0, item1) {
-            //     var result = new Date(item0.updateTime).getTime() - new Date(item1.updateTime).getTime();
-
-            //     return result < 0;
-            // };
-
-            // 归总排序，取前41筛选，保留余量
-            // var entiryList = this.list.concat(newList);
-            // console.log('[Magnet] entiryList: ' + entiryList.length);
-            // entiryList.sort(sortByUpdateTime);
-
-            // 去重
-            // var uniqueList = [];
-            // var uniqueListIds = [];
-            // newList.forEach(function (item, i) {
-            //     if (uniqueListIds.indexOf(item.id) === -1) {
-            //         uniqueListIds.push(item.id);
-            //         uniqueList.push(item);
-            //     }
-            // });
-            // console.log('[Magnet] uniqueListIds: ' + JSON.stringify(uniqueListIds));
-            // console.log('[Magnet] uniqueList after unique: ' + uniqueList.length);
-
             if (this.isUsingPersistData) {
                 this.list = newList;
                 this.isUsingPersistData = false;

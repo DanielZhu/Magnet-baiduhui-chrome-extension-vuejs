@@ -13,7 +13,7 @@
     "default_popup": "popup.html"
   },
   "background": {
-    "scripts": ["eventPage.js"],
+    "scripts": ["src/libs/storage.js", "src/libs/sdHuiCore.js", "eventPage.js"],
     "persistent": false
   },
   "icons": {
@@ -24,8 +24,13 @@
   },
   "options_page": "options.html",
   "permissions": [
+    "notifications",
     "tabs",
-    "bookmarks",
+    "alarms",
+    "<all_urls>"
+  ],
+  "web_accessible_resources": [
+    "48.png",
     "<all_urls>"
   ],
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
