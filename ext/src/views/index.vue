@@ -42,7 +42,7 @@
                         <img src="../assets/images/qrcode.png">
                     </div>
                     <div class="toolbar">
-                        <div class="see-outside" v-on:click="showDetail(item.id, item.coverImg)"><i class="icon sd-icon-qrcode"></i>查看详情</div>
+                        <div class="see-outside" v-on:click="showDetail(item)"><i class="icon sd-icon-qrcode"></i>查看详情</div>
                     </div>
                 </div>
                 <div class="sns-tool">
@@ -79,6 +79,7 @@
  * @author Daniel Zhu<enterzhu@gmail.com>
  */
 var storage = require('../libs/storage.js');
+var tj = require('../libs/tj.js');
 module.exports = {
     data: function () {
         var self = this;
@@ -198,6 +199,8 @@ module.exports = {
     ready: function () {
         console.log('[Hui] Detail Page Ready...');
         this.init();
+        tj.trackPageViewTJ(tj.pageLists.handpick);
+        tj.trackEventTJ(tj.category.handpick, 'pageLoaded', [{}]);
     },
     watch: {
         showSlideNav: function (val, oldVal) {
@@ -207,6 +210,9 @@ module.exports = {
             console.log('pageSlided: ' + val);
             $('.item-detail').height(val ? 'initial' : $(window).height());
             $('.hui-list').height(val ? $(window).height() : 'initial');
+
+            tj.trackPageViewTJ(val ? tj.pageLists.about : tj.pageLists.handpick);
+            tj.trackEventTJ(tj.category.handpick, 'pageSlided', [{isFirstPage: !val}]);
         }
     },
     methods:{
@@ -249,10 +255,13 @@ module.exports = {
                     console.log('[Magnet] freshItemCount: ' + freshItemCount);
                     $('.mask').addClass('hide');
                     self.isLoading = false;
+
+                    tj.trackEventTJ(tj.category.handpick, 'loadListMore', [params.page], data.data.result.length);
                 },
                 error: function (data, textStatus, jqXHR) {
                     self.isLoading = false;
                     console.log(data);
+                    tj.trackEventTJ(tj.category.handpick, 'loadListMore', [params.page], 0);
                 }
             });
             $.ajax();
@@ -279,7 +288,7 @@ module.exports = {
             else {
                 this.list = this.list.concat(newList);
             }
-            storage.set('hui_list', JSON.stringify(this.list.slice(0, 20)));
+            storage.set('hui_list', JSON.stringify(this.list.slice(0, 10)));
 
             // 返回更新量
             return this.calcUpdatedCount(newList, persistedList);
@@ -305,11 +314,11 @@ module.exports = {
         },
 
         bindEvents: function () {
-            var _self = this;
+            var self = this;
 
             $(window).on('scroll',function() {
                 // console.log($(window).scrollTop());
-                if (_self.pageSlided || _self.isLoading) {
+                if (self.pageSlided || self.isLoading) {
                     return;
                 }
                 var scrollH = $.type($('body').scrollTop()) === 'number' ? $('body').scrollTop() : $(document).scrollTop();
@@ -317,21 +326,24 @@ module.exports = {
 
                 if (scrollH + viewportHeight >= $('body').height()) {
                     console.log('[Magnet] Loading more');
-                    _self.loadMore();
+                    tj.trackEventTJ(tj.category.handpick, 'pageFlipping', [{listLength: self.list.length}], self.list.length);
+                    self.loadMore();
                 }
             });
         },
 
-        showDetail: function (id, coverImg) {
+        showDetail: function (item) {
             this.pageSlided = !this.pageSlided;
-            this.activeId = id;
-            this.coverImg = coverImg;
-            var offset = $('img[src="' + coverImg + '"]').offset();
+            this.activeId = item.id;
+            this.coverImg = item.coverImg;
+            var offset = $('img[src="' + item.coverImg + '"]').offset();
             var pos = {
                 top: offset.top - $('body').scrollTop(),
                 left: offset.left
             };
-            console.log(pos);
+            // console.log(pos);
+
+            tj.trackEventTJ(tj.category.handpick, 'showDetail', [{id: item.id}], item.price);
         }
     },
     components: {

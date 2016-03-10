@@ -1,13 +1,18 @@
-"use strict";
+/* global chrome:false */
+/* global SdHuiCore:false */
+/* global SdTJ:false */
 // Copyright (c) 2016 Zhu Meng-Dan(Daniel). All rights reserved.
+'use strict';
 
 var storage = new Storage();
+// var tj = new SdTJ();
 var sdHuiCore = new SdHuiCore();
 
 function Magnet() {
     this.configs = [];
     this.chromeVersion = null;
     this.platform = null;
+    this.itemNotifyId = 'notification.hui_info';
 
     // chrome.runtime.onInstalled.addListener(function () {
     //   chrome.tabs.create({url: chrome.runtime.getURL("options.html")});
@@ -19,7 +24,6 @@ function Magnet() {
 
 Magnet.prototype = {
     constructor: Magnet,
-    warningId: 'notification.hui_info',
 
     syncConfig: function () {
         var me = this;
@@ -28,10 +32,10 @@ Magnet.prototype = {
             me.platform = platformInfo.os;
         });
 
-        var userAgent = window.navigator.userAgent.split(" ");
+        var userAgent = window.navigator.userAgent.split(' ');
         for (var i = 0; i < userAgent.length; i++) {
-            if (userAgent[i].indexOf("Chrome") !== -1) {
-                this.chromeVersion = userAgent[i].substr(userAgent[i].indexOf("/") + 1);
+            if (userAgent[i].indexOf('Chrome') !== -1) {
+                this.chromeVersion = userAgent[i].substr(userAgent[i].indexOf('/') + 1);
                 break;
             }
         }
@@ -44,86 +48,104 @@ Magnet.prototype = {
 
     setAlarm: function () {
         chrome.alarms.create('fetch-list-alarm', {
-            periodInMinutes: 1
+            periodInMinutes: 0.2
         });
     },
 
     hideWarning: function (id) {
-        chrome.notifications.clear(id, function() {
+        chrome.notifications.clear(id, function () {
         });
     },
 
     pushNotification: function (itemList) {
         var self = this;
+        var message = '';
+        var title = '';
+        var notifyOpts = {};
+
         switch (itemList.length) {
             case 0:
-                chrome.notifications.create(this.warningId, {
+                message = '暂时更多优惠商品和活动';
+                notifyOpts = {
                     iconUrl: 'http://a4.mzstatic.com/us/r30/Purple49/v4/4d/9e/17/4d9e1766-3d9a-b609-d6fe-1d200c1b7739/icon175x175.png',
                     title: '百度惠新优惠商品更新通知',
                     type: 'basic',
-                    message: '暂时更多优惠商品和活动',
+                    message: message,
                     priority: 2
-                }, function() {});
+                };
                 break;
             case 1:
-                chrome.notifications.create(this.warningId, {
+                if (itemList[0].itemType === 1) {
+                    title  = '#精选# ';
+                    message = itemList[0].price + '元 / '
+                            + itemList[0].priceHighlight + ' / '
+                            + itemList[0].merchantAlias + ' / '
+                            + itemList[0].shortReason;
+                }
+                else if (itemList[0].itemType === 2) {
+                    title  = '#特卖 | ' + itemList[0].formattedRcmdRsn + '# ';
+                    message = itemList[0].merchantAlias + ' / ' + itemList[0].shortReason;
+                }
+                notifyOpts = {
                     // iconUrl: 'http://a4.mzstatic.com/us/r30/Purple49/v4/4d/9e/17/4d9e1766-3d9a-b609-d6fe-1d200c1b7739/icon175x175.png',
                     // imageUrl: itemList[0].imageUrl,
                     // type: 'image',
                     iconUrl: itemList[0].imageUrl,
-                    title: '百度惠新优惠商品更新通知',
+                    title: title + itemList[0].title,
                     type: 'basic',
-                    message: itemList[0].title + ' / ' + itemList[0].shortReason,
-                    buttons: [{ title: '查看详情' }],
+                    message: message,
+                    contextMessage: '',
+                    buttons: [{title: '查看详情', iconUrl: './src/assets/images/icon29x29.png'}],
                     isClickable: true,
                     priority: 2
-                }, function() {});
-
+                };
                 break;
             default:
                 var formatList = [];
                 for (var i = 0; i < itemList.length; i++) {
                     var item = itemList[i];
+                    if (item.itemType === 1) {
+                        title  = '#精选# ';
+                    }
+                    else if (item.itemType === 2) {
+                        title  = '#特卖# ';
+                    }
                     formatList.push({
-                        // id: item.id,
-                        title: item.title,
-                        // shortReason: item.shortReason,
-                        // merchantAlias: item.merchantAlias,
-                        // price: item.price,
+                        title: title + item.title,
                         message: item.title + ' / ' + item.shortReason
                     });
                 }
-                var iconUrl = formatList.length > 0 ? formatList[0].imageUrl : null;
-                chrome.notifications.create(this.warningId, {
-                    iconUrl: 'http://a4.mzstatic.com/us/r30/Purple49/v4/4d/9e/17/4d9e1766-3d9a-b609-d6fe-1d200c1b7739/icon175x175.png',
+                var iconUrl = formatList.length > 0 ? itemList[0].imageUrl : 'http://a4.mzstatic.com/us/r30/Purple49/v4/4d/9e/17/4d9e1766-3d9a-b609-d6fe-1d200c1b7739/icon175x175.png';
+                notifyOpts = {
+                    iconUrl: iconUrl,
                     title: '百度惠新优惠商品更新通知',
                     type: 'list',
                     // message: chrome.i18n.getMessage('name') + ' is obsolete ' +
                     message: '更新了' + formatList.length + '个优惠商品和活动',
-                    buttons: [{ title: '查看详情' }],
+                    buttons: [{title: '查看详情', iconUrl: './src/assets/images/icon29x29.png'}],
                     isClickable: true,
                     priority: 2,
                     items: formatList
-                }, function() {});
+                };
                 break;
         }
 
+        itemList.length > 0 && chrome.notifications.create(this.itemNotifyId, notifyOpts, function () {});
+
         setTimeout(function () {
-            self.hideWarning(self.warningId);
+            self.hideWarning(self.itemNotifyId);
         }, 60000);
 
     }
 };
 
 function entryPoint () {
+    var self = this;
     var magnet = new Magnet();
 
     chrome.alarms.onAlarm.addListener(function (alarm) {
-        console.log('[Magnet] Alarm');
         // 抓取百度惠精选商品列表定时器
         if (alarm.name === 'fetch-list-alarm') {
-            console.log('[Magnet] Alarm: ' + JSON.stringify(alarm));
-
             sdHuiCore.getHuiList({
                 success: function (data) {
                     var item = {};
@@ -136,13 +158,38 @@ function entryPoint () {
                     console.log('[Magnet] freshItemCount - ' + new Date().getTime() + ': ' + freshItemCount);
 
                     magnet.pushNotification(data.data.result.slice(0, freshItemCount));
+                    // tj.trackEventTJ(tj.category.bgNotify, 'fetchListAlarm', [{count: freshItemCount}]);
                 },
                 failure: function (data, textStatus, jqXHR) {
-                    console.log(data);
+                    console.log('[Magnet] Failed Fetching: ' + data);
+                    // tj.trackEventTJ(tj.category.bgNotify, 'fetchListAlarm', [{count: -1}]);
                 }
             });
         }
     });
+
+    chrome.notifications.onClicked.addListener(function (notifyId) {
+        // tj.trackEventTJ(tj.category.bgNotify, 'clicked', [{notifyId: notifyId}]);
+        chrome.notifications.clear(notifyId, function () {});
+        chrome.windows.create({url: 'http://hui.baidu.com', focused: true, incognito: false});
+    });
+
+    // 桌面通知按钮监听
+    chrome.notifications.onButtonClicked.addListener(function (notifyId, btnIdx) {
+        // tj.trackEventTJ(tj.category.bgNotify, 'clicked', [{notifyId: notifyId, btnIdx: btnIdx}]);
+        switch (notifyId) {
+            case magnet.itemNotifyId:
+                if (btnIdx === 0) {
+
+                }
+                // http://hui.baidu.com/detail.html?id=116765
+                break;
+            default:
+
+                break;
+        }
+    });
+
     // chrome.runtime.onMessage.addListener(
     //     function(request, sender, sendResponse) {
 

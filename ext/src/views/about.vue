@@ -80,9 +80,14 @@
  *
  * @author Daniel Zhu<enterzhu@gmail.com>
  */
+var tj = require('../libs/tj.js');
 module.exports = {
     data: function () {
         showLunetteMenu: true
+    },
+    ready: function () {
+        tj.trackPageViewTJ(tj.pageLists.about);
+        tj.trackEventTJ(tj.category.about, 'pageLoaded', [{}]);
     },
     methods: {
 

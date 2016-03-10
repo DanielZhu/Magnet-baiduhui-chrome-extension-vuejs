@@ -7,6 +7,7 @@ import validator from 'vue-validator'
 import filters from './filters'
 import routerMap from './routers'
 import FastClick from 'fastclick'
+import SdTJ from './libs/tj'
 
 Vue.use(VueResource);
 Vue.use(VueRouter);
@@ -43,7 +44,6 @@ router.beforeEach(transition => {
 })
 
 let app = Vue.extend({});
-
 routerMap(router);
 
 router.start(app, "#app");

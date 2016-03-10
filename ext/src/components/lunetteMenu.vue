@@ -43,9 +43,18 @@
  *
  * @author Daniel Zhu<enterzhu@gmail.com>
  */
+var tj = require('../libs/tj.js');
 module.exports = {
     replace: true,
     props: ['menuExpanded'],
+    ready: function () {
+        tj.trackEventTJ(tj.category.lunetteMenu, 'compLoaded', [{}]);
+    },
+    watch: {
+        menuExpanded: function (val, oldVal) {
+            tj.trackEventTJ(tj.category.lunetteMenu, 'menuExpanded', [{expanded: menuExpanded}]);
+        }
+    },
     methods: {
 
     }

@@ -1,0 +1,727 @@
+{
+  "status": 0,
+  "msg": "",
+  "data": {
+    "result": {
+      "dataType": 1,
+      "lowestPrice": "388.00",
+      "avgPriceInSixtyDays": "550.00",
+      "lowestPriceInSixtyDays": "398.00",
+      "lowestPriceInNintyDays": "398.00",
+      "lowestPriceInEightyDays": "388.00",
+      "historyPrice": [
+        {
+          "itemId": 0,
+          "date": "09-12",
+          "fullDate": "2015-09-12",
+          "merchantId": 10000,
+          "merchantName": "京东商城",
+          "price": "588.00",
+          "regionType": [
+            {
+              "regionId": 1,
+              "deviceType": "PC"
+            }
+          ]
+        },
+        {
+          "itemId": 0,
+          "date": "11-07",
+          "fullDate": "2015-11-07",
+          "merchantId": 10000,
+          "merchantName": "京东商城",
+          "price": "398.00",
+          "regionType": [
+            {
+              "regionId": 1,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 3,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 7,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 8,
+              "deviceType": "PC"
+            }
+          ]
+        },
+        {
+          "itemId": 0,
+          "date": "11-10",
+          "fullDate": "2015-11-10",
+          "merchantId": 10000,
+          "merchantName": "京东商城",
+          "price": "388.00",
+          "regionType": [
+            {
+              "regionId": 1,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 3,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 7,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 8,
+              "deviceType": "PC"
+            }
+          ]
+        },
+        {
+          "itemId": 0,
+          "date": "11-13",
+          "fullDate": "2015-11-13",
+          "merchantId": 10000,
+          "merchantName": "京东商城",
+          "price": "598.00",
+          "regionType": [
+            {
+              "regionId": 1,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 3,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 7,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 8,
+              "deviceType": "PC"
+            }
+          ]
+        },
+        {
+          "itemId": 0,
+          "date": "12-03",
+          "fullDate": "2015-12-03",
+          "merchantId": 10000,
+          "merchantName": "京东商城",
+          "price": "398.00",
+          "regionType": [
+            {
+              "regionId": 1,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 8,
+              "deviceType": "PC"
+            }
+          ]
+        },
+        {
+          "itemId": 0,
+          "date": "12-15",
+          "fullDate": "2015-12-15",
+          "merchantId": 10000,
+          "merchantName": "京东商城",
+          "price": "598.00",
+          "regionType": [
+            {
+              "regionId": 1,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 3,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 7,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 8,
+              "deviceType": "PC"
+            }
+          ]
+        },
+        {
+          "itemId": 111433,
+          "date": "01-08",
+          "fullDate": "2016-01-08",
+          "merchantId": 10000,
+          "merchantName": "京东商城",
+          "price": "398.00",
+          "regionType": [
+            {
+              "regionId": 1,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 3,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 7,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 8,
+              "deviceType": "PC"
+            }
+          ]
+        },
+        {
+          "itemId": 0,
+          "date": "01-09",
+          "fullDate": "2016-01-09",
+          "merchantId": 10000,
+          "merchantName": "京东商城",
+          "price": "598.00",
+          "regionType": [
+            {
+              "regionId": 1,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 3,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 7,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 8,
+              "deviceType": "PC"
+            }
+          ]
+        },
+        {
+          "itemId": 112785,
+          "date": "01-19",
+          "fullDate": "2016-01-19",
+          "merchantId": 10000,
+          "merchantName": "京东商城",
+          "price": "398.00",
+          "regionType": [
+            {
+              "regionId": 1,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 3,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 7,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 8,
+              "deviceType": "PC"
+            }
+          ]
+        },
+        {
+          "itemId": 0,
+          "date": "01-20",
+          "fullDate": "2016-01-20",
+          "merchantId": 10000,
+          "merchantName": "京东商城",
+          "price": "598.00",
+          "regionType": [
+            {
+              "regionId": 1,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 3,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 7,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 8,
+              "deviceType": "PC"
+            }
+          ]
+        },
+        {
+          "itemId": 0,
+          "date": "01-28",
+          "fullDate": "2016-01-28",
+          "merchantId": 10000,
+          "merchantName": "京东商城",
+          "price": "398.00",
+          "regionType": [
+            {
+              "regionId": 1,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 3,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 8,
+              "deviceType": "PC"
+            }
+          ]
+        },
+        {
+          "itemId": 0,
+          "date": "02-05",
+          "fullDate": "2016-02-05",
+          "merchantId": 10000,
+          "merchantName": "京东商城",
+          "price": "598.00",
+          "regionType": [
+            {
+              "regionId": 1,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 11,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 2,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 3,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 4,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 5,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 6,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 7,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 8,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 9,
+              "deviceType": "PC"
+            }
+          ]
+        },
+        {
+          "itemId": 0,
+          "date": "02-22",
+          "fullDate": "2016-02-22",
+          "merchantId": 10000,
+          "merchantName": "京东商城",
+          "price": "498.00",
+          "regionType": [
+            {
+              "regionId": 1,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 10,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 11,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 2,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 3,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 4,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 5,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 6,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 7,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 8,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 9,
+              "deviceType": "MOBILE"
+            }
+          ]
+        },
+        {
+          "itemId": 0,
+          "date": "02-28",
+          "fullDate": "2016-02-28",
+          "merchantId": 10000,
+          "merchantName": "京东商城",
+          "price": "598.00",
+          "regionType": [
+            {
+              "regionId": 1,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 11,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 2,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 3,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 4,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 5,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 6,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 7,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 8,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 9,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 1,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 10,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 11,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 2,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 3,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 4,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 5,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 6,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 7,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 8,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 9,
+              "deviceType": "MOBILE"
+            }
+          ]
+        },
+        {
+          "itemId": 0,
+          "date": "03-03",
+          "fullDate": "2016-03-03",
+          "merchantId": 10000,
+          "merchantName": "京东商城",
+          "price": "458.00",
+          "regionType": [
+            {
+              "regionId": 1,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 10,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 11,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 2,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 3,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 4,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 5,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 6,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 7,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 8,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 9,
+              "deviceType": "MOBILE"
+            }
+          ]
+        },
+        {
+          "itemId": 0,
+          "date": "03-05",
+          "fullDate": "2016-03-05",
+          "merchantId": 10000,
+          "merchantName": "京东商城",
+          "price": "598.00",
+          "regionType": [
+            {
+              "regionId": 1,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 11,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 2,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 3,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 4,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 5,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 6,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 7,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 8,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 9,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 1,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 10,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 11,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 2,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 3,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 4,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 5,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 6,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 7,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 8,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 9,
+              "deviceType": "MOBILE"
+            }
+          ]
+        },
+        {
+          "itemId": 116778,
+          "date": "03-09",
+          "fullDate": "2016-03-09",
+          "merchantId": 10000,
+          "merchantName": "京东商城",
+          "price": "398.00",
+          "regionType": [
+            {
+              "regionId": 1,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 10,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 11,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 2,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 3,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 4,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 5,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 6,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 7,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 8,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 9,
+              "deviceType": "PC"
+            },
+            {
+              "regionId": 1,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 10,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 11,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 2,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 3,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 4,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 5,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 6,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 7,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 8,
+              "deviceType": "MOBILE"
+            },
+            {
+              "regionId": 9,
+              "deviceType": "MOBILE"
+            }
+          ]
+        }
+      ],
+      "otherMerchantPrice": [],
+      "priceData": [],
+      "promotionData": []
+    },
+    "page": null,
+    "condition": null
+  }
+}

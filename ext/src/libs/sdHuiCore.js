@@ -87,9 +87,11 @@ sdHuiCorePrototype.getHuiList = function (opts) {
 
 sdHuiCorePrototype.persistTop20 = function (newList) {
     console.log('newList: ' + newList.length);
+    console.log(newList);
     var huiListPersist = storage.get('hui_list');
     var persistedList = (huiListPersist && JSON.parse(huiListPersist.data)) || [];
     console.log('persistedList: ' + persistedList.length);
+    console.log(persistedList);
     storage.set('hui_list', JSON.stringify(newList.slice(0, 10)));
 
     // 返回更新量
@@ -105,7 +107,7 @@ sdHuiCorePrototype.calcUpdatedCount = function (newList, oldList) {
         for (var j = 0; j < oldList.length; j++) {
             var oldItem = oldList[j];
             if (newItem.id === oldItem.id
-                && new Date(newItem.updateTime).getTime() - new Date(oldItem.updateTime).getTime() <= 0) {
+                /*&& new Date(newItem.updateTime).getTime() - new Date(oldItem.updateTime).getTime() <= 0*/) {
                 duplicated = true;
             }
         }
