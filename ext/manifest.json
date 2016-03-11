@@ -9,29 +9,30 @@
   "default_locale": "en",
 
   "browser_action": {
-    "default_icon": "./src/assets/images/staydan_logo.png",
+    "default_icon": "./src/assets/images/icon65x65.png",
     "default_popup": "popup.html"
   },
   "background": {
-    "scripts": ["src/libs/storage.js", "src/libs/sdHuiCore.js", "eventPage.js"],
+    "scripts": ["src/libs/tj.js", "src/libs/storage.js", "src/libs/sdHuiCore.js", "eventPage.js"],
     "persistent": false
   },
   "icons": {
-    "16": "./src/assets/images/staydan_logo.png",
-    "32": "./src/assets/images/staydan_logo.png",
-    "48": "./src/assets/images/staydan_logo.png",
-    "128": "./src/assets/images/staydan_logo.png"
+    "16": "./src/assets/images/icon29x29.png",
+    "32": "./src/assets/images/icon65x65.png",
+    "48": "./src/assets/images/icon65x65.png",
+    "128": "./src/assets/images/icon175x175.png"
   },
   "options_page": "options.html",
   "permissions": [
     "notifications",
     "tabs",
     "alarms",
+    "background",
     "<all_urls>"
   ],
   "web_accessible_resources": [
     "48.png",
     "<all_urls>"
   ],
-  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+  "content_security_policy": "script-src 'self' https://ssl.google-analytics.com https://www.google-analytics.com https://*.baidu.com 'unsafe-eval' 'sha256-eknnAl8VLFfw0pIrrse/PoBJAIW92d8KuqxZcyzwUCU='; object-src 'self';"
 }

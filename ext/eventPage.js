@@ -48,7 +48,7 @@ Magnet.prototype = {
 
     setAlarm: function () {
         chrome.alarms.create('fetch-list-alarm', {
-            periodInMinutes: 0.15
+            periodInMinutes: 1.5
         });
     },
 
