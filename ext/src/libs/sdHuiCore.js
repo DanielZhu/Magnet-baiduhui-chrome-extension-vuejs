@@ -86,11 +86,10 @@ sdHuiCorePrototype.getHuiList = function (opts) {
 };
 
 sdHuiCorePrototype.persistTop20 = function (newList) {
-    console.log('newList: ' + newList.length);
-    console.log(newList);
     var huiListPersist = storage.get('hui_list');
     var persistedList = (huiListPersist && JSON.parse(huiListPersist.data)) || [];
-    console.log('persistedList: ' + persistedList.length);
+    console.log('newList: ' + newList.length + '  persistedList: ' + persistedList.length);
+    console.log(newList);
     console.log(persistedList);
     storage.set('hui_list', JSON.stringify(newList.slice(0, 10)));
 

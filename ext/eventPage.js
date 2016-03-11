@@ -48,7 +48,7 @@ Magnet.prototype = {
 
     setAlarm: function () {
         chrome.alarms.create('fetch-list-alarm', {
-            periodInMinutes: 0.2
+            periodInMinutes: 0.15
         });
     },
 
@@ -79,12 +79,12 @@ Magnet.prototype = {
                     title  = '#精选# ';
                     message = itemList[0].price + '元 / '
                             + itemList[0].priceHighlight + ' / '
-                            + itemList[0].merchantAlias + ' / '
+                            + itemList[0].merchantName + ' / '
                             + itemList[0].shortReason;
                 }
                 else if (itemList[0].itemType === 2) {
                     title  = '#特卖 | ' + itemList[0].formattedRcmdRsn + '# ';
-                    message = itemList[0].merchantAlias + ' / ' + itemList[0].shortReason;
+                    message = itemList[0].merchantName + ' / ' + itemList[0].shortReason;
                 }
                 notifyOpts = {
                     // iconUrl: 'http://a4.mzstatic.com/us/r30/Purple49/v4/4d/9e/17/4d9e1766-3d9a-b609-d6fe-1d200c1b7739/icon175x175.png',
@@ -132,9 +132,9 @@ Magnet.prototype = {
 
         itemList.length > 0 && chrome.notifications.create(this.itemNotifyId, notifyOpts, function () {});
 
-        setTimeout(function () {
-            self.hideWarning(self.itemNotifyId);
-        }, 60000);
+        // setTimeout(function () {
+        //     self.hideWarning(self.itemNotifyId);
+        // }, 60000);
 
     }
 };
@@ -155,28 +155,32 @@ function entryPoint () {
                     }
                     var freshItemCount = sdHuiCore.persistTop20.call(sdHuiCore, data.data.result)
 
-                    console.log('[Magnet] freshItemCount - ' + new Date().getTime() + ': ' + freshItemCount);
+                    var now = new Date();
+                    console.log('[Magnet] freshItemCount - ' + now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate() + ' ' + now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds() + ': ' + freshItemCount);
+                    for (var j = 0; j < freshItemCount; j++) {
+                        console.log(data.data.result[j].id + ' / ' + data.data.result[j].title);
+                    }
 
                     magnet.pushNotification(data.data.result.slice(0, freshItemCount));
-                    // tj.trackEventTJ(tj.category.bgNotify, 'fetchListAlarm', [{count: freshItemCount}]);
+                    SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'fetchListAlarm', [{count: freshItemCount}]);
                 },
                 failure: function (data, textStatus, jqXHR) {
-                    console.log('[Magnet] Failed Fetching: ' + data);
-                    // tj.trackEventTJ(tj.category.bgNotify, 'fetchListAlarm', [{count: -1}]);
+                    console.log('[Magnet] Failed Fetching: '/* + JSON.stringify(data)*/);
+                    SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'fetchListAlarm', [{count: -1}]);
                 }
             });
         }
     });
 
     chrome.notifications.onClicked.addListener(function (notifyId) {
-        // tj.trackEventTJ(tj.category.bgNotify, 'clicked', [{notifyId: notifyId}]);
+        SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'clicked', [{notifyId: notifyId}]);
         chrome.notifications.clear(notifyId, function () {});
         chrome.windows.create({url: 'http://hui.baidu.com', focused: true, incognito: false});
     });
 
     // 桌面通知按钮监听
     chrome.notifications.onButtonClicked.addListener(function (notifyId, btnIdx) {
-        // tj.trackEventTJ(tj.category.bgNotify, 'clicked', [{notifyId: notifyId, btnIdx: btnIdx}]);
+        SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'clicked', [{notifyId: notifyId, btnIdx: btnIdx}]);
         switch (notifyId) {
             case magnet.itemNotifyId:
                 if (btnIdx === 0) {
