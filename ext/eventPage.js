@@ -12,7 +12,8 @@ function Magnet() {
     this.configs = [];
     this.chromeVersion = null;
     this.platform = null;
-    this.itemNotifyId = 'notification.hui_info';
+    this.itemNotifyId = 'notify.hui_info_';
+    this.notifyPairsList = [];
 
     // chrome.runtime.onInstalled.addListener(function () {
     //   chrome.tabs.create({url: chrome.runtime.getURL("options.html")});
@@ -20,6 +21,11 @@ function Magnet() {
 
     this.syncConfig();
     this.setAlarm();
+}
+
+function playAudio () {
+    var audio = new Audio('./src/assets/sound/tip.m4a');
+    audio.play();
 }
 
 Magnet.prototype = {
@@ -48,7 +54,7 @@ Magnet.prototype = {
 
     setAlarm: function () {
         chrome.alarms.create('fetch-list-alarm', {
-            periodInMinutes: 1.5
+            periodInMinutes: 0.3
         });
     },
 
@@ -57,85 +63,111 @@ Magnet.prototype = {
         });
     },
 
-    pushNotification: function (itemList) {
-        var self = this;
+    getNotifySingleItem: function (item) {
         var message = '';
         var title = '';
-        var notifyOpts = {};
+        if (item.itemType === 1) {
+            title  = '#精选# ';
+            message = item.price + '元 / '
+                    + item.priceHighlight + ' / '
+                    + item.merchantName + ' / '
+                    + item.shortReason;
+        }
+        else if (item.itemType === 2) {
+            title  = '#特卖 | ' + item.formattedRcmdRsn + '# ';
+            message = item.merchantName + ' / ' + item.shortReason;
+        }
 
+        return {
+            // iconUrl: 'http://a4.mzstatic.com/us/r30/Purple49/v4/4d/9e/17/4d9e1766-3d9a-b609-d6fe-1d200c1b7739/icon175x175.png',
+            // imageUrl: item.imageUrl,
+            // type: 'image',
+            id: item.id,
+            notify: {
+                iconUrl: item.imageUrl,
+                title: title + item.title,
+                type: 'basic',
+                message: message,
+                contextMessage: '',
+                buttons: [{title: '查看详情', iconUrl: './src/assets/images/icon29x29.png'}],
+                isClickable: true,
+                priority: 2
+            }
+        };
+    },
+
+    getNotifyItem4List: function (list) {
+        var formatList = [];
+        var title = '';
+        for (var i = 0; i < list.length; i++) {
+            var item = list[i];
+            if (item.itemType === 1) {
+                title  = '#精选# ';
+            }
+            else if (item.itemType === 2) {
+                title  = '#特卖# ';
+            }
+            formatList.push({
+                title: title + item.title,
+                message: item.title + ' / ' + item.shortReason
+            });
+        }
+        var iconUrl = formatList.length > 0 ? list[0].imageUrl : 'http://a4.mzstatic.com/us/r30/Purple49/v4/4d/9e/17/4d9e1766-3d9a-b609-d6fe-1d200c1b7739/icon175x175.png';
+        this.notifyPairsList.push({id: -1});
+        return {
+            id: item.id,
+            notify: {
+                iconUrl: iconUrl,
+                title: '百度惠新优惠商品更新通知',
+                type: 'list',
+                // message: chrome.i18n.getMessage('name') + ' is obsolete ' +
+                message: '其它' + formatList.length + '个优惠商品和活动',
+                buttons: [{title: '查看详情', iconUrl: './src/assets/images/icon29x29.png'}],
+                isClickable: true,
+                priority: 2,
+                items: formatList
+            }
+        };
+    },
+
+    pushNotification: function (itemList) {
+        var notifyList = [];
         switch (itemList.length) {
             case 0:
-                message = '暂时更多优惠商品和活动';
-                notifyOpts = {
-                    iconUrl: 'http://a4.mzstatic.com/us/r30/Purple49/v4/4d/9e/17/4d9e1766-3d9a-b609-d6fe-1d200c1b7739/icon175x175.png',
-                    title: '百度惠新优惠商品更新通知',
-                    type: 'basic',
-                    message: message,
-                    priority: 2
-                };
+                // notifyList.push({
+                //     iconUrl: 'http://a4.mzstatic.com/us/r30/Purple49/v4/4d/9e/17/4d9e1766-3d9a-b609-d6fe-1d200c1b7739/icon175x175.png',
+                //     title: '百度惠新优惠商品更新通知',
+                //     type: 'basic',
+                //     message: '暂时更多优惠商品和活动',
+                //     priority: 2
+                // });
                 break;
             case 1:
-                if (itemList[0].itemType === 1) {
-                    title  = '#精选# ';
-                    message = itemList[0].price + '元 / '
-                            + itemList[0].priceHighlight + ' / '
-                            + itemList[0].merchantName + ' / '
-                            + itemList[0].shortReason;
-                }
-                else if (itemList[0].itemType === 2) {
-                    title  = '#特卖 | ' + itemList[0].formattedRcmdRsn + '# ';
-                    message = itemList[0].merchantName + ' / ' + itemList[0].shortReason;
-                }
-                notifyOpts = {
-                    // iconUrl: 'http://a4.mzstatic.com/us/r30/Purple49/v4/4d/9e/17/4d9e1766-3d9a-b609-d6fe-1d200c1b7739/icon175x175.png',
-                    // imageUrl: itemList[0].imageUrl,
-                    // type: 'image',
-                    iconUrl: itemList[0].imageUrl,
-                    title: title + itemList[0].title,
-                    type: 'basic',
-                    message: message,
-                    contextMessage: '',
-                    buttons: [{title: '查看详情', iconUrl: './src/assets/images/icon29x29.png'}],
-                    isClickable: true,
-                    priority: 2
-                };
+                notifyList.push(this.getNotifySingleItem(itemList[0]));
                 break;
             default:
-                var formatList = [];
                 for (var i = 0; i < itemList.length; i++) {
-                    var item = itemList[i];
-                    if (item.itemType === 1) {
-                        title  = '#精选# ';
+                    if (i < 2) {
+                        notifyList.push(this.getNotifySingleItem(itemList[i]));
                     }
-                    else if (item.itemType === 2) {
-                        title  = '#特卖# ';
+                    else {
+                        notifyList.push(this.getNotifyItem4List(itemList.slice(i)));
+                        break;
                     }
-                    formatList.push({
-                        title: title + item.title,
-                        message: item.title + ' / ' + item.shortReason
-                    });
                 }
-                var iconUrl = formatList.length > 0 ? itemList[0].imageUrl : 'http://a4.mzstatic.com/us/r30/Purple49/v4/4d/9e/17/4d9e1766-3d9a-b609-d6fe-1d200c1b7739/icon175x175.png';
-                notifyOpts = {
-                    iconUrl: iconUrl,
-                    title: '百度惠新优惠商品更新通知',
-                    type: 'list',
-                    // message: chrome.i18n.getMessage('name') + ' is obsolete ' +
-                    message: '更新了' + formatList.length + '个优惠商品和活动',
-                    buttons: [{title: '查看详情', iconUrl: './src/assets/images/icon29x29.png'}],
-                    isClickable: true,
-                    priority: 2,
-                    items: formatList
-                };
                 break;
         }
 
-        itemList.length > 0 && chrome.notifications.create(this.itemNotifyId, notifyOpts, function () {});
+        if (notifyList.length > 0) {
+            for (var j = 0; j < notifyList.length; j++) {
+                chrome.notifications.create(this.itemNotifyId + notifyList[j].id, notifyList[j].notify, function () {});
+            }
+            playAudio();
+        }
 
         // setTimeout(function () {
         //     self.hideWarning(self.itemNotifyId);
         // }, 60000);
-
     }
 };
 
@@ -175,30 +207,36 @@ function entryPoint () {
     chrome.notifications.onClicked.addListener(function (notifyId) {
         SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'clicked', [{notifyId: notifyId}]);
         chrome.notifications.clear(notifyId, function () {});
-        chrome.windows.create({url: 'http://hui.baidu.com', focused: true, incognito: false});
+        chrome.tabs.create({url: 'http://hui.baidu.com', focused: true, incognito: false});
     });
 
     // 桌面通知按钮监听
     chrome.notifications.onButtonClicked.addListener(function (notifyId, btnIdx) {
         SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'clicked', [{notifyId: notifyId, btnIdx: btnIdx}]);
-        switch (notifyId) {
-            case magnet.itemNotifyId:
-                if (btnIdx === 0) {
-
-                }
-                // http://hui.baidu.com/detail.html?id=116765
-                break;
-            default:
-
-                break;
+        var notifyIdArr = notifyId.split('_');
+        var id = notifyIdArr[notifyIdArr.length -1];
+        if (btnIdx === 0) {
+            if (id !== -1) {
+                chrome.tabs.create({url: 'http://hui.baidu.com/detail.html?id=' + id});
+            }
+            else {
+                chrome.tabs.create({url: 'http://hui.baidu.com'});
+            }
         }
     });
 
-    // chrome.runtime.onMessage.addListener(
-    //     function(request, sender, sendResponse) {
-
-    //     }
-    // );
+    chrome.runtime.onMessage.addListener(
+        function(request, sender, sendResponse) {
+            switch (request.type) {
+                case 'pushItem':
+                    magnet.pushNotification(request.list);
+                    return true;
+                    break;
+                default:
+                    break;
+            }
+        }
+    );
 }
 
 
