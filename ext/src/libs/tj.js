@@ -94,7 +94,7 @@ var SdTJ = {
             }
         }
 
-        console.log("%csend: " + category + " " + action + " " + label, "font-size:0.6em");
+        // console.log("%csend: " + category + " " + action + " " + JSON.stringify(label), "color: #333;font-size:0.6em");
 
         // patch: seems arguments isn't really an array so let's create one from it
         var argumentsArray = [].splice.call(arguments, 0);
@@ -116,7 +116,7 @@ if (_hmt.length === 0) {
     SdTJ.deployBaiduTJ();
 }
 
-if (typeof ga === 'undefined') {
+if (typeof window.ga === 'undefined') {
     SdTJ.deployGA();
 }
 
