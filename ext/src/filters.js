@@ -43,7 +43,7 @@ exports.getTabStr = (tab, good, top) => {
         }
     }
     return str;
-}
+};
 
 /** 获取标签样式
  *  @param {string} tab Tab分类
@@ -74,7 +74,7 @@ exports.getTabClassName = (tab, good, top) => {
         }
     }
     return className;
-}
+};
 
 /** 获取title文字
  *  @param {string} tab Tab分类
@@ -99,4 +99,36 @@ exports.getTitleStr = tab => {
             break;
     }
     return str;
-}
+};
+
+
+exports.untilNow = function (value) {
+    // var value = '2016-01-31 00:07:00';
+    var date = new Date(value);
+    var originTs = date.getTime();
+    var nowTs = new Date().getTime();
+    var delta = (nowTs -  originTs) / 1000;
+    var showTime = '';
+
+    if (delta < 60) {
+        // 1分钟内
+        showTime = Math.round(delta) + '秒前';
+    }
+    else if (delta < 60 * 60) {
+        // 一小时内
+        showTime = Math.round(delta / 60) + '分钟前';
+    }
+    else if (delta < 24 * 60 * 60) {
+        // 1天内
+        showTime = Math.round(delta / (60 * 60)) + '小时前';
+    }
+    else if (delta < 7 * 24 * 60 * 60) {
+        // 7天内
+        showTime = Math.round(delta / (24 * 60 * 60)) + '天前';
+    }
+    else {
+        showTime = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+    }
+
+    return showTime;
+};

@@ -42,7 +42,8 @@
                         <img src="../assets/images/qrcode.png">
                     </div>
                     <div class="toolbar">
-                        <div class="see-outside" v-on:click="showDetail(item)"><i class="icon sd-icon-qrcode"></i>查看详情</div>
+                        <div class="see-detail" v-on:click="showDetail(item)"><i class="icon sd-icon-qrcode"></i>查看详情</div>
+                        <div class="see-outside" v-on:click="sendMessage(item)"><i class="icon sd-icon-external-link"></i></div>
                     </div>
                 </div>
                 <div class="sns-tool">
@@ -164,38 +165,7 @@ module.exports = {
         //     transition.next();
         // }
     },
-    filters: {
-        untilNow: function (value) {
-            // var value = '2016-01-31 00:07:00';
-            var date = new Date(value);
-            var originTs = date.getTime();
-            var nowTs = new Date().getTime();
-            var delta = (nowTs -  originTs) / 1000;
-            var showTime = '';
-
-            if (delta < 60) {
-                // 1分钟内
-                showTime = Math.round(delta) + '秒前';
-            }
-            else if (delta < 60 * 60) {
-                // 一小时内
-                showTime = Math.round(delta / 60) + '分前';
-            }
-            else if (delta < 24 * 60 * 60) {
-                // 1天内
-                showTime = Math.round(delta / (60 * 60)) + '小时前';
-            }
-            else if (delta < 7 * 24 * 60 * 60) {
-                // 7天内
-                showTime = Math.round(delta / (24 * 60 * 60)) + '天前';
-            }
-            else {
-                showTime = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
-            }
-
-            return showTime;
-        }
-    },
+    filters: {},
     ready: function () {
         console.log('[Hui] Detail Page Ready...');
         this.init();
@@ -225,6 +195,15 @@ module.exports = {
             !this.isLoading && this.getHuiItems(this.reqParam);
         },
 
+        sendMessage: function (item) {
+            chrome.runtime.sendMessage({
+                type: "pushItem",
+                list: [item],
+            }, function(response) {
+
+            });
+        },
+
         getHuiItems: function (params) {
             var self = this;
             self.isLoading = true;
@@ -249,7 +228,7 @@ module.exports = {
                     else {
                         self.toast.type = 'info';
                         self.toast.show = true;
-                        self.toast.msg = freshItemCount + '个新优惠';
+                        self.toast.msg = freshItemCount === 0 ? '已经是最新的了' : freshItemCount + '个新优惠';
                         self.toast.hideToast();
                     }
                     console.log('[Magnet] freshItemCount: ' + freshItemCount);
