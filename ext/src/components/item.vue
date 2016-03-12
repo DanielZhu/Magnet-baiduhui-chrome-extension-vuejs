@@ -48,7 +48,7 @@
         </div>
         <div class="detail-short-reason">
             <span class="reason-item">{{item.shortReason}}</span>
-            <img src="{{item.portrait}}" class="revealer-avatar">
+            <img :src="item.portrait" class="revealer-avatar">
             <span class="revealer">{{item.revealerName}}</span>
         </div>
         <div class="description">
@@ -82,8 +82,10 @@ module.exports = {
     },
     watch: {
         activeId: function (val, oldVal) {
-            this.getHuiItemDetail(val);
-            this.getHuiItemDetailComment(val);
+            if (val) {
+                this.getHuiItemDetail(val);
+                this.getHuiItemDetailComment(val);
+            }
         }
     },
     methods: {

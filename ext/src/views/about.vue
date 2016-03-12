@@ -71,7 +71,7 @@
             </article>
         </section>
     </div>
-    <sd-Lunette-menu :menuExpanded.sync="showLunetteMenu"></sd-Lunette-menu>
+    <sd-Lunette-menu :menu-expanded.sync="showLunetteMenu"></sd-Lunette-menu>
 </template>
 
 <script>

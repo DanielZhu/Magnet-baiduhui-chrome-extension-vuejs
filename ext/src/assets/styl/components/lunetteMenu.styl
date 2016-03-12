@@ -1,5 +1,5 @@
 
-$menu-width = 150px
+$menu-width = 120px
 $menu-height = $menu-width
 $menu-margin-left = $menu-width / -1
 $menu-li-width = $menu-width / 4
@@ -30,6 +30,7 @@ $menu-switch-width = $menu-width * 2 * 0.2
     margin-left: $menu-switch-width * -.5
     border: 2px solid #F55858
     z-index: 50
+    box-sizing: border-box
     .left-hyphen, .right-hyphen
         animation: breathing 2s both
         animation-iteration-count: infinite
@@ -43,11 +44,11 @@ $menu-switch-width = $menu-width * 2 * 0.2
         margin-top: 0
         transition: all .2s linear
     .left-hyphen
-        left: $menu-switch-width * .24
+        left: $menu-switch-width * .26
         transform-origin: 100% 50%
         transform: rotateZ(-15deg)
     .right-hyphen
-        right: $menu-switch-width * .24
+        right: $menu-switch-width * .26
         transform-origin: 0% 50%
         transform: rotateZ(15deg)
     &.active

@@ -61,7 +61,7 @@
         <ul class="c-list" v-show="list.length > 0">
             <li v-for="item in list" class="c-list-item clearfix">
                 <div class="c-user">
-                    <img src="{{item.portrait}}" class="c-user-avatar">
+                    <img :src="item.portrait" class="c-user-avatar">
                     <p class="c-layer">{{item.layer}}楼</p>
                 </div>
                 <div class="c-comments clearfix">
@@ -72,7 +72,7 @@
                 <ul class="c-reply-list">
                     <li v-for="item in item.reply" class="c-list-item clearfix">
                         <div class="c-user">
-                            <img src="{{item.portrait}}" class="c-user-avatar">
+                            <img :src="item.portrait" class="c-user-avatar">
                         </div>
                         <div class="c-comments">
                             <p class="c-nickname">{{item.userName}}</p>

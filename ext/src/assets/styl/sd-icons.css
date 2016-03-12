@@ -113,3 +113,6 @@
 .sd-icon-external-link:before {
   content: "\79";
 }
+.sd-icon-puzzle:before {
+  content: "\7a";
+}

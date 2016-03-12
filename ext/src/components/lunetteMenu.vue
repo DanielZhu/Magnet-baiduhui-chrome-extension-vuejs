@@ -7,27 +7,27 @@
         <ul class="list-ul">
             <li class="icon-hui" v-link="{'name':'list', query: {tab: 'hui'}}">
                 <a href="javascript:;" class="a-hui">
-                    <i class="fa fa-bluetooth"></i>
+                    <i class="icon sd-icon-baidu"></i>
                 </a>
             </li>
             <li class="icon-extension" v-link="{name: 'about', query: {tab: 'extension'}}">
                 <a href="javascript:;" class="a-extension">
-                    <span><i class="fa fa-bluetooth"></i></span>
+                    <i class="icon sd-icon-puzzle"></i>
                 </a>
             </li>
             <li class="icon-donate" v-link="{name: 'about', query: {tab: 'donate'}}">
                 <a href="javascript:;" class="a-donate">
-                    <span><i class="fa fa-bluetooth"></i></span>
+                    <i class="icon sd-icon-money"></i>
                 </a>
             </li>
             <li class="icon-feedback" v-link="{name: 'about', query: {tab: 'feedback'}}">
                 <a href="javascript:;" class="a-feedback">
-                    <span><i class="fa fa-bluetooth"></i></span>
+                    <i class="icon sd-icon-speaker"></i>
                 </a>
             </li>
             <li class="icon-other" v-link="{name: 'about', query: {tab: 'feedback'}}">
                 <a href="javascript:;" class="a-other">
-                    <span><i class="fa fa-bluetooth"></i></span>
+                    <i class="icon sd-icon-money"></i>
                 </a>
             </li>
         </ul>
@@ -51,9 +51,9 @@ module.exports = {
         tj.trackEventTJ(tj.category.lunetteMenu, 'compLoaded', [{}]);
     },
     watch: {
-        menuExpanded: function (val, oldVal) {
-            tj.trackEventTJ(tj.category.lunetteMenu, 'menuExpanded', [{expanded: menuExpanded}]);
-        }
+        // menuExpanded: function (val, oldVal) {
+        //     tj.trackEventTJ(tj.category.lunetteMenu, 'menuExpanded', [{expanded: menuExpanded}]);
+        // }
     },
     methods: {
 

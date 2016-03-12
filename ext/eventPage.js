@@ -54,13 +54,12 @@ Magnet.prototype = {
 
     setAlarm: function () {
         chrome.alarms.create('fetch-list-alarm', {
-            periodInMinutes: 0.3
+            periodInMinutes: 1.2
         });
     },
 
     hideWarning: function (id) {
-        chrome.notifications.clear(id, function () {
-        });
+        chrome.notifications.clear(id, function () {});
     },
 
     getNotifySingleItem: function (item) {
@@ -206,7 +205,7 @@ function entryPoint () {
 
     chrome.notifications.onClicked.addListener(function (notifyId) {
         SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'clicked', [{notifyId: notifyId}]);
-        chrome.notifications.clear(notifyId, function () {});
+        magnet.hideWarning(notifyId);
         chrome.tabs.create({url: 'http://hui.baidu.com', focused: true, incognito: false});
     });
 
@@ -222,6 +221,7 @@ function entryPoint () {
             else {
                 chrome.tabs.create({url: 'http://hui.baidu.com'});
             }
+            magnet.hideWarning(notifyId);
         }
     });
 
