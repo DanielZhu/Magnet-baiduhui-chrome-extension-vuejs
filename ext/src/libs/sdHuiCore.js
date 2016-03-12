@@ -88,14 +88,21 @@ sdHuiCorePrototype.getHuiList = function (opts) {
 sdHuiCorePrototype.persistTop20 = function (newList) {
     var huiListPersist = storage.get('hui_list');
     var persistedList = (huiListPersist && JSON.parse(huiListPersist.data)) || [];
-    console.log('newList: ' + newList.length + '  persistedList: ' + persistedList.length);
-    console.log(newList);
-    console.log(persistedList);
+    logIdAndTitle(newList, 'color: #EA6591;font-size: 12px;');
+    logIdAndTitle(persistedList, 'color: #999;font-size: 12px;');
     storage.set('hui_list', JSON.stringify(newList.slice(0, 10)));
 
     // 返回更新量
     return this.calcUpdatedCount(newList, persistedList);
 };
+
+function logIdAndTitle (list, style) {
+    for (var key in list) {
+        if (list.hasOwnProperty(key)) {
+            console.log('%c No.%s %s / %s', style, key, list[key].id, list[key].title);
+        }
+    }
+}
 
 sdHuiCorePrototype.calcUpdatedCount = function (newList, oldList) {
     var freshItemCount = 0;
@@ -108,6 +115,7 @@ sdHuiCorePrototype.calcUpdatedCount = function (newList, oldList) {
             if (newItem.id === oldItem.id
                 /*&& new Date(newItem.updateTime).getTime() - new Date(oldItem.updateTime).getTime() <= 0*/) {
                 duplicated = true;
+                break;
             }
         }
         !duplicated && freshItemCount++;
