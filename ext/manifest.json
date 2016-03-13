@@ -13,7 +13,7 @@
     "default_popup": "popup.html"
   },
   "background": {
-    "scripts": ["src/libs/consts.js", "src/libs/tj.js", "src/libs/storage.js", "src/libs/sdHuiCore.js", "eventPage.js"],
+    "scripts": ["src/libs/utils.js", "src/libs/consts.js", "src/libs/tj.js", "src/libs/storage.js", "src/libs/sdHuiCore.js", "eventPage.js"],
     "persistent": false
   },
   "icons": {
