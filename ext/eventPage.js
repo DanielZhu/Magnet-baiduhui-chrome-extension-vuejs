@@ -1,5 +1,6 @@
 /* global chrome:false */
 /* global SdHuiCore:false */
+/* global consts:false */
 /* global SdTJ:false */
 // Copyright (c) 2016 Zhu Meng-Dan(Daniel). All rights reserved.
 'use strict';
@@ -14,16 +15,13 @@ function Magnet() {
     this.platform = null;
     this.itemNotifyId = 'notify.hui_info_';
     this.notifyPairsList = [];
-
-    // chrome.runtime.onInstalled.addListener(function () {
-    //   chrome.tabs.create({url: chrome.runtime.getURL("options.html")});
-    // });
+    this.freshCount = 0;
 
     this.syncConfig();
     this.setAlarm();
 }
 
-function playAudio () {
+function playAudio() {
     var audio = new Audio('./src/assets/sound/tip.m4a');
     audio.play();
 }
@@ -32,29 +30,66 @@ Magnet.prototype = {
     constructor: Magnet,
 
     syncConfig: function () {
-        var me = this;
+        var configCached = storage.get(consts.configName) || {};
+        var initSetting = consts.settingList;
 
-        chrome.runtime.getPlatformInfo(function (platformInfo) {
-            me.platform = platformInfo.os;
-        });
+        // 初始化所有默认配置项，若发现不存在的配置项，补上
+        for (var i = 0; i < initSetting.length; i++) {
+            var setItem = initSetting[i];
+            for (var j = 0; j < setItem.items.length; j++) {
+                var item = setItem.items[j];
 
-        var userAgent = window.navigator.userAgent.split(' ');
-        for (var i = 0; i < userAgent.length; i++) {
-            if (userAgent[i].indexOf('Chrome') !== -1) {
-                this.chromeVersion = userAgent[i].substr(userAgent[i].indexOf('/') + 1);
-                break;
+                if (configCached && configCached.hasOwnProperty('data')) {
+                    if (!configCached.data.hasOwnProperty(item.key)) {
+                        configCached.data[item.key] = item.init;
+                    }
+                }
+                else {
+                    configCached[item.key] = item.init;
+                }
             }
         }
 
-        var manifestObj = chrome.runtime.getManifest();
-        this.magnetVersion = manifestObj.version;
+        var finalConfig = configCached.hasOwnProperty('data') ? configCached.data : configCached;
+        storage.set(consts.configName, finalConfig);
 
-        storage.set('magnet_config', {cv: this.chromeVersion, mv: this.magnetVersion});
+        return finalConfig;
+        // chrome.runtime.getPlatformInfo(function (platformInfo) {
+        //     me.platform = platformInfo.os;
+        // });
+
+        // var userAgent = window.navigator.userAgent.split(' ');
+        // for (var i = 0; i < userAgent.length; i++) {
+        //     if (userAgent[i].indexOf('Chrome') !== -1) {
+        //         this.chromeVersion = userAgent[i].substr(userAgent[i].indexOf('/') + 1);
+        //         break;
+        //     }
+        // }
+
+        // var manifestObj = chrome.runtime.getManifest();
+        // this.magnetVersion = manifestObj.version;
+        // cv: this.chromeVersion, mv: this.magnetVersion
+        // storage.set('magnet_config', {set: consts.settingList});
+    },
+
+    retrieveConfigCached: function () {
+        var config = {};
+        var configCached = storage.get(consts.configName) || {};
+        if (configCached) {
+            config = configCached.data;
+        }
+        else {
+            config = this.syncConfig();
+        }
+
+        return config;
     },
 
     setAlarm: function () {
-        chrome.alarms.create('fetch-list-alarm', {
-            periodInMinutes: 1.2
+        var configCached = this.retrieveConfigCached();
+
+        configCached['push-switch'] && chrome.alarms.create('fetch-list-alarm', {
+            periodInMinutes: configCached['push-frequency'] || 10
         });
     },
 
@@ -63,74 +98,98 @@ Magnet.prototype = {
     },
 
     getNotifySingleItem: function (item) {
+        var configCached = this.retrieveConfigCached();
         var message = '';
         var title = '';
-        if (item.itemType === 1) {
-            title  = '#精选# ';
-            message = item.price + '元 / '
-                    + item.priceHighlight + ' / '
-                    + item.merchantName + ' / '
-                    + item.shortReason;
-        }
-        else if (item.itemType === 2) {
-            title  = '#特卖 | ' + item.formattedRcmdRsn + '# ';
-            message = item.merchantName + ' / ' + item.shortReason;
+        var notify = {};
+
+        if (configCached['push-type']
+            && configCached['push-type'].indexOf(consts.pushType[item.itemType]) !== -1) {
+            if (item.itemType === 1) {
+                title  = '#精选# ';
+                message = item.price + '元 / '
+                        + item.priceHighlight + ' / '
+                        + item.merchantName + ' / '
+                        + item.shortReason;
+            }
+            else if (item.itemType === 2) {
+                title  = '#特卖 | ' + item.formattedRcmdRsn + '# ';
+                message = item.merchantName + ' / ' + item.shortReason;
+            }
+
+            notify = {
+                // iconUrl: 'http://a4.mzstatic.com/us/r30/Purple49/v4/4d/9e/17/4d9e1766-3d9a-b609-d6fe-1d200c1b7739/icon175x175.png',
+                // imageUrl: item.imageUrl,
+                // type: 'image',
+                id: item.id,
+                notify: {
+                    iconUrl: item.imageUrl,
+                    title: title + item.title,
+                    type: 'basic',
+                    message: message,
+                    contextMessage: '',
+                    buttons: [{title: '查看详情', iconUrl: './src/assets/images/icon29x29.png'}],
+                    isClickable: true,
+                    priority: 2
+                }
+            };
         }
 
-        return {
-            // iconUrl: 'http://a4.mzstatic.com/us/r30/Purple49/v4/4d/9e/17/4d9e1766-3d9a-b609-d6fe-1d200c1b7739/icon175x175.png',
-            // imageUrl: item.imageUrl,
-            // type: 'image',
-            id: item.id,
-            notify: {
-                iconUrl: item.imageUrl,
-                title: title + item.title,
-                type: 'basic',
-                message: message,
-                contextMessage: '',
-                buttons: [{title: '查看详情', iconUrl: './src/assets/images/icon29x29.png'}],
-                isClickable: true,
-                priority: 2
-            }
-        };
+        return notify;
     },
 
     getNotifyItem4List: function (list) {
+        var configCached = this.retrieveConfigCached();
+
         var formatList = [];
         var title = '';
+        var iconUrl = 'http://a4.mzstatic.com/us/r30/Purple49/v4/4d/9e/17/4d9e1766-3d9a-b609-d6fe-1d200c1b7739/icon175x175.png';
+        var notify = {};
+
         for (var i = 0; i < list.length; i++) {
             var item = list[i];
-            if (item.itemType === 1) {
-                title  = '#精选# ';
+
+            if (configCached['push-type']
+                && configCached['push-type'].indexOf(consts.pushType[item.itemType]) !== -1) {
+                if (item.itemType === 1) {
+                    title  = '#精选# ';
+                }
+                else if (item.itemType === 2) {
+                    title  = '#特卖# ';
+                }
+
+                formatList.push({
+                    title: title + item.title,
+                    message: item.title + ' / ' + item.shortReason
+                });
             }
-            else if (item.itemType === 2) {
-                title  = '#特卖# ';
-            }
-            formatList.push({
-                title: title + item.title,
-                message: item.title + ' / ' + item.shortReason
-            });
         }
-        var iconUrl = formatList.length > 0 ? list[0].imageUrl : 'http://a4.mzstatic.com/us/r30/Purple49/v4/4d/9e/17/4d9e1766-3d9a-b609-d6fe-1d200c1b7739/icon175x175.png';
+
+        if (formatList.length > 0) {
+            iconUrl = list[0].imageUrl;
+            notify = {
+                id: item.id,
+                notify: {
+                    iconUrl: iconUrl,
+                    title: '百度惠新优惠商品更新通知',
+                    type: 'list',
+                    // message: chrome.i18n.getMessage('name') + ' is obsolete ' +
+                    message: '其它' + formatList.length + '个优惠商品和活动',
+                    buttons: [{title: '查看详情', iconUrl: './src/assets/images/icon29x29.png'}],
+                    isClickable: true,
+                    priority: 2,
+                    items: formatList
+                }
+            };
+        }
         this.notifyPairsList.push({id: -1});
-        return {
-            id: item.id,
-            notify: {
-                iconUrl: iconUrl,
-                title: '百度惠新优惠商品更新通知',
-                type: 'list',
-                // message: chrome.i18n.getMessage('name') + ' is obsolete ' +
-                message: '其它' + formatList.length + '个优惠商品和活动',
-                buttons: [{title: '查看详情', iconUrl: './src/assets/images/icon29x29.png'}],
-                isClickable: true,
-                priority: 2,
-                items: formatList
-            }
-        };
+        return notify;
     },
 
     pushNotification: function (itemList) {
+        var configCached = this.retrieveConfigCached();
         var notifyList = [];
+        var notify = {};
         switch (itemList.length) {
             case 0:
                 // notifyList.push({
@@ -142,15 +201,18 @@ Magnet.prototype = {
                 // });
                 break;
             case 1:
-                notifyList.push(this.getNotifySingleItem(itemList[0]));
+                notify = this.getNotifySingleItem(itemList[0]);
+                !isObjEmpty(notify) && notifyList.push(notify);
                 break;
             default:
                 for (var i = 0; i < itemList.length; i++) {
                     if (i < 2) {
-                        notifyList.push(this.getNotifySingleItem(itemList[i]));
+                        notify = this.getNotifySingleItem(itemList[i]);
+                        !isObjEmpty(notify) && notifyList.push(notify);
                     }
                     else {
-                        notifyList.push(this.getNotifyItem4List(itemList.slice(i)));
+                        notify = this.getNotifyItem4List(itemList.slice(i));
+                        !isObjEmpty(notify) && notifyList.push(notify);
                         break;
                     }
                 }
@@ -161,18 +223,55 @@ Magnet.prototype = {
             for (var j = 0; j < notifyList.length; j++) {
                 chrome.notifications.create(this.itemNotifyId + notifyList[j].id, notifyList[j].notify, function () {});
             }
-            playAudio();
+
+            this.freshCount += notifyList.length;
+            this.updateBadge(this.freshCount);
+            configCached['push-audio'] && playAudio();
+        }
+    },
+
+    /**
+     * 更新缓存
+     *
+     * @param  {Array} pairs 更新的配置项
+     */
+    updateStorge: function (pairs, opts) {
+        if (pairs.length === 0) {
+            return;
         }
 
-        // setTimeout(function () {
-        //     self.hideWarning(self.itemNotifyId);
-        // }, 60000);
+        // 是否存在有效的更新项目
+        var updatedFlag = false;
+        var configCached = storage.get(consts.configName);
+        if (configCached) {
+            for (var i = 0; i < pairs.length; i++) {
+                var key = pairs[i].key;
+                configCached.data[key] = pairs[i].value;
+                updatedFlag = true;
+            }
+            updatedFlag && storage.set(consts.configName, configCached.data, opts);
+        }
+        else {
+            this.syncConfig();
+        }
+    },
+
+    updateBadge: function (bargeText) {
+        var bargeOption = {};
+        if (bargeText === 0) {
+            bargeText = '';
+        }
+        bargeOption.text = bargeText.toString();
+        chrome.browserAction.setBadgeText(bargeOption);
     }
 };
 
 function entryPoint () {
-    var self = this;
     var magnet = new Magnet();
+
+    chrome.runtime.onInstalled.addListener(function () {
+        magnet.syncConfig();
+    });
 
     chrome.alarms.onAlarm.addListener(function (alarm) {
         // 抓取百度惠精选商品列表定时器
@@ -206,14 +305,14 @@ function entryPoint () {
     chrome.notifications.onClicked.addListener(function (notifyId) {
         SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'clicked', [{notifyId: notifyId}]);
         magnet.hideWarning(notifyId);
-        chrome.tabs.create({url: 'http://hui.baidu.com', focused: true, incognito: false});
+        chrome.tabs.create({url: 'http://hui.baidu.com'});
     });
 
     // 桌面通知按钮监听
     chrome.notifications.onButtonClicked.addListener(function (notifyId, btnIdx) {
         SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'clicked', [{notifyId: notifyId, btnIdx: btnIdx}]);
         var notifyIdArr = notifyId.split('_');
-        var id = notifyIdArr[notifyIdArr.length -1];
+        var id = notifyIdArr[notifyIdArr.length - 1];
         if (btnIdx === 0) {
             if (id !== -1) {
                 chrome.tabs.create({url: 'http://hui.baidu.com/detail.html?id=' + id});
@@ -226,11 +325,22 @@ function entryPoint () {
     });
 
     chrome.runtime.onMessage.addListener(
-        function(request, sender, sendResponse) {
+        function (request, sender, sendResponse) {
             switch (request.type) {
                 case 'pushItem':
                     magnet.pushNotification(request.list);
-                    return true;
+                    break;
+                case 'updateStorage':
+                    // Todo - Consider move storage related into eventpage
+                    magnet.updateStorge([request.set]);
+                    break;
+                case 'getMagnetConfig':
+                    // Todo - it'll cost too much time and waste
+                    sendResponse(magnet.retrieveConfigCached());
+                    break;
+                case 'clearBadge':
+                    magnet.freshCount = 0;
+                    magnet.updateBadge(0);
                     break;
                 default:
                     break;
