@@ -20,6 +20,12 @@ export default function(router){
                 require(['./views/index.vue'],resolve);
             }
         },
+        '/setting':{               //首页
+            name:'setting',
+            component: function(resolve){
+                require(['./views/setting.vue'],resolve);
+            }
+        },
         '/about':{               //关于
             name:'about',
             component: function(resolve){

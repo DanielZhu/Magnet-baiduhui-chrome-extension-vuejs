@@ -3,9 +3,25 @@
 .about-container
     position: relative
     width: 100%
+    display: flex
+    padding-top: 10px
+    font-size: 14px
+    color: $gray9
+    line-height: 1.5
+    .highlight-text
+        color: $gray3
+        font-weight: bold
+    .highlight-vline
+            color: $gray3
+            font-weight: bold
+    .about-header
+        margin: 20px 0
+        font-size: 20px
+        color: $gray3
     .sec-item
         margin: 0 auto
         width: 80%
-        display: none
-        &.sec-about-hui
-            display: block
+        padding-bottom: 40px
+        &.hidden
+            display: none
+

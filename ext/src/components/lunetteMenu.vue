@@ -6,7 +6,7 @@
     <div id="lunette-menu">
         <div class="lunette-menu lunette-menu-list" transition="menu-anim" :class="{'menu-anim-enter': menuExpanded}">
             <ul class="list-ul">
-                <li class="icon-hui" v-link="{'name':'list', query: {tab: 'hui'}}">
+                <li class="icon-hui" v-link="{'name':'about', query: {tab: 'hui'}}">
                     <a href="javascript:;" class="a-hui">
                         <i class="icon sd-icon-baidu"></i>
                     </a>
@@ -26,9 +26,9 @@
                         <i class="icon sd-icon-speaker"></i>
                     </a>
                 </li>
-                <li class="icon-other" v-link="{name: 'about', query: {tab: 'feedback'}}">
+                <li class="icon-other" v-link="{name: 'about', query: {tab: 'other'}}">
                     <a href="javascript:;" class="a-other">
-                        <i class="icon sd-icon-money"></i>
+                        <i class="icon sd-icon-info"></i>
                     </a>
                 </li>
             </ul>
