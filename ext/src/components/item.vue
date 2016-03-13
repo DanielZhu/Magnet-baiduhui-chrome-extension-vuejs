@@ -40,7 +40,7 @@
                 </div>
             </div>
             <div class="away">
-                <div class="btn btn-away">去{{item.merchantAlias}}瞧瞧</div>
+                <div class="btn btn-away" v-on:click="goMerchantSite(item.url)">去{{item.merchantAlias}}瞧瞧</div>
                 <span class="update-time" v-text="item.revealTime"></span>
             </div>
         </div>
@@ -87,6 +87,12 @@ module.exports = {
         }
     },
     methods: {
+        goMerchantSite: function (url) {
+            if (url) {
+                chrome.tabs.create({url: url});
+            }
+        },
+
         getHuiItemDetail: function (itemId) {
             var self = this;
             self.id = itemId;

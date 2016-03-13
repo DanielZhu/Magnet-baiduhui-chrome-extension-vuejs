@@ -28,7 +28,6 @@
                                             <p class="reason-item highlight" v-show="item.priceHighlight">{{item.priceHighlight}}</p>
                                         </div>
                                         <div class="reason-item formatted-rcmd-reason" :class="item.itemType===1 ? 'pull-right' : ''">
-                                            <!-- <label class="reason-item highlight" v-show="item.appPriceOnly">手机专享</label> -->
                                             <label v-html="item.formattedRcmdRsn"></label>
                                         </div>
                                     </div>
@@ -44,7 +43,7 @@
                             </div>
                             <div class="toolbar">
                                 <div class="see-detail" v-on:click="showDetail(item)"><i class="icon sd-icon-qrcode"></i>查看详情</div>
-                                <div class="see-outside" v-on:click="sendMessage(item)"><i class="icon sd-icon-external-link"></i></div>
+                                <div class="see-outside" v-on:click="sendMessage(item)"><i class="icon sd-icon-bell-o"></i></div>
                             </div>
                         </div>
                         <div class="sns-tool">
@@ -83,6 +82,7 @@
  */
 var storage = require('../libs/storage.js');
 var tj = require('../libs/tj.js');
+var consts = require('../libs/consts.js');
 module.exports = {
     data: function () {
         var self = this;
@@ -117,61 +117,14 @@ module.exports = {
     },
     route: {
         canReuse: false
-        // data (transition){
-        //     let query = transition.to.query,tab = query.tab || 'all';
-
-        //     //记录首次加载的查询条件
-        //     if(this.searchDataStr == ""){
-        //         this.searchDataStr = JSON.stringify(this.searchKey);
-        //     }
-        //     //如果从左侧切换分类，则清空查询条件
-        //     if(transition.from.name === "house-list"){
-        //         //this.searchKey.page = 1;
-        //         this.searchKey.limit = 20;
-        //         this.searchKey = JSON.parse(this.searchDataStr);
-        //     }
-
-
-        //     //如果从详情返回并且typeid一样才去sessionStorge
-        //     if(sessionStorage.searchKey && transition.from.name === "topic"
-        //         && sessionStorage.tab == tab){
-        //         this.topics = JSON.parse(sessionStorage.topics);
-        //         this.searchKey = JSON.parse(sessionStorage.searchKey);
-        //         this.$nextTick(()=> $(window).scrollTop(sessionStorage.scrollTop));
-        //     }
-        //     else{
-        //         //页面初次加载获取的数据
-        //         this.searchKey.tab = query.tab;
-        //         this.getTopics();
-        //     }
-        //     this.showMenu = false;
-
-        //     //滚动加载
-        //     $(window).on('scroll', () => {
-        //         this.getScrollData();
-        //     });
-
-        // },
-        // deactivate (transition){
-        //     $(window).off('scroll');
-        //     if(transition.to.name === "topic"){
-        //         sessionStorage.scrollTop = $(window).scrollTop();
-        //         sessionStorage.topics = JSON.stringify(this.topics);
-        //         sessionStorage.searchKey = JSON.stringify(this.searchKey);
-        //         sessionStorage.tab = transition.from.query.tab || 'all';
-        //     }
-        //     else{
-        //         sessionStorage.removeItem("topics");
-        //         sessionStorage.removeItem("searchKey");
-        //         sessionStorage.removeItem("tab");
-        //     }
-        //     transition.next();
-        // }
     },
     filters: {},
     ready: function () {
         console.log('[Hui] Detail Page Ready...');
+        var configCached = this.retrieveConfigCached();
+        this.reqParam.page.pageSize = configCached['num-loading'];
         this.init();
+        this.clearBadge();
         tj.trackPageViewTJ(tj.pageLists.handpick);
         tj.trackEventTJ(tj.category.handpick, 'pageLoaded', [{}]);
     },
@@ -189,11 +142,35 @@ module.exports = {
         }
     },
     methods:{
+        retrieveConfigCached: function () {
+            var config = {};
+            var configCached = storage.get(consts.configName) || {};
+            if (configCached) {
+                config = configCached.data;
+            }
+            else {
+                config = this.syncConfig();
+            }
+
+            return config;
+        },
+
+        clearBadge: function () {
+            chrome.runtime.sendMessage({
+                type: "clearBadge"
+            }, function(res) {
+
+            });
+        },
+
         refresh: function () {
 
         },
 
         loadMore: function () {
+            var configCached = this.retrieveConfigCached();
+            this.reqParam.page.pageSize = configCached['num-loading'] || 10;
+
             this.reqParam.page.pageNo += 1;
             !this.isLoading && this.getHuiItems(this.reqParam);
         },
@@ -323,7 +300,6 @@ module.exports = {
                 top: offset.top - $('body').scrollTop(),
                 left: offset.left
             };
-            // console.log(pos);
 
             tj.trackEventTJ(tj.category.handpick, 'showDetail', [{id: item.id}], item.price);
         }

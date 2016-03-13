@@ -5,7 +5,7 @@
 </style>
 
 <template>
-    <header>
+    <header id="header">
         <sd-nav-drawer transition='slide' :class="{'slide-enter': shownav, 'slide-leave': !shownav}"></sd-nav-drawer>
         <div class="title-bar" transition='header-slide' :class="{'header-slide-enter': shownav, 'header-slide-leave': !shownav}">
             <div class="left-btn">
@@ -15,7 +15,7 @@
             </div>
             <div class="title" transition="fly-down" :class="{'fly-down-enter': titleflied, 'fly-down-leave': !titleflied}">{{title}}</div>
             <div class="right-btn">
-                <i class="icon sd-icon-info" v-on:click="shownav = !shownav"></i>
+                <!-- <i class="icon sd-icon-info" v-on:click="shownav = !shownav"></i> -->
             </div>
             <div class="personal-info" v-show="false">
                 <img class="avatar" data-src="{{avatar_src}}" src="../assets/images/img_35*35.svg">
