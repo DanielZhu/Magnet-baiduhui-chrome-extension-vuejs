@@ -5,72 +5,74 @@
     @import '../assets/styl/list.styl'
 </style>
 <template>
-<sd-toast :showing="toast.show" :msg="toast.msg" :icontype="toast.type"></sd-toast>
-<sd-head :shownav.sync="showSlideNav" :back.sync="pageSlided" :titleflied.sync="toast.show"></sd-head>
-<div class="slide-paging" transition="page" :class="{'page-enter': pageSlided, 'page-leave': !pageSlided}">
-    <div class="hui-list">
-        <ul>
-            <li v-for="item in list" data-id="{{item.id}}">
-                <div class="hui-item">
-                    <div class="cover-img">
-                        <img :src="item.coverImg" data-src="../assets/images/img_120*120.svg">
-                    </div>
-                    <div class="item-brief">
-                        <div class="info">
-                            <div class="feed-info">
-                                <img v-show="item.feedLogo" :src="item.feedLogo" data-src="../assets/images/img_80*35.svg" class="feed-logo">
-                                <div class="title">{{item.title}}</div>
+    <div class="home">
+        <sd-toast :showing="toast.show" :msg="toast.msg" :icontype="toast.type"></sd-toast>
+        <sd-head :shownav.sync="showSlideNav" :back.sync="pageSlided" :titleflied.sync="toast.show"></sd-head>
+        <div class="slide-paging" transition="page" :class="{'page-enter': pageSlided, 'page-leave': !pageSlided}">
+            <div class="hui-list">
+                <ul>
+                    <li v-for="item in list" data-id="{{item.id}}">
+                        <div class="hui-item">
+                            <div class="cover-img">
+                                <img :src="item.coverImg" data-src="../assets/images/img_120*120.svg">
                             </div>
-                            <div class="price-cut reason">
-                                <div class="highlight-area" v-show="item.itemType === 1">
-                                    <p class="reason-item price">{{item.price}}</p>
-                                    <p class="reason-item highlight" v-show="item.priceHighlight">{{item.priceHighlight}}</p>
+                            <div class="item-brief">
+                                <div class="info">
+                                    <div class="feed-info">
+                                        <img v-show="item.feedLogo" :src="item.feedLogo" data-src="../assets/images/img_80*35.svg" class="feed-logo">
+                                        <div class="title">{{item.title}}</div>
+                                    </div>
+                                    <div class="price-cut reason">
+                                        <div class="highlight-area" v-show="item.itemType === 1">
+                                            <p class="reason-item price">{{item.price}}</p>
+                                            <p class="reason-item highlight" v-show="item.priceHighlight">{{item.priceHighlight}}</p>
+                                        </div>
+                                        <div class="reason-item formatted-rcmd-reason" :class="item.itemType===1 ? 'pull-right' : ''">
+                                            <!-- <label class="reason-item highlight" v-show="item.appPriceOnly">手机专享</label> -->
+                                            <label v-html="item.formattedRcmdRsn"></label>
+                                        </div>
+                                    </div>
+                                    <div class="short-reason">
+                                        <p class="reason-item">{{item.shortReason}}</p>
+                                    </div>
                                 </div>
-                                <div class="reason-item formatted-rcmd-reason" :class="item.itemType===1 ? 'pull-right' : ''">
-                                    <!-- <label class="reason-item highlight" v-show="item.appPriceOnly">手机专享</label> -->
-                                    <label v-html="item.formattedRcmdRsn"></label>
-                                </div>
-                            </div>
-                            <div class="short-reason">
-                                <p class="reason-item">{{item.shortReason}}</p>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="sns">
-                    <div class="qr-preview">
-                        <img src="../assets/images/qrcode.png">
-                    </div>
-                    <div class="toolbar">
-                        <div class="see-detail" v-on:click="showDetail(item)"><i class="icon sd-icon-qrcode"></i>查看详情</div>
-                        <div class="see-outside" v-on:click="sendMessage(item)"><i class="icon sd-icon-external-link"></i></div>
-                    </div>
-                </div>
-                <div class="sns-tool">
-                    <div class="summary">
-                        <span class="merchant-name">{{item.merchantName}}</span>
-                        <span class="update-time" v-text="item.revealTime | untilNow"></span>
-                    </div>
-                    <div class="sns-numbers">
-                        <i class="icon sd-icon-thumbs-o-up"></i><span class="number">{{item.likeNum > 0 ? item.likeNum : 0}}</span>
-                        <div class="progress">
-                            <div class="progress-bar-active" v-bind:style="{width: item.progressAt + '%' }"></div>
-                            <div class="progress-anchor-at" v-bind:style="{left: item.progressAt + '%' }"></div>
+                        <div class="sns">
+                            <div class="qr-preview">
+                                <img src="../assets/images/qrcode.png">
+                            </div>
+                            <div class="toolbar">
+                                <div class="see-detail" v-on:click="showDetail(item)"><i class="icon sd-icon-qrcode"></i>查看详情</div>
+                                <div class="see-outside" v-on:click="sendMessage(item)"><i class="icon sd-icon-external-link"></i></div>
+                            </div>
                         </div>
-                        <i class="icon sd-icon-thumbs-o-down"></i><span class="number">{{item.unlikeNum > 0 ? item.unlikeNum : 0}}</span>
-                        <i class="icon sd-icon-bubble-comment-streamline-talk"></i><span class="number">{{item.commentNum > 0 ? item.commentNum : 0}}</span>
-                        <i class="icon sd-icon-heart-o"></i><span class="number">{{item.favorNum > 0 ? item.favorNum : 0}}</span>
-                    </div>
-                    <div class="revealer">
-                        <span class="name">{{item.revealerName}}</span>
-                    </div>
-                </div>
-            </li>
-            <div class="loading-more">Loading...</div>
-        </ul>
+                        <div class="sns-tool">
+                            <div class="summary">
+                                <span class="merchant-name">{{item.merchantName}}</span>
+                                <span class="update-time" v-text="item.revealTime | untilNow"></span>
+                            </div>
+                            <div class="sns-numbers">
+                                <i class="icon sd-icon-thumbs-o-up"></i><span class="number">{{item.likeNum > 0 ? item.likeNum : 0}}</span>
+                                <div class="progress">
+                                    <div class="progress-bar-active" v-bind:style="{width: item.progressAt + '%' }"></div>
+                                    <div class="progress-anchor-at" v-bind:style="{left: item.progressAt + '%' }"></div>
+                                </div>
+                                <i class="icon sd-icon-thumbs-o-down"></i><span class="number">{{item.unlikeNum > 0 ? item.unlikeNum : 0}}</span>
+                                <i class="icon sd-icon-bubble-comment-streamline-talk"></i><span class="number">{{item.commentNum > 0 ? item.commentNum : 0}}</span>
+                                <i class="icon sd-icon-heart-o"></i><span class="number">{{item.favorNum > 0 ? item.favorNum : 0}}</span>
+                            </div>
+                            <div class="revealer">
+                                <span class="name">{{item.revealerName}}</span>
+                            </div>
+                        </div>
+                    </li>
+                    <div class="loading-more">Loading...</div>
+                </ul>
+            </div>
+            <sd-item :active-id="activeId" :cover-img="coverImg"></sd-item>
+        </div>
     </div>
-    <sd-item :active-id="activeId" :cover-img="coverImg"></sd-item>
-</div>
 </template>
 
 <script>
@@ -113,7 +115,8 @@ module.exports = {
             }
         }
     },
-    route:{
+    route: {
+        canReuse: false
         // data (transition){
         //     let query = transition.to.query,tab = query.tab || 'all';
 

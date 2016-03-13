@@ -1,7 +1,12 @@
 
 $popup-width = 600px
 $popup-height = 550px
-
+$graya = #aaa
+$gray9 = #999
+$gray6 = #666
+$gray3 = #333
+$hui-pink = #EA6591
+$hui-danger = #F54F4F
 
 html, body
     border 0
@@ -76,7 +81,7 @@ body, html
 #app
     position relative
     width $popup-width
-    // height $popup-height
+    min-height $popup-height
     overflow-x hidden
     background-color #fff
     margin-top 60px
@@ -85,9 +90,6 @@ body, html
     width 100%
     // height 100%
     margin 0 auto
-    text-align center
-    vertical-align middle
-    margin-top 60px !important
 .mask
     position absolute
     width 100%

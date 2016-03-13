@@ -21,6 +21,9 @@
 module.exports = {
     replace: true,
     props: ['showing', 'msg', 'icontype'],
+    route: {
+        canReuse: false
+    },
     data: function () {
         return {
             countdownShow: false

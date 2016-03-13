@@ -1,8 +1,9 @@
 <template>
     <section id="sideBar" class="nav-drawer-list">
         <ul class="list-ul">
-            <li class="icon-home" v-link="{'name':'list',query: {tab: 'all'}}">首页</li>
-            <li class="icon-about" v-link="{name: 'about'}">关于</li>
+            <li class="icon-home" v-link="'list'">首页</li>
+            <li class="icon-setting" v-link="{name: 'setting', query: {nav: 'push-frequency'}}">设置</li>
+            <li class="icon-about" v-link="'about'">关于</li>
         </ul>
     </section>
 </template>
@@ -14,7 +15,10 @@
 */
 module.exports = {
     replace: true,
-    props: ['show']
+    props: ['show'],
+    route: {
+        canReuse: false
+    }
 }
 </script>
 

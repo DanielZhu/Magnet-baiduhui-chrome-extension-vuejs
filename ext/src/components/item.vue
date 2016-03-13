@@ -6,8 +6,6 @@
 
 <template>
     <div class="item-detail">
-        <!-- <div class="mask"></div> -->
-        <!-- <img :src="coverImg" class="item-preview-img" transition="zoom-in-center"> -->
         <div class="item-brief">
             <div class="feed-info">
                 <img v-show="item.feedLogo" :src="item.feedLogo" data-src="../assets/images/img_80*35.svg" class="feed-logo">

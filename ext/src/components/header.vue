@@ -34,6 +34,9 @@
 var tj = require('../libs/tj.js');
 module.exports = {
     props: ['back', 'titleflied', 'shownav'],
+    route: {
+        canReuse: false
+    },
     data: function () {
         return {
             title: 'Checker For 百度惠',
