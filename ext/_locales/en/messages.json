@@ -1,8 +1,8 @@
 {
-  "appName": {
-    "message": "百度惠Chrome插件（非官方）"
-  },
-  "appDesc": {
-    "message": "一个极其简易的百度惠Chrome插件。"
-  }
+    "appName": {
+        "message": "BaiduHui Unfficial Extension(Push Notification Enabled)"
+    },
+    "appDesc": {
+        "message": "A simple extension for Google Chrome allows the user to use BaiduHui Services in the current window to this extension."
+    }
 }
