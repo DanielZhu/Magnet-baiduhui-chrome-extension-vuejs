@@ -1,0 +1,76 @@
+@import './common.styl'
+
+.setting-container
+    position: relative
+    width: 100%
+    display: flex
+    padding-top: 10px
+    font-size: 14px
+    color: $gray9
+    .setting-nav
+        width: 160px
+        margin-right: 20px
+        border-right: 1px solid #eee
+        .nav-item
+            padding: 15px 0 0 20px
+        .nav-item-sub
+            padding: 5px 0 0 20px
+            &.active
+                color: $hui-pink
+    .setting-area
+        flex: 1
+        padding-bottom: 20px
+        .btn, .checkbox
+            min-width: 100px
+            background-color: $graya
+            color: white
+            padding: 6px 15px
+            display: inline-block
+            text-align: center
+            cursor: pointer
+            &[data-key="cache-clear"]
+                background-color: $hui-danger
+        .checkbox
+            border-right 1px solid white
+            &.active
+                background-color: $hui-pink
+        .switcher
+            width: 30px
+            height: 30px
+            background-color: $graya
+            border: 2px solid #ddd
+            padding: 6px 15px
+            display: inline-block
+            text-align: center
+            cursor: pointer
+            &.active
+                background-color: $hui-pink
+        .radio
+            color: white
+            display: inline-block
+            background-color: $graya
+            min-width: 10px
+            border-right 1px solid white
+            padding: 6px 15px
+            cursor: pointer
+            &.active
+                background-color: $hui-pink
+        .item
+            padding: 15px 0 0 10px
+            .item-lable
+                color: $gray6
+                font-size: 1.3rem
+        .item-sub
+            padding: 5px 0 0 30px
+            .item-sub-wrapper
+                margin-top: 5px
+                margin-bottom: 10px
+
+
+
+
+
+
+
+
+

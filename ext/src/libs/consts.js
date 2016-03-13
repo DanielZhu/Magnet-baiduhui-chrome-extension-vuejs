@@ -9,6 +9,10 @@
 let consts = {
     configName: 'magnet_config',
     cacheListName: 'hui_list',
+    pushType: {
+        1: '精选',
+        2: '特卖'
+    },
     settingList: [
         {
             id: 1,
@@ -35,13 +39,13 @@ let consts = {
                     label: '类型',
                     values: ['精选', '特卖'],
                     type: 'checkbox',
-                    init: '精选, 特卖'
+                    init: '精选,特卖'
                 },
                 {
                     id: 104,
                     key: 'push-frequency',
                     label: '频率',
-                    values: [5, 10, 20, 30, 60],
+                    values: [0.2, 1.2, 5, 10, 20, 30, 60],
                     type: 'radio',
                     init: 10
                 }

@@ -1,6 +1,14 @@
 /*global storage:false */
 "use strict";
 
+// Todo - import consts
+// Error in extension eventpage
+// Cannot work in both extensioni eventpage and popup
+
+// if  (import !== 'undefined') {
+    // import consts from './consts'
+// }
+
 /**
  * Magnet 数据本地持久化模块
  *
@@ -114,7 +122,31 @@ storagePrototype.get = function (key) {
     return result;
 };
 
+/**
+ * 更新缓存
+ *
+ * @param  {Array} pairs 更新的配置项
+ */
+storagePrototype.updateStorge = function (pairs, opts) {
+    if (pairs.length === 0) {
+        return;
+    }
 
+    // 是否存在有效的更新项目
+    var updatedFlag = false;
+    var configCached = this.get('magnet_config');
+    if (configCached) {
+        for (var i = 0; i < pairs.length; i++) {
+            var key = pairs[i].key;
+            configCached.data[key] = pairs[i].value;
+            updatedFlag = true;
+        }
+        updatedFlag && this.set('magnet_config', configCached.data, opts);
+    }
+    else {
+        this.syncConfig();
+    }
+};
 
 if (typeof define !== 'undefined') {
     define(function (require) {
