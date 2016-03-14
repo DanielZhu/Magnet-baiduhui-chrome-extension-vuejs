@@ -188,7 +188,7 @@ module.exports = {
             var self = this;
             self.isLoading = true;
             $.ajaxSetup({
-                url: 'http://localhost/api/api.php/hui/list',
+                url: 'http://www.staydan.com/api/api.php/hui/list',
                 timeout: 5000,
                 type: 'POST',
                 data: JSON.stringify(params.page),

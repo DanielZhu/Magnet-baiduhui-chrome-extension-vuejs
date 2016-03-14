@@ -101,7 +101,7 @@ module.exports = {
             //     console.log(d);
             // });
 
-            $.post('http://localhost/api/api.php/hui/detail',
+            $.post('http://www.staydan.com/api/api.php/hui/detail',
                 JSON.stringify({id: self.id}),
                 function (data, textStatus, jqXHR) {
                     self.item = data.data.result;
@@ -126,7 +126,7 @@ module.exports = {
                 orderBy: "ctime"
             };
 
-            $.post('http://localhost/api/api.php/hui/comment',
+            $.post('http://www.staydan.com/api/api.php/hui/comment',
                 JSON.stringify(param),
                 function (data, textStatus, jqXHR) {
                     self.commentList = data.data.result;
