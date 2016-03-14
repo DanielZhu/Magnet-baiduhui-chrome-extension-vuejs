@@ -45,7 +45,7 @@ let consts = {
                     id: 104,
                     key: 'push-frequency',
                     label: '频率',
-                    values: [0.2, 1.2, 5, 10, 20, 30, 60],
+                    values: [5, 10, 20, 30, 60],
                     type: 'radio',
                     init: 10
                 }
