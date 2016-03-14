@@ -223,7 +223,7 @@ Magnet.prototype = {
             for (var j = 0; j < notifyList.length; j++) {
                 chrome.notifications.create(this.itemNotifyId + notifyList[j].id, notifyList[j].notify, function () {});
             }
-
+            SdTJ.trackEventTJ(SdTJ.category.pushNotify, 'push', [{count: notifyList.length}]);
             this.freshCount += notifyList.length;
             this.updateBadge(this.freshCount);
             configCached['push-audio'] && playAudio();
@@ -263,6 +263,7 @@ Magnet.prototype = {
         }
         bargeOption.text = bargeText.toString();
         chrome.browserAction.setBadgeText(bargeOption);
+        SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'updateBadge', [{bargeText: bargeText}]);
     }
 };
 
@@ -303,14 +304,14 @@ function entryPoint () {
     });
 
     chrome.notifications.onClicked.addListener(function (notifyId) {
-        SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'clicked', [{notifyId: notifyId}]);
+        SdTJ.trackEventTJ(SdTJ.category.pushNotify, 'clicked', [{notifyId: notifyId}]);
         magnet.hideWarning(notifyId);
         chrome.tabs.create({url: 'http://hui.baidu.com'});
     });
 
     // 桌面通知按钮监听
     chrome.notifications.onButtonClicked.addListener(function (notifyId, btnIdx) {
-        SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'clicked', [{notifyId: notifyId, btnIdx: btnIdx}]);
+        SdTJ.trackEventTJ(SdTJ.category.pushNotify, 'clicked', [{notifyId: notifyId, btnIdx: btnIdx}]);
         var notifyIdArr = notifyId.split('_');
         var id = notifyIdArr[notifyIdArr.length - 1];
         if (btnIdx === 0) {

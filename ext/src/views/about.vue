@@ -137,6 +137,7 @@ module.exports = {
         updateView: function () {
             $('.sec-item').toggleClass('hidden', true);
             $('.sec-about-' + this.seQuery.tab).toggleClass('hidden', false);
+            tj.trackEventTJ(tj.category.about, 'view', [{tab: this.seQuery.tab}]);
         }
     },
     components: {

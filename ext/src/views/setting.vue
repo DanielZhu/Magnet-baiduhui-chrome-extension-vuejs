@@ -82,8 +82,8 @@ module.exports = {
         }
     },
     ready: function () {
-        tj.trackPageViewTJ(tj.pageLists.about);
-        tj.trackEventTJ(tj.category.about, 'pageLoaded', [{}]);
+        tj.trackPageViewTJ(tj.pageLists.setting);
+        tj.trackEventTJ(tj.category.setting, 'pageLoaded', [{}]);
     },
     methods: {
         btnHandler: function (key) {
@@ -103,6 +103,7 @@ module.exports = {
                             self.toast.hideToast();
                         }
                     });
+                    tj.trackEventTJ(tj.category.setting, 'clearCache', [{}]);
                     break;
                 default:
                     break;
@@ -115,6 +116,7 @@ module.exports = {
                     self.settingValue[key] = value;
                 }
             });
+            tj.trackEventTJ(tj.category.setting, 'switcher-' + key, [{value: value}]);
         },
         checkboxHandler: function (key, value) {
             var self = this;
@@ -139,6 +141,7 @@ module.exports = {
                     self.settingValue[key] = boxValue;
                 }
             });
+            tj.trackEventTJ(tj.category.setting, 'checkbox-' + key, [{value: boxValue}]);
         },
         radioHandler: function (key, value) {
             var self = this;
@@ -147,6 +150,7 @@ module.exports = {
                     self.settingValue[key] = value;
                 }
             });
+            tj.trackEventTJ(tj.category.setting, 'radio-' + key, [{value: value}], value);
         }
     },
     components: {

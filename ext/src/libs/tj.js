@@ -12,15 +12,18 @@ var SdTJ = {
         discover: 'discover',
         promo: 'promo',
         about: 'about',
+        setting: 'setting',
         lunetteMenu: 'lunetteMenu',
         navDrawerMenu: 'navDrawerMenu',
-        bgNotify: 'bgNotify'
+        bgNotify: 'bgNotify',
+        pushNotify: 'push'
     },
 
     pageLists: {
         handpick: 'handpick',
         discover: 'discover',
         promo: 'promo',
+        setting: 'setting',
         about: 'about'
     },
 
