@@ -63,6 +63,7 @@
  *
  * @author Daniel Zhu<enterzhu@gmail.com>
  */
+var consts = require('../libs/consts');
 module.exports = {
     replace: true,
     props: ['activeId', 'coverImg'],
@@ -113,6 +114,17 @@ module.exports = {
             });
         },
 
+        addClickListeners: function () {
+            // https://trello.com/c/V1D6u3M1/38-v1-0-1-magnet-v1-0-0
+            $('.description').on('click', 'a', function (e) {
+                e.preventDefault();
+                var href = $(this)[0].getAttribute('href');
+                if (href.indexOf('facade/hui/vip/redirect') !== -1) {
+                    chrome.tabs.create({url: consts.host + href});
+                }
+            })
+        },
+
         getHuiItemDetailComment: function (itemId) {
             // {"targetType":1,"targetId":103407,"page":{"pageNo":1,"pageSize":30,"order":"desc","orderBy":"ctime"}}
             var self = this;
@@ -138,7 +150,7 @@ module.exports = {
         },
 
         init: function () {
-            console.log(this.activeId);
+            this.addClickListeners();
         }
     },
     components: {

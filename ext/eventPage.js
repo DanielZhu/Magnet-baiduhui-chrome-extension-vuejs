@@ -7,13 +7,14 @@
 
 var storage = new Storage();
 // var tj = new SdTJ();
-var sdHuiCore = new SdHuiCore();
+var sdHuiCore = new SdHuiCore(storage);
 
 function Magnet() {
     this.configs = [];
     this.chromeVersion = null;
     this.platform = null;
     this.itemNotifyId = 'notify.hui_info_';
+    this.alarmNameFetchList = 'fetch-list-alarm';
     this.notifyPairsList = [];
     this.freshCount = 0;
 
@@ -85,16 +86,49 @@ Magnet.prototype = {
         return config;
     },
 
-    setAlarm: function () {
+    setAlarm: function (flag) {
         var configCached = this.retrieveConfigCached();
 
-        configCached['push-switch'] && chrome.alarms.create('fetch-list-alarm', {
+        configCached['push-switch'] && chrome.alarms.create(this.alarmNameFetchList, {
             periodInMinutes: configCached['push-frequency'] || 10
         });
     },
 
+    /**
+     * 清楚后台抓取最新列表定时器（推送用）
+     *
+     * @param  {boolean} flag  新的推送标志(true: 允许推送, false: 不允许推送)
+     * @param  {fun} cb 回调
+     */
+    clearFetchingAlarm: function (flag, cb) {
+        var self = this;
+        if (flag) {
+            storage.updateStorge([{key: 'push-switch', value: flag}], {
+                success: function () {
+                    self.setAlarm();
+                    cb && cb({value: flag});
+                }
+            });
+        }
+        else {
+            // Todo - 放在clear的回调函数里popup接收不到回参
+            cb && cb({value: flag});
+            chrome.alarms.clear(this.alarmNameFetchList, function () {
+                storage.updateStorge([{key: 'push-switch', value: flag}]);
+            });
+        }
+    },
+
+
     hideWarning: function (id) {
         chrome.notifications.clear(id, function () {});
+    },
+
+    stripHtmlTag: function (htmlString) {
+        var divNode = document.createElement('div');
+        divNode.innerHTML = htmlString;
+
+        return divNode.innerText;
     },
 
     getNotifySingleItem: function (item) {
@@ -102,6 +136,8 @@ Magnet.prototype = {
         var message = '';
         var title = '';
         var notify = {};
+        var formattedReason = this.stripHtmlTag(item.formattedRcmdRsn);
+        var shortReason = this.stripHtmlTag(item.shortReason);
 
         if (configCached['push-type']
             && configCached['push-type'].indexOf(consts.pushType[item.itemType]) !== -1) {
@@ -110,11 +146,11 @@ Magnet.prototype = {
                 message = item.price + '元 / '
                         + item.priceHighlight + ' / '
                         + item.merchantName + ' / '
-                        + item.shortReason;
+                        + shortReason;
             }
             else if (item.itemType === 2) {
-                title  = '#特卖 | ' + item.formattedRcmdRsn + '# ';
-                message = item.merchantName + ' / ' + item.shortReason;
+                title  = '#特卖 | ' + formattedReason + '# ';
+                message = item.merchantName + ' / ' + shortReason;
             }
 
             notify = {
@@ -160,7 +196,7 @@ Magnet.prototype = {
 
                 formatList.push({
                     title: title + item.title,
-                    message: item.title + ' / ' + item.shortReason
+                    message: item.title + ' / ' + this.stripHtmlTag(item.shortReason)
                 });
             }
         }
@@ -284,15 +320,17 @@ function entryPoint () {
                         item = data.data.result[i];
                         data.data.result[i].progressAt = item.likeNum / (item.likeNum + item.unlikeNum) * 100;
                     }
-                    var freshItemCount = sdHuiCore.persistTop20.call(sdHuiCore, data.data.result)
+                    var freshList = sdHuiCore.persistTop20.call(sdHuiCore, data.data.result);
+                    var freshItemCount = freshList.length;
 
                     var now = new Date();
-                    console.log('[Magnet] freshItemCount - ' + now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate() + ' ' + now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds() + ': ' + freshItemCount);
+                    console.log('%c[Magnet] freshItemCount - ' + now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate() + ' ' + now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds() + ': ' + freshItemCount, 'color: #E69B95; font-weight: bold;');
                     for (var j = 0; j < freshItemCount; j++) {
                         console.log(data.data.result[j].id + ' / ' + data.data.result[j].title);
                     }
 
-                    magnet.pushNotification(data.data.result.slice(0, freshItemCount));
+                    // v1.0.1 - 使用筛选后的增量更新列表，而不再继续截取靠前部分
+                    magnet.pushNotification(freshList);
                     SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'fetchListAlarm', [{count: freshItemCount}]);
                 },
                 failure: function (data, textStatus, jqXHR) {
@@ -342,6 +380,11 @@ function entryPoint () {
                 case 'clearBadge':
                     magnet.freshCount = 0;
                     magnet.updateBadge(0);
+                    break;
+                case 'clearFetchingAlarm':
+                    magnet.clearFetchingAlarm(request.pushFlag, function (res) {
+                        sendResponse(res);
+                    });
                     break;
                 default:
                     break;

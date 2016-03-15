@@ -6,9 +6,10 @@
  *
  * @author Daniel Zhu<enterzhu@gmail.com>
 */
-var SdHuiCore = function () {};
+var SdHuiCore = function (storage) {
+    this.storage = storage;
+};
 var sdHuiCorePrototype = SdHuiCore.prototype;
-var storage = new Storage();
 
 function Ajax() {
   this.loadXMLHttp = function () {
@@ -86,29 +87,16 @@ sdHuiCorePrototype.getHuiList = function (opts) {
 };
 
 sdHuiCorePrototype.persistTop20 = function (newList) {
-    var huiListPersist = storage.get('hui_list');
+    var huiListPersist = this.storage.get('hui_list');
     var persistedList = (huiListPersist && JSON.parse(huiListPersist.data)) || [];
-    // logCompare(persistedList, newList);
-    storage.set('hui_list', JSON.stringify(newList.slice(0, 10)));
+    this.storage.set('hui_list', JSON.stringify(newList.slice(0, 10)));
 
     // 返回更新量
-    return this.calcUpdatedCount(newList, persistedList);
+    return this.calcUpdatedList(newList, persistedList);
 };
 
-// function logCompare (oldList, newList) {
-//     for (var i = 0; i < newList.length; i++) {
-//         for
-//         if (oldList[i] && newList[i].id === oldList[i].id) {
-
-//         }
-//         else {
-//             console.log('%c [Du] No.%s %s / %s', 'color: #EA6591;font-size: 12px;', i, newList[i].id, newList[i].title);
-//         }
-//     }
-// }
-
-sdHuiCorePrototype.calcUpdatedCount = function (newList, oldList) {
-    var freshItemCount = 0;
+sdHuiCorePrototype.calcUpdatedList = function (newList, oldList) {
+    var freshList = [];
 
     for (var i = 0; i < newList.length; i++) {
         var newItem = newList[i];
@@ -122,15 +110,15 @@ sdHuiCorePrototype.calcUpdatedCount = function (newList, oldList) {
                 break;
             }
         }
-        !duplicated && freshItemCount++;
+        !duplicated && freshList.push(newItem);
         !duplicated && console.log('%c [Uni] No.%s %s / %s', 'color: #EA6591;font-size: 12px;', i, newList[i].id, newList[i].title);
     }
 
-    return freshItemCount;
+    return freshList;
 };
 
 if (typeof define !== 'undefined') {
     define(function (require) {
-        return new SdHuiCore();
+        return SdHuiCore;
     });
 }

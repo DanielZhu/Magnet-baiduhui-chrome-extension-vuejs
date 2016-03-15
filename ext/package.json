@@ -1,7 +1,7 @@
 {
   "name": "BaiduHui_Chrome_Extension(Not_Official)",
-  "version": "1.0.0",
-  "description": "百度惠Chrome插件（非官方）",
+  "version": "1.0.1",
+  "description": "百度惠：实时推送-专业推荐优惠",
   "main": "popup.html",
   "scripts": {
     "dev": "webpack --progress --profile --colors",

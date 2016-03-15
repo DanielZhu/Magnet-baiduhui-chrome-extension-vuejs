@@ -27,8 +27,7 @@
                                             <p class="reason-item price">{{item.price}}</p>
                                             <p class="reason-item highlight" v-show="item.priceHighlight">{{item.priceHighlight}}</p>
                                         </div>
-                                        <div class="reason-item formatted-rcmd-reason" :class="item.itemType===1 ? 'pull-right' : ''">
-                                            <label v-html="item.formattedRcmdRsn"></label>
+                                        <div class="reason-item formatted-rcmd-reason" :class="item.itemType===1 ? 'pull-right' : ''" v-html="item.formattedRcmdRsn">
                                         </div>
                                     </div>
                                     <div class="short-reason">
@@ -39,11 +38,11 @@
                         </div>
                         <div class="sns">
                             <div class="qr-preview">
-                                <img src="../assets/images/qrcode.png">
+                                <!-- <img src="../assets/images/qrcode.png"> -->
                             </div>
                             <div class="toolbar">
-                                <div class="see-detail" v-on:click="showDetail(item)"><i class="icon sd-icon-qrcode"></i>查看详情</div>
                                 <div class="see-outside" v-on:click="sendMessage(item)"><i class="icon sd-icon-bell-o"></i></div>
+                                <div class="see-detail" v-on:click="showDetail(item)"><i class="icon sd-icon-qrcode"></i>查看详情</div>
                             </div>
                         </div>
                         <div class="sns-tool">
@@ -83,10 +82,13 @@
 var storage = require('../libs/storage.js');
 var tj = require('../libs/tj.js');
 var consts = require('../libs/consts.js');
+var SdHuiCore = require('../libs/sdHuiCore.js');
+var sdHuiCore = new SdHuiCore(storage);
 module.exports = {
     data: function () {
         var self = this;
         return {
+            configCached: {},
             pageSlided: false,
             showSlideNav: false,
             isLoading: false,
@@ -121,8 +123,8 @@ module.exports = {
     filters: {},
     ready: function () {
         console.log('[Hui] Detail Page Ready...');
-        var configCached = this.retrieveConfigCached();
-        this.reqParam.page.pageSize = configCached['num-loading'];
+        this.configCached = this.retrieveConfigCached();
+        this.reqParam.page.pageSize = this.configCached['num-loading'];
         this.init();
         this.clearBadge();
         tj.trackPageViewTJ(tj.pageLists.handpick);
@@ -138,7 +140,7 @@ module.exports = {
             $('.hui-list').height(val ? $(window).height() : 'initial');
 
             tj.trackPageViewTJ(val ? tj.pageLists.about : tj.pageLists.handpick);
-            tj.trackEventTJ(tj.category.handpick, 'pageSlided', [{isFirstPage: !val}]);
+            tj.trackEventTJ(tj.category.handpick, 'pageSlided', [{isFirstPage: !val}], !val);
         }
     },
     methods:{
@@ -147,9 +149,6 @@ module.exports = {
             var configCached = storage.get(consts.configName) || {};
             if (configCached) {
                 config = configCached.data;
-            }
-            else {
-                config = this.syncConfig();
             }
 
             return config;
@@ -168,8 +167,8 @@ module.exports = {
         },
 
         loadMore: function () {
-            var configCached = this.retrieveConfigCached();
-            this.reqParam.page.pageSize = configCached['num-loading'] || 10;
+            this.configCached = this.retrieveConfigCached();
+            this.reqParam.page.pageSize = this.configCached['num-loading'] || 10;
 
             this.reqParam.page.pageNo += 1;
             !this.isLoading && this.getHuiItems(this.reqParam);
@@ -198,7 +197,20 @@ module.exports = {
                         item = data.data.result[i];
                         data.data.result[i].progressAt = item.likeNum / (item.likeNum + item.unlikeNum) * 100;
                     }
-                    var freshItemCount = self.persistTop20.call(self, data.data.result)
+
+                    var freshList = sdHuiCore.persistTop20.call(sdHuiCore, data.data.result)
+                    var freshItemCount = freshList.length;
+
+                    // 更新列表
+                    if (self.isUsingPersistData) {
+                        // 首屏翻新，不去除二次编辑更新过的项目
+                        self.list = data.data.result;
+                        self.isUsingPersistData = false;
+                    }
+                    else {
+                        // 增量更新时，必须去除二次编辑更新的项目
+                        self.list = self.list.concat(freshList);
+                    }
 
                     if (self.toast.show) {
                         var oldFreshNum = ~~self.toast.msg.slice(0, self.toast.msg.indexOf('个'));
@@ -214,7 +226,7 @@ module.exports = {
                     console.log('[Magnet] freshItemCount: ' + freshItemCount);
                     $('.mask').addClass('hide');
                     self.isLoading = false;
-
+                    self.bindToolbar();
                     tj.trackEventTJ(tj.category.handpick, 'loadListMore', [params.page], data.data.result.length);
                 },
                 error: function (data, textStatus, jqXHR) {
@@ -235,43 +247,6 @@ module.exports = {
             this.bindEvents();
         },
 
-        persistTop20: function (newList) {
-            console.log('newList: ' + newList.length);
-            var huiListPersist = storage.get('hui_list');
-            var persistedList = (huiListPersist && JSON.parse(huiListPersist.data)) || [];
-            console.log('persistedList: ' + persistedList.length);
-            if (this.isUsingPersistData) {
-                this.list = newList;
-                this.isUsingPersistData = false;
-            }
-            else {
-                this.list = this.list.concat(newList);
-            }
-            storage.set('hui_list', JSON.stringify(this.list.slice(0, 10)));
-
-            // 返回更新量
-            return this.calcUpdatedCount(newList, persistedList);
-        },
-
-        calcUpdatedCount: function (newList, oldList) {
-            var freshItemCount = 0;
-
-            for (var i = 0; i < newList.length; i++) {
-                var newItem = newList[i];
-                var duplicated = false;
-                for (var j = 0; j < oldList.length; j++) {
-                    var oldItem = oldList[j];
-                    if (newItem.id === oldItem.id
-                        && new Date(newItem.updateTime).getTime() - new Date(oldItem.updateTime).getTime() <= 0) {
-                        duplicated = true;
-                    }
-                }
-                !duplicated && freshItemCount++;
-            }
-
-            return freshItemCount;
-        },
-
         bindEvents: function () {
             var self = this;
 
@@ -289,6 +264,20 @@ module.exports = {
                     self.loadMore();
                 }
             });
+
+            this.bindToolbar();
+        },
+
+        bindToolbar: function () {
+            setTimeout(function () {
+                $('.sns')
+                    .on('mouseover', '.toolbar', function () {
+                        $(this).find('.see-outside').addClass('hovering');
+                    })
+                    .on('mouseleave', '.toolbar', function () {
+                        $(this).find('.see-outside').removeClass('hovering');
+                    });
+            }, 1000);
         },
 
         showDetail: function (item) {

@@ -18,7 +18,7 @@
                 <!-- <i class="icon sd-icon-info" v-on:click="shownav = !shownav"></i> -->
             </div>
             <div class="personal-info" v-show="false">
-                <img class="avatar" data-src="{{avatar_src}}" src="../assets/images/img_35*35.svg">
+                <!-- <img class="avatar" data-src="{{avatar_src}}" src="../assets/images/img_35*35.svg"> -->
                 <p class="nickname">{{nickname}}</p>
             </div>
         </div>

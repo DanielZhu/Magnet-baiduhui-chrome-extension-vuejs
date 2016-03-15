@@ -45,7 +45,7 @@
             .sns
                 display block
                 opacity 1
-                transition all .3s ease-in
+                transition all .2s ease-in
         .sns-tool
             box-sizing border-box
             display inline-block
@@ -187,9 +187,16 @@
                             line-height 45px
                             flex 1
                             padding-right 15px
+                            padding-left 20px
+                            font-size 16px
+                            overflow hidden
+                            text-overflow ellipsis
+                            position relative
+                            white-space nowrap
                             em
                                 padding 0 3px
                             span
+                                padding 0 1px
                                 color #DD3067
                         .highlight
                             background-color #fff
@@ -242,20 +249,27 @@
                 box-sizing border-box
                 line-height 40px
                 font-size 18px
+                cursor pointer
                 .see-outside
+                    position absolute
+                    left 20%
                     width 20%
                     height 40px
-                    float right
                     background-color #A2B5D4
                     box-sizing border-box
                     display inline-block
+                    transition left 150ms linear
+                    &.hovering
+                        left 0%
                     .icon
                         cursor pointer
                         vertical-align -2px
                 .see-detail
+                    position absolute
+                    right 0
+                    top 0
                     width 80%
                     height 40px
-                    float right
                     background-color #86A4D5
                     box-sizing border-box
                     display inline-block

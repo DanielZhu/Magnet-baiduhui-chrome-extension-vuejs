@@ -49,7 +49,7 @@ var tj = require('../libs/tj.js');
 module.exports = {
     replace: true,
     route: {
-        canReuse: false
+        canReuse: true
     },
     props: ['menuExpanded'],
     ready: function () {

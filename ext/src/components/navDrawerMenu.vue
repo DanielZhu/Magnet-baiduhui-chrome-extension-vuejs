@@ -17,7 +17,7 @@ module.exports = {
     replace: true,
     props: ['show'],
     route: {
-        canReuse: false
+        canReuse: true
     }
 }
 </script>

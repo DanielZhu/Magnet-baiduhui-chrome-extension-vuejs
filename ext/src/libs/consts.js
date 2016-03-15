@@ -7,6 +7,8 @@
  * @author Daniel Zhu<enterzhu@gmail.com>
 */
 let consts = {
+    host: 'http://hui.baidu.com',
+
     configName: 'magnet_config',
     cacheListName: 'hui_list',
     pushType: {
@@ -45,9 +47,9 @@ let consts = {
                     id: 104,
                     key: 'push-frequency',
                     label: '频率',
-                    values: [5, 10, 20, 30, 60],
+                    values: [3, 5, 10, 20, 30, 60],
                     type: 'radio',
-                    init: 10
+                    init: 5
                 }
             ]
         },

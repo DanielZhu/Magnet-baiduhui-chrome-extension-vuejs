@@ -42,27 +42,40 @@
         <section class="sec-item sec-about-extension">
             <div class="about-header">关于百度惠Chrome Extension</div>
             <article>
-                本插件为非官方『百度惠』谷歌浏览器插件，包含推送功能，欢迎使用。<br/><br/>
+                本插件为非官方『百度惠』谷歌浏览器插件，包含推送功能，欢迎使用。<br/><br/><br/>
 
-                v1.0.0版本：
-                - 支持百度惠首页精选频道商品浏览
-                - 支持查看精选商品和活动详情
-                - 支持查看详情页内评论
-                - 插件支持页面内设置
-                - 支持实时推送与音效（可定制）
-                - 永久缓存一页最新的优惠列表（可定制）
+                <strong>v1.0.1 / 2016.03.15</strong><br/><br/>
+                <p>Bug Fix</p><br/>
+                <p>- 推送特卖活动时，修复了显示多余HTML标记文本的问题</p>
+                <p>- 在页面上修改推送开关后，实时停止推送</p>
+                <p>- 支持优惠详细介绍中的百度VIP外链跳转（保障你的返利权利）</p>
+                <p>- 修复推送时，因消息排序导致的推送内容错误问题</p><br/>
+
+                <p>优化</p><br/>
+                <p>- 部分界面显示问题</p>
+                <p>- 单条手动推送入口增加显示门槛</p><br/><br/>
+
+                <strong>v1.0.0 / 2016.03.13</strong><br/><br/>
+                <p>- 支持百度惠首页精选频道商品浏览</p>
+                <p>- 支持查看精选商品和活动详情</p>
+                <p>- 支持查看详情页内评论</p>
+                <p>- 插件支持页面内设置</p>
+                <p>- 支持实时推送与音效（可定制）</p>
+                <p>- 永久缓存一页最新的优惠列表（可定制）</p><br/><br/>
             </article>
         </section>
         <section class="sec-item sec-about-donate">
-            <div class="about-header">买杯甜甜圈？</div>
+            <div class="about-header">感谢信</div>
             <article>
                 哈喽，亲爱的用户：
                 <br/><br/>
                 很高兴您费尽千幸万苦安装了此插件，希望她能帮你买买买咯， ~ ^_^ ~<br/><br/>
 
-                另外，开发GG觉得第一个版本（v1.0.0）还比较粗糙，但为了方便大家使用（尤其是实时推送功能），所以决定提前发布该插件，试用下来，推送功能还是非常实用的，绝对能帮助我们大家了解买买买的实时行情。<br/><br/>
+                另外，小丹农民（俗称码农）觉得第一个版本还比较粗糙，但为了方便大家使用（尤其是实时推送功能），所以决定提前发布该插件，试用下来，推送功能还是非常实用的，绝对能帮助我们大家了解买买买的实时行情。<br/><br/>
 
                 再有，该插件使用的数据皆来自于百度惠官方数据，请不要怀疑哦！<br/><br/>
+
+                P.S. 为什么这页的图标是纸币呢，因为本来这里的标题是『能给开发GG买个甜甜圈么？』，但就如上面所描述的，该版本还比较粗糙，本农民不好意思这么做。<br/><br/>
 
                 <span class="highlight-text">声明：该插件使用的所有来自于百度惠网站(http://hui.baidu.com)的数据的版权都属于百度惠官方团队所有。 本插件不具有以上数据的所有权，对于数据有任何疑问，欢迎在谷歌Chrome官方插件商店留言，或者发送邮件至：hui@baidu.com</span><br/><br/>
             </article>
@@ -99,7 +112,7 @@
 var tj = require('../libs/tj.js');
 module.exports = {
     route: {
-        canReuse: false,
+        canReuse: true,
         data (transition) {
             let query = transition.to.query;
             this.seQuery.tab = query.tab || 'hui';

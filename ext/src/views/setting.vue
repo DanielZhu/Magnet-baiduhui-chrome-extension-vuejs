@@ -111,12 +111,24 @@ module.exports = {
         },
         switcherHandler: function (key, value) {
             var self = this;
-            storage.updateStorge([{key: key, value: value}], {
-                success: function () {
-                    self.settingValue[key] = value;
-                }
-            });
-            tj.trackEventTJ(tj.category.setting, 'switcher-' + key, [{value: value}]);
+            if (key === 'push-switch') {
+                // 推送开关需要单独向后端推送更新，以便让eventpage立即关闭alarm
+                chrome.runtime.sendMessage({
+                    type: 'clearFetchingAlarm',
+                    pushFlag: value
+                }, function(res) {
+                    self.settingValue[key] = res.value;
+                });
+            }
+            else {
+                // 其余单选设置立即更新即可
+                storage.updateStorge([{key: key, value: value}], {
+                    success: function () {
+                        self.settingValue[key] = value;
+                    }
+                });
+            }
+            tj.trackEventTJ(tj.category.setting, 'switcher-' + key, [{value: value}], value);
         },
         checkboxHandler: function (key, value) {
             var self = this;
@@ -141,7 +153,7 @@ module.exports = {
                     self.settingValue[key] = boxValue;
                 }
             });
-            tj.trackEventTJ(tj.category.setting, 'checkbox-' + key, [{value: boxValue}]);
+            tj.trackEventTJ(tj.category.setting, 'checkbox-' + key, [{value: boxValue}], boxValue);
         },
         radioHandler: function (key, value) {
             var self = this;
