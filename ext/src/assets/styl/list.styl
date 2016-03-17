@@ -284,7 +284,27 @@
     text-align left
 .pull-right
     text-align right
-.loading-more
-    text-align center
-    color #666
-    padding 20px 0
+.loading-tips
+    position relative
+    width 100%
+    .loading-more, .loading-retry
+        text-align center
+        color #CAC9C9
+        margin 20px 0
+        font-size 14px
+        height 40px
+    &.loading
+        .loading-more
+            display block
+        .loading-retry
+            display none
+    &.failed
+        .loading-more
+            display none
+        .loading-retry
+            display block
+            span
+                padding: 0 2px
+            .tip
+                padding: 5px 0
+                color: #CAC9C9

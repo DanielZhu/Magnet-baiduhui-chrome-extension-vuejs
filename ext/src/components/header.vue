@@ -44,7 +44,7 @@ module.exports = {
         };
     },
     ready: function () {
-        tj.trackEventTJ(tj.category.navDrawerMenu, 'compLoaded', [{}]);
+        // tj.trackEventTJ(tj.category.navDrawerMenu, 'compLoaded', [{}]);
     },
     watch: {
         shownav: function (val, oldVal) {

@@ -12,11 +12,13 @@ var SdTJ = {
         discover: 'discover',
         promo: 'promo',
         about: 'about',
+        itemDetail: 'itemDetail',
         setting: 'setting',
+        itemComment: 'itemComment',
         lunetteMenu: 'lunetteMenu',
         navDrawerMenu: 'navDrawerMenu',
         bgNotify: 'bgNotify',
-        pushNotify: 'push'
+        pushNotify: 'pushNotify'
     },
 
     pageLists: {
@@ -24,6 +26,7 @@ var SdTJ = {
         discover: 'discover',
         promo: 'promo',
         setting: 'setting',
+        itemDetail: 'itemDetail',
         about: 'about'
     },
 

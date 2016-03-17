@@ -66,11 +66,11 @@ sdHuiCorePrototype.getHuiList = function (opts) {
     var self = this;
     var ajax = new Ajax();
     ajax.post({
-        url: "http://hui.baidu.com/facade/hui/se/list",
+        url: "http://hui.baidu.com/facade/hui/rcmdse/list",
         body: JSON.stringify({
             page: {
-                pageNo: 1,
-                pageSize: 10
+                pageNo: opts.pageNo || 1,
+                pageSize: opts.pageSize || 10
             },
             condition: {}
         }),
@@ -86,36 +86,57 @@ sdHuiCorePrototype.getHuiList = function (opts) {
     });
 };
 
-sdHuiCorePrototype.persistTop20 = function (newList) {
+sdHuiCorePrototype.persistTop20 = function (newList, pageNo) {
     var huiListPersist = this.storage.get('hui_list');
     var persistedList = (huiListPersist && JSON.parse(huiListPersist.data)) || [];
-    this.storage.set('hui_list', JSON.stringify(newList.slice(0, 10)));
+
+    logIdAndTitle(newList, 'color: #B87EE4;font-size: 12px;');
+    logIdAndTitle(persistedList, 'color: #999;font-size: 12px;');
+
+    // 最新一页的数据才考虑缓存
+    pageNo === 1 && this.storage.set('hui_list', JSON.stringify(newList.slice(0, 10)));
 
     // 返回更新量
-    return this.calcUpdatedList(newList, persistedList);
+    var freshList = this.calcUpdatedList(newList, persistedList);
+
+    return {
+        freshList: freshList,
+        persistedList: persistedList
+    };
 };
 
 sdHuiCorePrototype.calcUpdatedList = function (newList, oldList) {
     var freshList = [];
 
+    console.log('%c old vs new: %s / %s', 'color: #B87EE4;font-size: 12px;', oldList.length, newList.length);
     for (var i = 0; i < newList.length; i++) {
         var newItem = newList[i];
         var duplicated = false;
         for (var j = 0; j < oldList.length; j++) {
             var oldItem = oldList[j];
-            if (newItem.id === oldItem.id
-                /*&& new Date(newItem.updateTime).getTime() - new Date(oldItem.updateTime).getTime() <= 0*/) {
+            if (newItem.id === oldItem.id) {
                 duplicated = true;
-                console.log('%c [Dup] No.%s %s / %s', 'color: #999;font-size: 12px;', i, newList[i].id, newList[i].title);
+                // console.log('%c [Dup] No.%s %s / %s', 'color: #999;font-size: 12px;', i, newList[i].id, newList[i].title);
                 break;
             }
         }
-        !duplicated && freshList.push(newItem);
-        !duplicated && console.log('%c [Uni] No.%s %s / %s', 'color: #EA6591;font-size: 12px;', i, newList[i].id, newList[i].title);
+
+        if (!duplicated) {
+            freshList.push(newItem);
+            console.log('%c [Uni] No.%s %s / %s', 'color: #B87EE4;font-size: 12px;', i, newList[i].id, newList[i].title);
+        }
     }
 
     return freshList;
 };
+
+function logIdAndTitle (list, style) {
+    for (var key in list) {
+        if (list.hasOwnProperty(key)) {
+            console.log('%c No.%s %s / %s', style, key, list[key].id, list[key].title);
+        }
+    }
+}
 
 if (typeof define !== 'undefined') {
     define(function (require) {

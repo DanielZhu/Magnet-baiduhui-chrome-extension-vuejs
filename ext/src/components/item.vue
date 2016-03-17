@@ -63,6 +63,7 @@
  *
  * @author Daniel Zhu<enterzhu@gmail.com>
  */
+var tj = require('../libs/tj.js');
 var consts = require('../libs/consts');
 module.exports = {
     replace: true,
@@ -78,6 +79,8 @@ module.exports = {
     },
     ready: function () {
         this.init();
+        // tj.trackPageViewTJ(tj.pageLists.itemDetail);
+        // tj.trackEventTJ(tj.category.itemDetail, 'pageLoaded', [{}]);
     },
     watch: {
         activeId: function (val, oldVal) {
@@ -90,6 +93,7 @@ module.exports = {
     methods: {
         goMerchantSite: function (url) {
             if (url) {
+                tj.trackEventTJ(tj.category.itemDetail, 'redirectOut', [{url: url}]);
                 chrome.tabs.create({url: url});
             }
         },
@@ -102,15 +106,17 @@ module.exports = {
             //     console.log(d);
             // });
 
-            $.post('http://www.staydan.com/api/api.php/hui/detail',
+            $.post(consts.apiProxyHost + 'detail',
                 JSON.stringify({id: self.id}),
                 function (data, textStatus, jqXHR) {
                     self.item = data.data.result;
                     self.progressAt = self.item.likeNum / (self.item.likeNum + self.item.unlikeNum) * 100;
+                    tj.trackEventTJ(tj.category.itemDetail, 'getItemDetailSuccess', [{itemId: itemId}]);
                 }, 'json'
             )
             .fail(function (data, textStatus, jqXHR) {
-                console.log(data);
+                // console.log(data);
+                tj.trackEventTJ(tj.category.itemDetail, 'getItemDetailFail', [{itemId: itemId}]);
             });
         },
 
@@ -118,10 +124,15 @@ module.exports = {
             // https://trello.com/c/V1D6u3M1/38-v1-0-1-magnet-v1-0-0
             $('.description').on('click', 'a', function (e) {
                 e.preventDefault();
-                var href = $(this)[0].getAttribute('href');
-                if (href.indexOf('facade/hui/vip/redirect') !== -1) {
-                    chrome.tabs.create({url: consts.host + href});
+                var link = $(this)[0].getAttribute('href');
+                if (link.indexOf('facade/hui/vip/redirect') !== -1) {
+                    link = consts.host + link;
                 }
+
+                if (link.indexOf('http://') === 0 || link.indexOf('https://') === 0) {
+                    chrome.tabs.create({url: link});
+                }
+                tj.trackEventTJ(tj.category.itemDetail, 'redirectOutDesc', [{url: link}]);
             })
         },
 
@@ -138,14 +149,16 @@ module.exports = {
                 orderBy: "ctime"
             };
 
-            $.post('http://www.staydan.com/api/api.php/hui/comment',
+            $.post(consts.apiProxyHost + '/comment',
                 JSON.stringify(param),
                 function (data, textStatus, jqXHR) {
                     self.commentList = data.data.result;
+                    tj.trackEventTJ(tj.category.itemDetail, 'getItemCommentSuccess', [{itemId: itemId}]);
                 }, 'json'
             )
             .fail(function (data, textStatus, jqXHR) {
-                console.log(data);
+                // console.log(data);
+                tj.trackEventTJ(tj.category.itemDetail, 'getItemCommentFail', [{itemId: itemId}]);
             });
         },
 

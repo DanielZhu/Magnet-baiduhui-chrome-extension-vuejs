@@ -17,6 +17,7 @@ function Magnet() {
     this.alarmNameFetchList = 'fetch-list-alarm';
     this.notifyPairsList = [];
     this.freshCount = 0;
+    this.notifySizePerPage = 10;
 
     this.syncConfig();
     this.setAlarm();
@@ -54,6 +55,8 @@ Magnet.prototype = {
         var finalConfig = configCached.hasOwnProperty('data') ? configCached.data : configCached;
         storage.set(consts.configName, finalConfig);
 
+        SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'syncConfig', [{}]);
+
         return finalConfig;
         // chrome.runtime.getPlatformInfo(function (platformInfo) {
         //     me.platform = platformInfo.os;
@@ -86,12 +89,14 @@ Magnet.prototype = {
         return config;
     },
 
-    setAlarm: function (flag) {
+    setAlarm: function () {
         var configCached = this.retrieveConfigCached();
 
         configCached['push-switch'] && chrome.alarms.create(this.alarmNameFetchList, {
-            periodInMinutes: configCached['push-frequency'] || 10
+            periodInMinutes: configCached['push-frequency'] || 5
         });
+
+        SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'setFetchingAlarm', [{}]);
     },
 
     /**
@@ -100,7 +105,7 @@ Magnet.prototype = {
      * @param  {boolean} flag  新的推送标志(true: 允许推送, false: 不允许推送)
      * @param  {fun} cb 回调
      */
-    clearFetchingAlarm: function (flag, cb) {
+    updateFetchingAlarm: function (flag, cb) {
         var self = this;
         if (flag) {
             storage.updateStorge([{key: 'push-switch', value: flag}], {
@@ -117,11 +122,27 @@ Magnet.prototype = {
                 storage.updateStorge([{key: 'push-switch', value: flag}]);
             });
         }
+
+        SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'updateFetchingAlarm', [{flag: flag}]);
     },
 
+    restartFetchingAlarm: function (cb) {
+        var self = this;
+        chrome.alarms.clear(this.alarmNameFetchList, function () {
+            self.setAlarm();
+        });
+
+        SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'restartFetchingAlarm', [{}]);
+    },
 
     hideWarning: function (id) {
         chrome.notifications.clear(id, function () {});
+    },
+
+    hideWarningWithDelay: function (id) {
+        setTimeout(function () {
+            chrome.notifications.clear(id, function () {});
+        }, 15000);
     },
 
     stripHtmlTag: function (htmlString) {
@@ -223,6 +244,7 @@ Magnet.prototype = {
     },
 
     pushNotification: function (itemList) {
+        var self = this;
         var configCached = this.retrieveConfigCached();
         var notifyList = [];
         var notify = {};
@@ -258,10 +280,9 @@ Magnet.prototype = {
         if (notifyList.length > 0) {
             for (var j = 0; j < notifyList.length; j++) {
                 chrome.notifications.create(this.itemNotifyId + notifyList[j].id, notifyList[j].notify, function () {});
+                this.hideWarningWithDelay(this.itemNotifyId + notifyList[j].id);
             }
             SdTJ.trackEventTJ(SdTJ.category.pushNotify, 'push', [{count: notifyList.length}]);
-            this.freshCount += notifyList.length;
-            this.updateBadge(this.freshCount);
             configCached['push-audio'] && playAudio();
         }
     },
@@ -290,6 +311,8 @@ Magnet.prototype = {
         else {
             this.syncConfig();
         }
+
+        SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'updateStorge', [pairs]);
     },
 
     updateBadge: function (bargeText) {
@@ -300,6 +323,73 @@ Magnet.prototype = {
         bargeOption.text = bargeText.toString();
         chrome.browserAction.setBadgeText(bargeOption);
         SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'updateBadge', [{bargeText: bargeText}]);
+    },
+
+    notifyClicked: function (notifyId, btnIdx) {
+        var notifyIdArr = notifyId.split('_');
+        var id = notifyIdArr[notifyIdArr.length - 1];
+        var actionLabel = 'clickedOnList';
+        if (id !== -1) {
+            actionLabel = 'clickedOnCertainItem';
+            if (btnIdx) {
+                if (btnIdx === 0) {
+                    chrome.tabs.create({url: consts.host + '/detail.html?id=' + id});
+                }
+                else {
+                    // No this kind of button
+                }
+            }
+            else {
+                chrome.tabs.create({url: consts.host + '/detail.html?id=' + id});
+            }
+        }
+        else {
+            chrome.tabs.create({url: consts.host});
+        }
+
+        this.hideWarning(notifyId);
+        SdTJ.trackEventTJ(SdTJ.category.pushNotify, actionLabel, [{notifyId: notifyId, btnIdx: btnIdx, id: id}]);
+    },
+
+    fetchingAlarmTrigger: function () {
+        var self = this;
+        // 抓取百度惠精选商品列表定时器
+        sdHuiCore.getHuiList({
+            pageNo: 1,
+            pageSize: self.notifySizePerPage,
+            success: function (data) {
+                var item = {};
+                for (var i = 0; i < data.data.result.length; i++) {
+                    item = data.data.result[i];
+                    data.data.result[i].progressAt = item.likeNum / (item.likeNum + item.unlikeNum) * 100;
+                }
+
+                // 比对结果，包含最新和最旧
+                var persistTopResult = sdHuiCore.persistTop20.call(sdHuiCore, data.data.result, 1);
+                var freshList = persistTopResult.freshList;
+                var freshItemCount = freshList.length;
+
+                // 此次对比时缓存中的数据
+                var cachedList = persistTopResult.persistedList;
+
+                var now = new Date();
+                console.log('%c[Magnet] freshItemCount - ' + now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate() + ' ' + now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds() + ': ' + freshItemCount, 'color: #E69B95; font-weight: bold;');
+
+                // v1.0.1 - 使用筛选后的增量更新列表，而不再继续截取靠前部分
+                self.freshCount += freshItemCount;
+                self.updateBadge(self.freshCount);
+
+                if (freshItemCount < self.notifySizePerPage && cachedList.length !== 0 ) {
+                    self.pushNotification(freshList);
+                }
+
+                SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'fetchListAlarm', [{count: freshItemCount}]);
+            },
+            failure: function (data, textStatus, jqXHR) {
+                console.log('[Magnet] Failed Fetching: '/* + JSON.stringify(data)*/);
+                SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'fetchListAlarm', [{count: -1}]);
+            }
+        });
     }
 };
 
@@ -308,59 +398,23 @@ function entryPoint () {
 
     chrome.runtime.onInstalled.addListener(function () {
         magnet.syncConfig();
+        magnet.fetchingAlarmTrigger();
+        console.log('installed');
     });
 
     chrome.alarms.onAlarm.addListener(function (alarm) {
-        // 抓取百度惠精选商品列表定时器
         if (alarm.name === 'fetch-list-alarm') {
-            sdHuiCore.getHuiList({
-                success: function (data) {
-                    var item = {};
-                    for (var i = 0; i < data.data.result.length; i++) {
-                        item = data.data.result[i];
-                        data.data.result[i].progressAt = item.likeNum / (item.likeNum + item.unlikeNum) * 100;
-                    }
-                    var freshList = sdHuiCore.persistTop20.call(sdHuiCore, data.data.result);
-                    var freshItemCount = freshList.length;
-
-                    var now = new Date();
-                    console.log('%c[Magnet] freshItemCount - ' + now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate() + ' ' + now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds() + ': ' + freshItemCount, 'color: #E69B95; font-weight: bold;');
-                    for (var j = 0; j < freshItemCount; j++) {
-                        console.log(data.data.result[j].id + ' / ' + data.data.result[j].title);
-                    }
-
-                    // v1.0.1 - 使用筛选后的增量更新列表，而不再继续截取靠前部分
-                    magnet.pushNotification(freshList);
-                    SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'fetchListAlarm', [{count: freshItemCount}]);
-                },
-                failure: function (data, textStatus, jqXHR) {
-                    console.log('[Magnet] Failed Fetching: '/* + JSON.stringify(data)*/);
-                    SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'fetchListAlarm', [{count: -1}]);
-                }
-            });
+            magnet.fetchingAlarmTrigger();
         }
     });
 
     chrome.notifications.onClicked.addListener(function (notifyId) {
-        SdTJ.trackEventTJ(SdTJ.category.pushNotify, 'clicked', [{notifyId: notifyId}]);
-        magnet.hideWarning(notifyId);
-        chrome.tabs.create({url: 'http://hui.baidu.com'});
+        magnet.notifyClicked(notifyId);
     });
 
     // 桌面通知按钮监听
     chrome.notifications.onButtonClicked.addListener(function (notifyId, btnIdx) {
-        SdTJ.trackEventTJ(SdTJ.category.pushNotify, 'clicked', [{notifyId: notifyId, btnIdx: btnIdx}]);
-        var notifyIdArr = notifyId.split('_');
-        var id = notifyIdArr[notifyIdArr.length - 1];
-        if (btnIdx === 0) {
-            if (id !== -1) {
-                chrome.tabs.create({url: 'http://hui.baidu.com/detail.html?id=' + id});
-            }
-            else {
-                chrome.tabs.create({url: 'http://hui.baidu.com'});
-            }
-            magnet.hideWarning(notifyId);
-        }
+        magnet.notifyClicked(notifyId, btnIdx);
     });
 
     chrome.runtime.onMessage.addListener(
@@ -381,10 +435,13 @@ function entryPoint () {
                     magnet.freshCount = 0;
                     magnet.updateBadge(0);
                     break;
-                case 'clearFetchingAlarm':
-                    magnet.clearFetchingAlarm(request.pushFlag, function (res) {
+                case 'updateFetchingAlarm':
+                    magnet.updateFetchingAlarm(request.pushFlag, function (res) {
                         sendResponse(res);
                     });
+                    break;
+                case 'restartFetchingAlarm':
+                    magnet.restartFetchingAlarm();
                     break;
                 default:
                     break;

@@ -65,7 +65,13 @@
                             </div>
                         </div>
                     </li>
-                    <div class="loading-more">Loading...</div>
+                    <div class="loading-tips loading">
+                        <div class="loading-more">加载中...</div>
+                        <div class="loading-retry">
+                            <p>点击重试 <label v-show="fetchFailedTips.counter >= 10">受挫了<span>{{fetchFailedTips.counter}}</span>次</label></p>
+                            <p class="tip">{{fetchFailedTips.tips[fetchFailedTips.counter - 1]}}</p>
+                        </div>
+                    </div>
                 </ul>
             </div>
             <sd-item :active-id="activeId" :cover-img="coverImg"></sd-item>
@@ -114,6 +120,10 @@ module.exports = {
                         self.toast.show = false;
                     }, self.toast.hideDelay);
                 }
+            },
+            fetchFailedTips: {
+                counter: 0,
+                tips: consts.failFunnyTips
             }
         }
     },
@@ -170,7 +180,6 @@ module.exports = {
             this.configCached = this.retrieveConfigCached();
             this.reqParam.page.pageSize = this.configCached['num-loading'] || 10;
 
-            this.reqParam.page.pageNo += 1;
             !this.isLoading && this.getHuiItems(this.reqParam);
         },
 
@@ -186,19 +195,22 @@ module.exports = {
         getHuiItems: function (params) {
             var self = this;
             self.isLoading = true;
+            $('.loading-tips').removeClass('failed').addClass('loading');
+
             $.ajaxSetup({
-                url: 'http://www.staydan.com/api/api.php/hui/list',
+                url: consts.apiProxyHost + 'search/list',
                 timeout: 5000,
                 type: 'POST',
                 data: JSON.stringify(params.page),
                 success: function (data) {
+                    self.reqParam.page.pageNo += 1;
                     var item = {};
                     for (var i = 0; i < data.data.result.length; i++) {
                         item = data.data.result[i];
                         data.data.result[i].progressAt = item.likeNum / (item.likeNum + item.unlikeNum) * 100;
                     }
 
-                    var freshList = sdHuiCore.persistTop20.call(sdHuiCore, data.data.result)
+                    var freshList = sdHuiCore.persistTop20.call(sdHuiCore, data.data.result, params.page.pageNo).freshList;
                     var freshItemCount = freshList.length;
 
                     // 更新列表
@@ -227,11 +239,14 @@ module.exports = {
                     $('.mask').addClass('hide');
                     self.isLoading = false;
                     self.bindToolbar();
+                    $('.loading-tips').removeClass('failed').addClass('loading');
                     tj.trackEventTJ(tj.category.handpick, 'loadListMore', [params.page], data.data.result.length);
                 },
                 error: function (data, textStatus, jqXHR) {
                     self.isLoading = false;
                     console.log(data);
+                    $('.loading-tips').removeClass('loading').addClass('failed');
+                    self.fetchFailedTips.counter++;
                     tj.trackEventTJ(tj.category.handpick, 'loadListMore', [params.page], 0);
                 }
             });
@@ -261,6 +276,12 @@ module.exports = {
                 if (scrollH + viewportHeight >= $('body').height()) {
                     console.log('[Magnet] Loading more');
                     tj.trackEventTJ(tj.category.handpick, 'pageFlipping', [{listLength: self.list.length}], self.list.length);
+                    self.loadMore();
+                }
+            });
+
+            $('.loading-tips').click(function () {
+                if ($('.loading-tips').hasClass('failed')) {
                     self.loadMore();
                 }
             });

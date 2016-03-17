@@ -8,6 +8,8 @@
 */
 let consts = {
     host: 'http://hui.baidu.com',
+    apiProxyHost: 'http://www.staydan.com/api/api.php/hui/',
+    apiHost: 'http://hui.baidu.com/facade/',
 
     configName: 'magnet_config',
     cacheListName: 'hui_list',
@@ -15,6 +17,13 @@ let consts = {
         1: '精选',
         2: '特卖'
     },
+    failFunnyTips: ['', '失败乃成功之母', '事不过三', '数据在哪里啊，数据在哪里', '我有一只小毛驴，从来也不骑',
+        '今天天气好晴朗，处处好风光',
+        '蓝蓝天空，太阳公公，小狗追着小蜜蜂',
+        '百度惠，助你买买买',
+        '刷了这么多次，不如去商店里给我写个评价吧',
+        '', '', '', '尿点来了'
+    ],
     settingList: [
         {
             id: 1,

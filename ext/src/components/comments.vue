@@ -92,6 +92,7 @@
  *
  * @author Daniel Zhu<enterzhu@gmail.com>
 */
+var tj = require('../libs/tj.js');
 module.exports = {
     replace: true,
     props: ['list'],
@@ -104,10 +105,7 @@ module.exports = {
         };
     },
     ready: function () {
-        // var _self = this;
-        // if(_self.replyTo){
-        //     _self.content = '@'+_self.replyTo+' ';
-        // }
+        // tj.trackEventTJ(tj.category.itemComment, 'compLoaded', [{}]);
     },
     methods: {
 

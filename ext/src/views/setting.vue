@@ -114,7 +114,7 @@ module.exports = {
             if (key === 'push-switch') {
                 // 推送开关需要单独向后端推送更新，以便让eventpage立即关闭alarm
                 chrome.runtime.sendMessage({
-                    type: 'clearFetchingAlarm',
+                    type: 'updateFetchingAlarm',
                     pushFlag: value
                 }, function(res) {
                     self.settingValue[key] = res.value;
@@ -157,11 +157,20 @@ module.exports = {
         },
         radioHandler: function (key, value) {
             var self = this;
+
             storage.updateStorge([{key: key, value: value}], {
                 success: function () {
                     self.settingValue[key] = value;
+
+                    if (key === 'push-frequency') {
+                        // 推送开关需要单独向后端推送更新，以便让eventpage立即关闭alarm
+                        chrome.runtime.sendMessage({
+                            type: 'restartFetchingAlarm'
+                        }, function() {});
+                    }
                 }
             });
+
             tj.trackEventTJ(tj.category.setting, 'radio-' + key, [{value: value}], value);
         }
     },
