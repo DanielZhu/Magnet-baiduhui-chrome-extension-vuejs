@@ -149,7 +149,7 @@ module.exports = {
                 orderBy: "ctime"
             };
 
-            $.post(consts.apiProxyHost + '/comment',
+            $.post(consts.apiProxyHost + 'comment',
                 JSON.stringify(param),
                 function (data, textStatus, jqXHR) {
                     self.commentList = data.data.result;

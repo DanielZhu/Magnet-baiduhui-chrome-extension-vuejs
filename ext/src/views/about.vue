@@ -141,7 +141,7 @@ module.exports = {
     data: function () {
         var self = this;
         return {
-            showLunetteMenu: true,
+            showLunetteMenu: false,
             pageSlided: false,
             seQuery: {
                 tab: 'hui'
