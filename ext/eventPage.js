@@ -7,7 +7,7 @@
 
 var storage = new Storage();
 // var tj = new SdTJ();
-var sdHuiCore = new SdHuiCore(storage);
+var sdHuiCore = new SdHuiCore(storage, consts);
 
 function Magnet() {
     this.configs = [];
@@ -279,11 +279,13 @@ Magnet.prototype = {
 
         if (notifyList.length > 0) {
             for (var j = 0; j < notifyList.length; j++) {
-                chrome.notifications.create(this.itemNotifyId + notifyList[j].id, notifyList[j].notify, function () {});
+                chrome.notifications.create(this.itemNotifyId + notifyList[j].id, notifyList[j].notify, function () {
+                    configCached['push-audio'] && playAudio();
+
+                });
                 this.hideWarningWithDelay(this.itemNotifyId + notifyList[j].id);
             }
             SdTJ.trackEventTJ(SdTJ.category.pushNotify, 'push', [{count: notifyList.length}]);
-            configCached['push-audio'] && playAudio();
         }
     },
 

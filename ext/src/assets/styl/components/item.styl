@@ -57,6 +57,27 @@
                 height: 45px
                 line-height: 45px
                 white-space: nowrap
+                &::before
+                    // content: ''
+                    // position: absolute
+                    // top: 0
+                    // left: 100%
+                    // margin-left: 22.5px
+                    // border-width: 22.5px
+                    // border-style: solid
+                    // border-color: transparent
+                    // border-left-color: #eee
+                    // border-left-width: 11px
+                &::after
+                    content: ''
+                    position: absolute
+                    top: 0
+                    left: 100%
+                    border-width: 22.5px
+                    border-style: solid
+                    border-color: transparent
+                    border-left-color: #F9DEE7
+                    border-left-width: 11px
             .reason-item
                 display: inline-block
                 margin: 0 5px
@@ -68,7 +89,7 @@
                 height: 45px
                 line-height: 45px
                 flex: 1
-                padding-right: 15px
+                padding-left: 15px
                 font-size: 16px
                 em
                     padding: 0 3px
@@ -81,12 +102,12 @@
                 line-height: 20px
                 padding: 0 5px
     .detail-short-reason
-        padding: 10px
+        padding: 20px
         margin: 10px 0
-        background-color: #E6DFFF
-        color: #999
+        background-color: #f3f7fd
+        color: #374761
         text-align: left
-        font-size: 12px
+        font-size: 14px
         .revealer
             float: right
             padding-right: 5px
@@ -103,8 +124,15 @@
     .description
         padding: 10px
         line-height: 1.8
-        p img
-            text-align: center
+        p
+            margin-top: 15px
+            margin-bottom: 15px
+            text-indent: 2em
+            text-align: justify
+            img
+                text-align: center
+                width: 100%
+                margin-top: 8px auto
     .sns-tool
         box-sizing: border-box
         font-size: 12px

@@ -5,49 +5,91 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     webpack = require('webpack'),
     rename = require('gulp-rename'),
+    gutil = require('gulp-util'),
+    htmlmin = require('gulp-htmlmin'),
     del = require('del');
 
 var config = require('./webpack.config');
 
-/** 
+/**
  *  清理生产目录文件
  */
 gulp.task('clean', function(cb) {
-    del(['./dist/*.js','./dist/*.css','./dist/*.map']).then(paths => {
+    del(['./output']).then(paths => {
         console.log('Deleted files and folders:\n', paths.join('\n'));
         cb();
     });
 });
 
-
-/** 
+/**
  *  执行webpack打包
  */
-gulp.task('webpack',['clean'], function(cb) {
-    webpack(config, cb)
+gulp.task('webpack', ['clean'], function (cb) {
+    webpack(config, cb);
 });
 
-/** 
+/**
  *  压缩css文件
  */
-gulp.task('style',function() {
-    gulp.src('./dist/style.css')
-    .pipe(rename({suffix:'.min'}))
+gulp.task('style', function () {
+    gulp.src('./output/style.css')
+    .pipe(rename({suffix: '.min'}))
     .pipe(minifycss())
-    .pipe(gulp.dest('dist'));
+    .pipe(gulp.dest('output'));
 });
 
-/** 
- *  压缩js文件
- */
-gulp.task('script',function(){
-    gulp.src('./dist/*.js')
-    // .pipe(rename({suffix:'.min'}))
+gulp.task('copyExtFilesOnlyJS', function () {
+    gulp.src([
+        './eventPage.js'
+    ], {
+        base: './'
+    })
     .pipe(uglify())
-    .pipe(gulp.dest('dist'));
+    .on('error', gutil.log)
+    .pipe(gulp.dest('output'));
 });
 
-gulp.task('default', ['webpack'], function() {
+gulp.task('libScript', function () {
+    gulp.src([
+        './src/libs/**'
+    ], {
+        base: './'
+    })
+    .pipe(uglify())
+    .on('error', gutil.log)
+    .pipe(gulp.dest('output'));
+});
+
+gulp.task('copyExtFilesExceptJS', function () {
+    gulp.src([
+        './_locales/**',
+        './*.html',
+        './*.json'
+    ], {
+        base: './'
+    })
+    .pipe(htmlmin({collapseWhitespace: true}))
+    .on('error', gutil.log)
+    .pipe(gulp.dest('output'));
+});
+
+gulp.task('resource', function () {
+    gulp.src([
+        './src/assets/images/**'
+    ], {
+        base: './'
+    })
+    .pipe(gulp.dest('output'));
+
+    gulp.src([
+        './src/assets/sound/**'
+    ], {
+        base: './'
+    })
+    .pipe(gulp.dest('output'));
+});
+
+gulp.task('default', ['webpack'], function () {
     console.log(process.env.NODE_ENV);
-    gulp.start('style','script')
-})
+    gulp.start('style', 'copyExtFilesExceptJS', 'resource', 'copyExtFilesOnlyJS', 'libScript');
+});

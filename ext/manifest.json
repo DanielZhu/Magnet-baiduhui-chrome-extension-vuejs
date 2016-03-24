@@ -4,7 +4,7 @@
   "name": "__MSG_appName__",
   "short_name": "Manget · 百度惠Chrome插件（非官方）",
   "description": "__MSG_appDesc__",
-  "version": "1.0.2",
+  "version": "1.0.3",
 
   "default_locale": "zh_CN",
   "author": "Daniel Zhu(zhumengdan)",
@@ -28,11 +28,10 @@
     "tabs",
     "alarms",
     "background",
-    "<all_urls>"
+    "http://*.baidu.com/"
   ],
   "web_accessible_resources": [
-    "48.png",
-    "<all_urls>"
+    "48.png"
   ],
-  "content_security_policy": "script-src 'self' https://ssl.google-analytics.com https://www.google-analytics.com https://*.baidu.com 'unsafe-eval' 'sha256-eknnAl8VLFfw0pIrrse/PoBJAIW92d8KuqxZcyzwUCU='; object-src 'self';"
+  "content_security_policy": "script-src 'self' https://ssl.google-analytics.com https://www.google-analytics.com https://*.baidu.com 'unsafe-eval' 'sha256-4NaKVWO6nsNzxL52BX+UONrZJ/GbgrVU2B+ISW3sEJc='; object-src 'self';"
 }

@@ -1,4 +1,6 @@
 /*global storage:false */
+/*global consts:false */
+
 "use strict";
 
 /**
@@ -6,21 +8,22 @@
  *
  * @author Daniel Zhu<enterzhu@gmail.com>
 */
-var SdHuiCore = function (storage) {
+var SdHuiCore = function (storage, consts) {
     this.storage = storage;
+    this.consts = consts;
 };
 var sdHuiCorePrototype = SdHuiCore.prototype;
 
 function Ajax() {
-  this.loadXMLHttp = function () {
-    var xmlhttp;
-    if (window.XMLHttpRequest) {
-      // code for IE7+, Firefox, Chrome, Opera, Safari
-      xmlhttp = new XMLHttpRequest();
-    }
+    this.loadXMLHttp = function () {
+        var xmlhttp;
+        if (window.XMLHttpRequest) {
+            // code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+        }
 
-    return xmlhttp;
-  };
+        return xmlhttp;
+    };
 }
 
 Ajax.prototype.post = function (inParams) {
@@ -28,7 +31,7 @@ Ajax.prototype.post = function (inParams) {
 
     xhr.open('POST', inParams.url, true);
 
-    //set headers
+    // set headers
     // xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.setRequestHeader('Content-Type', 'application/json');
     // xhr.setRequestHeader('charset', 'UTF-8');
@@ -37,7 +40,8 @@ Ajax.prototype.post = function (inParams) {
     // };
 
     xhr.onreadystatechange = function (res) {
-        if(res.currentTarget.readyState == 4 && res.currentTarget.status == 200) {
+        if (res.currentTarget.readyState == 4
+            && res.currentTarget.status == 200) {
             inParams.callback.success && inParams.callback.success(JSON.parse(res.currentTarget.responseText));
         }
         else {
@@ -47,10 +51,73 @@ Ajax.prototype.post = function (inParams) {
                 status: res.currentTarget.status
             });
         }
-    }
+    };
 
     xhr.send(inParams.body);
     return xhr;
+};
+
+/**
+ * 根据id获取优惠详情
+ *
+ * @param {Object} opts = {   //可选参数
+ *    success : function(){} ,   //操作成功时的操作
+ *    error : function(){}     //操作失败时的操作
+ *  }
+ */
+sdHuiCorePrototype.getHuiItemDetail = function (opts) {
+    var self = this;
+    var ajax = new Ajax();
+    ajax.post({
+        url: self.consts.getApiHost() + self.consts.getApiPath('itemDetail'),
+        body: JSON.stringify({
+            id: opts.id
+        }),
+        timeout: 5000,
+        callback: {
+            success: function (data) {
+                opts.success(data);
+            },
+            failure: function (data) {
+                opts.failure(data);
+            }
+        }
+    });
+};
+
+/**
+ * 根据id获取优惠详情
+ *
+ * @param {Object} opts = {   //可选参数
+ *    success : function(){} ,   //操作成功时的操作
+ *    error : function(){}     //操作失败时的操作
+ *  }
+ */
+sdHuiCorePrototype.getHuiItemComment = function (opts) {
+    var self = this;
+    var ajax = new Ajax();
+    ajax.post({
+        url: self.consts.getApiHost() + self.consts.getApiPath('itemComment'),
+        body: JSON.stringify({
+            targetType: 1,
+            targetId: opts.id,
+            page: {
+                pageNo: 1,
+                pageSize: 30,
+                order: 'desc',
+                orderBy: 'ctime'
+            }
+        }),
+        timeout: 5000,
+        callback: {
+            success: function (data) {
+                opts.success(data);
+            },
+            failure: function (data) {
+                opts.failure(data);
+            }
+        }
+    });
 };
 
 /**
@@ -66,7 +133,7 @@ sdHuiCorePrototype.getHuiList = function (opts) {
     var self = this;
     var ajax = new Ajax();
     ajax.post({
-        url: "http://hui.baidu.com/facade/hui/rcmdse/list",
+        url: self.consts.getApiHost() + self.consts.getApiPath('recmdList'),
         body: JSON.stringify({
             page: {
                 pageNo: opts.pageNo || 1,
@@ -114,6 +181,10 @@ sdHuiCorePrototype.calcUpdatedList = function (newList, oldList) {
         var duplicated = false;
         for (var j = 0; j < oldList.length; j++) {
             var oldItem = oldList[j];
+            // For Debug
+            // if (newItem.id === 118267) {
+            //     break;
+            // }
             if (newItem.id === oldItem.id) {
                 duplicated = true;
                 // console.log('%c [Dup] No.%s %s / %s', 'color: #999;font-size: 12px;', i, newList[i].id, newList[i].title);

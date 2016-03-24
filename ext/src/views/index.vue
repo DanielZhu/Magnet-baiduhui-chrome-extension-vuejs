@@ -41,8 +41,9 @@
                                 <!-- <img src="../assets/images/qrcode.png"> -->
                             </div>
                             <div class="toolbar">
+                                <div class="open-hui-site" v-on:click="showDetail(item)">本页查看</div>
                                 <div class="see-outside" v-on:click="sendMessage(item)"><i class="icon sd-icon-bell-o"></i></div>
-                                <div class="see-detail" v-on:click="showDetail(item)"><i class="icon sd-icon-qrcode"></i>查看详情</div>
+                                <div class="see-detail" v-on:click="openHuiPcDetailSite(item)"><i class="icon sd-icon-qrcode"></i>查看详情</div>
                             </div>
                         </div>
                         <div class="sns-tool">
@@ -89,7 +90,7 @@ var storage = require('../libs/storage.js');
 var tj = require('../libs/tj.js');
 var consts = require('../libs/consts.js');
 var SdHuiCore = require('../libs/sdHuiCore.js');
-var sdHuiCore = new SdHuiCore(storage);
+var sdHuiCore = new SdHuiCore(storage, consts);
 module.exports = {
     data: function () {
         var self = this;
@@ -183,6 +184,11 @@ module.exports = {
             !this.isLoading && this.getHuiItems(this.reqParam);
         },
 
+        openHuiPcDetailSite: function (item) {
+            chrome.tabs.create({url: consts.host + 'detail.html?id=' + item.id + '&hmsr=staydan.com&hmmd=Baidu_Hui_Chrome_Extension&hmpl=staydan_enjoy&hmkw=staydan&hmci='});
+            tj.trackEventTJ(tj.category.handpick, 'openHuiPcDetail', [{id: item.id}], item.price);
+        },
+
         sendMessage: function (item) {
             chrome.runtime.sendMessage({
                 type: "pushItem",
@@ -197,11 +203,10 @@ module.exports = {
             self.isLoading = true;
             $('.loading-tips').removeClass('failed').addClass('loading');
 
-            $.ajaxSetup({
-                url: consts.apiProxyHost + 'search/list',
-                timeout: 5000,
-                type: 'POST',
-                data: JSON.stringify(params.page),
+            // 抓取百度惠精选商品列表定时器
+            sdHuiCore.getHuiList({
+                pageNo: params.page.pageNo,
+                pageSize: params.page.pageSize,
                 success: function (data) {
                     self.reqParam.page.pageNo += 1;
                     var item = {};
@@ -242,15 +247,13 @@ module.exports = {
                     $('.loading-tips').removeClass('failed').addClass('loading');
                     tj.trackEventTJ(tj.category.handpick, 'loadListMore', [params.page], data.data.result.length);
                 },
-                error: function (data, textStatus, jqXHR) {
+                failure: function (data, textStatus, jqXHR) {
                     self.isLoading = false;
-                    console.log(data);
                     $('.loading-tips').removeClass('loading').addClass('failed');
                     self.fetchFailedTips.counter++;
                     tj.trackEventTJ(tj.category.handpick, 'loadListMore', [params.page], 0);
                 }
             });
-            $.ajax();
         },
 
         init: function () {
@@ -293,10 +296,10 @@ module.exports = {
             setTimeout(function () {
                 $('.sns')
                     .on('mouseover', '.toolbar', function () {
-                        $(this).find('.see-outside').addClass('hovering');
+                        $(this).find('.open-hui-site').addClass('hovering');
                     })
                     .on('mouseleave', '.toolbar', function () {
-                        $(this).find('.see-outside').removeClass('hovering');
+                        $(this).find('.open-hui-site').removeClass('hovering');
                     });
             }, 1000);
         },

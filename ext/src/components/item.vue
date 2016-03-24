@@ -65,6 +65,8 @@
  */
 var tj = require('../libs/tj.js');
 var consts = require('../libs/consts');
+var SdHuiCore = require('../libs/sdHuiCore.js');
+var sdHuiCore = new SdHuiCore(null, consts);
 module.exports = {
     replace: true,
     props: ['activeId', 'coverImg'],
@@ -102,21 +104,16 @@ module.exports = {
             var self = this;
             self.id = itemId;
 
-            // $.get('http://localhost/api/api.php/hui/ios/version', function (d) {
-            //     console.log(d);
-            // });
-
-            $.post(consts.apiProxyHost + 'detail',
-                JSON.stringify({id: self.id}),
-                function (data, textStatus, jqXHR) {
+            sdHuiCore.getHuiItemDetail({
+                id: itemId,
+                success: function (data) {
                     self.item = data.data.result;
                     self.progressAt = self.item.likeNum / (self.item.likeNum + self.item.unlikeNum) * 100;
                     tj.trackEventTJ(tj.category.itemDetail, 'getItemDetailSuccess', [{itemId: itemId}]);
-                }, 'json'
-            )
-            .fail(function (data, textStatus, jqXHR) {
-                // console.log(data);
-                tj.trackEventTJ(tj.category.itemDetail, 'getItemDetailFail', [{itemId: itemId}]);
+                },
+                failure: function (data, textStatus, jqXHR) {
+                    tj.trackEventTJ(tj.category.itemDetail, 'getItemDetailFail', [{itemId: itemId}]);
+                }
             });
         },
 
@@ -137,28 +134,17 @@ module.exports = {
         },
 
         getHuiItemDetailComment: function (itemId) {
-            // {"targetType":1,"targetId":103407,"page":{"pageNo":1,"pageSize":30,"order":"desc","orderBy":"ctime"}}
             var self = this;
 
-            var param = {
-                targetType: 1,
-                targetId: itemId,
-                pageNo: 1,
-                pageSize: 30,
-                order: "desc",
-                orderBy: "ctime"
-            };
-
-            $.post(consts.apiProxyHost + 'comment',
-                JSON.stringify(param),
-                function (data, textStatus, jqXHR) {
+            sdHuiCore.getHuiItemComment({
+                id: itemId,
+                success: function (data) {
                     self.commentList = data.data.result;
                     tj.trackEventTJ(tj.category.itemDetail, 'getItemCommentSuccess', [{itemId: itemId}]);
-                }, 'json'
-            )
-            .fail(function (data, textStatus, jqXHR) {
-                // console.log(data);
-                tj.trackEventTJ(tj.category.itemDetail, 'getItemCommentFail', [{itemId: itemId}]);
+                },
+                failure: function (data, textStatus, jqXHR) {
+                    tj.trackEventTJ(tj.category.itemDetail, 'getItemCommentFail', [{itemId: itemId}]);
+                }
             });
         },
 

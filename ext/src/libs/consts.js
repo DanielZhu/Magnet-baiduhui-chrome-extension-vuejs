@@ -6,13 +6,31 @@
  *
  * @author Daniel Zhu<enterzhu@gmail.com>
 */
-let consts = {
-    host: 'http://hui.baidu.com',
+var consts = {
+
+    /**
+     * 环境参数
+     *
+     * dev_ext：插件内调试模式
+     * dev_html：插件外浏览器内调试模式
+     * pro_ext: 插件内发布时，编译时使用
+     */
+    env: 'pro_ext',
+
+    debug: true,
+
+    host: 'http://hui.baidu.com/',
     apiProxyHost: 'http://www.staydan.com/api/api.php/hui/',
     apiHost: 'http://hui.baidu.com/facade/',
+    apiList: {
+        recmdList: 'hui/rcmdse/list',
+        itemDetail: 'hui/detail/get',
+        itemComment: 'comment/page'
+    },
 
     configName: 'magnet_config',
     cacheListName: 'hui_list',
+
     pushType: {
         1: '精选',
         2: '特卖'
@@ -93,8 +111,12 @@ let consts = {
         }
     ],
 
-    placeholder: function (pageUrl) {
+    getApiHost: function () {
+        return this.env === 'pro_ext' ? this.apiHost : '/facade/';
+    },
 
+    getApiPath: function (apiName) {
+        return this.apiList.hasOwnProperty(apiName) && this.apiList[apiName];
     }
 };
 

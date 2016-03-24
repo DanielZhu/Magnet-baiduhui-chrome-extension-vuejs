@@ -119,7 +119,7 @@
                 height 120px
                 z-index 1
                 background-color #fff
-                border 1px solid #eee
+                // border 1px solid #eee
                 img
                     position relative
                     width 100%
@@ -175,6 +175,16 @@
                             height 45px
                             line-height 45px
                             white-space nowrap
+                            &::after
+                                content: ''
+                                position: absolute
+                                top: 0
+                                left: 100%
+                                border-width: 22.5px
+                                border-style: solid
+                                border-color: transparent
+                                border-left-color: #F9DEE7
+                                border-left-width: 11px
                         .reason-item
                             display inline-block
                             margin 0 5px
@@ -240,7 +250,7 @@
                 bottom 0
                 right 0
                 width $popup-width * 0.25
-                height 40px
+                height 80px
                 margin 0
                 padding 0
                 background-color transparent
@@ -250,14 +260,24 @@
                 line-height 40px
                 font-size 18px
                 cursor pointer
-                .see-outside
-                    position absolute
-                    left 20%
-                    width 20%
+                .open-hui-site
+                    position: relative
+                    bottom -50%
+                    width 100%
                     height 40px
                     background-color #A2B5D4
                     box-sizing border-box
                     display inline-block
+                    transition bottom 150ms linear
+                    &.hovering
+                        bottom: 0%
+                .see-outside
+                    display none
+                    position: relative;
+                    width 20%
+                    height 40px
+                    background-color #A2B5D4
+                    box-sizing border-box
                     transition left 150ms linear
                     &.hovering
                         left 0%
@@ -265,10 +285,10 @@
                         cursor pointer
                         vertical-align -2px
                 .see-detail
-                    position absolute
+                    position: relative;
                     right 0
                     top 0
-                    width 80%
+                    width 100%
                     height 40px
                     background-color #86A4D5
                     box-sizing border-box
