@@ -82,6 +82,13 @@ gulp.task('resource', function () {
     .pipe(gulp.dest('output'));
 
     gulp.src([
+        './dist/**'
+    ], {
+        base: './'
+    })
+    .pipe(gulp.dest('output'));
+
+    gulp.src([
         './src/assets/sound/**'
     ], {
         base: './'

@@ -26,7 +26,7 @@ var plugins = [
 ];
 var entry = ['./src/main'],
     cdnPrefix = "",
-    buildPath = "/output/dist/",
+    buildPath = "/dist/",
     publishPath = cdnPrefix + buildPath;
 //生产环境js压缩和图片cdn
 if (isProduction()) {

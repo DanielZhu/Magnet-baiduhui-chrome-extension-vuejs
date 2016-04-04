@@ -4,7 +4,7 @@
   "name": "__MSG_appName__",
   "short_name": "Manget · 百度惠Chrome插件（非官方）",
   "description": "__MSG_appDesc__",
-  "version": "1.0.3",
+  "version": "1.0.4",
 
   "default_locale": "zh_CN",
   "author": "Daniel Zhu(zhumengdan)",

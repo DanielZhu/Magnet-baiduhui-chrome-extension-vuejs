@@ -22,7 +22,7 @@ let router = new VueRouter({
     hashbang: true,
     history: false,
     saveScrollPosition: true,
-    transitionOnLoad: true
+    transitionOnLoad: false
 });
 
 //登录中间验证，页面需要登录而没有登录的情况直接跳转登录

@@ -3,6 +3,166 @@
   "msg": "",
   "data": {
     "result": [
+        {
+        "id": 119083,
+        "title": "并没有和你开玩笑！4月1日起京东上调运费",
+        "subTitle": "",
+        "shortReason": "什么？听说狗东又要涨运费？这次自提也收钱？",
+        "price": "0.0",
+        "priceHighlight": "",
+        "appPriceOnly": false,
+        "revealTime": "2016-04-01 14:05:06",
+        "addtime": "2016-04-01 14:02:34",
+        "revealerName": "百度惠-小惠",
+        "portrait": null,
+        "medal": [
+            {
+                "id": 100008,
+                "name": "居家艺术家",
+                "desc": "收纳、清洁、日用等百货类",
+                "imgUrl": "http://huicms.baidu.com/weigou-prodb-image/description_56_1442378014800_b52dab23ba8c8a9c8c2b2df772a634e1.PNG",
+                "validPeriod": 0,
+                "categoryId": 1000008,
+                "categoryName": "居家百货",
+                "updateTime": "2015-12-10 14:11:07"
+            },
+            {
+                "id": 100006,
+                "name": "穿搭潮人",
+                "desc": "服饰鞋包",
+                "imgUrl": "http://huicms.baidu.com/weigou-prodb-image/description_56_1442377934691_6aab50462720e482ab826afbc354689e.PNG",
+                "validPeriod": 0,
+                "categoryId": 1000003,
+                "categoryName": "服饰鞋包",
+                "updateTime": "2015-12-10 14:11:01"
+            },
+            {
+                "id": 100007,
+                "name": "家有萌宝",
+                "desc": "儿童、母婴、孕产相关",
+                "imgUrl": "http://huicms.baidu.com/weigou-prodb-image/description_56_1442377972134_1d22c055f250650d11cc7404a1b62bac.PNG",
+                "validPeriod": 0,
+                "categoryId": 1000007,
+                "categoryName": "母婴用品",
+                "updateTime": "2015-12-10 14:10:53"
+            },
+            {
+                "id": 100005,
+                "name": "运动即态度",
+                "desc": "运动、跑步、蛋白粉之类营养补充剂",
+                "imgUrl": "http://huicms.baidu.com/weigou-prodb-image/description_56_1442377812263_7b2f94df1e0fc87f5be78c49f171baae.PNG",
+                "validPeriod": 0,
+                "categoryId": 1000009,
+                "categoryName": "运动户外",
+                "updateTime": "2015-12-10 14:10:47"
+            },
+            {
+                "id": 100004,
+                "name": "知礼达人",
+                "desc": "礼品、节日相关品",
+                "imgUrl": "http://huicms.baidu.com/weigou-prodb-image/description_56_1442377708359_c8feb7a8db8e00e5140319a4703430fd.PNG",
+                "validPeriod": 0,
+                "categoryId": 1000002,
+                "categoryName": "文玩礼品",
+                "updateTime": "2015-12-10 14:10:41"
+            },
+            {
+                "id": 100003,
+                "name": "懂车族",
+                "desc": "汽车、自驾相关",
+                "imgUrl": "http://huicms.baidu.com/weigou-prodb-image/description_56_1442377467403_8e1cb8994758097a3cb2dd0e9f8f7eff.PNG",
+                "validPeriod": 0,
+                "categoryId": 1000004,
+                "categoryName": "汽车用品",
+                "updateTime": "2015-12-10 14:10:32"
+            },
+            {
+                "id": 100002,
+                "name": "悦读客",
+                "desc": "图书、影音类",
+                "imgUrl": "http://huicms.baidu.com/weigou-prodb-image/description_56_1442377340248_8559b106f0988d65320e3850f2f3586c.PNG",
+                "validPeriod": 0,
+                "categoryId": 1000000,
+                "categoryName": "图书音像",
+                "updateTime": "2015-12-10 14:10:22"
+            },
+            {
+                "id": 100012,
+                "name": "家电行家",
+                "desc": "家用电器类，非3C的一切电器",
+                "imgUrl": "http://huicms.baidu.com/weigou-prodb-image/description_56_1442378572151_b52dab23ba8c8a9c8c2b2df772a634e1.PNG",
+                "validPeriod": 0,
+                "categoryId": 1000000,
+                "categoryName": "图书音像",
+                "updateTime": "2015-12-10 14:10:15"
+            },
+            {
+                "id": 100010,
+                "name": "美妆达人",
+                "desc": "彩妆美妆护肤品",
+                "imgUrl": "http://huicms.baidu.com/weigou-prodb-image/description_56_1442378126469_095b90d0480a275fb6017f00e4965c32.PNG",
+                "validPeriod": 0,
+                "categoryId": 1000006,
+                "categoryName": "个护美妆",
+                "updateTime": "2015-12-10 14:10:07"
+            },
+            {
+                "id": 100009,
+                "name": "美食小分队",
+                "desc": "食品饮料粮油",
+                "imgUrl": "http://huicms.baidu.com/weigou-prodb-image/description_56_1442378094078_c33ed8bb349d7ffb8424710a2bf6e0cb.PNG",
+                "validPeriod": 0,
+                "categoryId": 1000005,
+                "categoryName": "食品保健",
+                "updateTime": "2015-12-10 14:09:58"
+            },
+            {
+                "id": 100011,
+                "name": "3C发烧友",
+                "desc": "电脑3C周边等",
+                "imgUrl": "http://huicms.baidu.com/weigou-prodb-image/description_56_1442378228252_fed1e8e95eb08058ea3b7852582bef80.PNG",
+                "validPeriod": 0,
+                "categoryId": 1000010,
+                "categoryName": "电脑数码",
+                "updateTime": "2015-12-10 14:09:41"
+            }
+        ],
+        "categoryId": 0,
+        "categoryName": null,
+        "merchantId": 0,
+        "merchantName": "百度惠",
+        "merchantAlias": "商家",
+        "itemType": 4,
+        "feedLogo": "",
+        "coverImg": "http://huiimg.baidu.com/hui/5e9f9ab2d6f00acae01129a28e1fba78.jpg@s_2,w_300,h_300",
+        "tags": [],
+        "url": "100171",
+        "imageUrl": "http://huiimg.baidu.com/hui/5e9f9ab2d6f00acae01129a28e1fba78.jpg@s_2,w_300,h_300",
+        "imgUrl": [
+            "http://huiimg.baidu.com/hui/5e9f9ab2d6f00acae01129a28e1fba78.jpg"
+        ],
+        "imgUrls": [
+            "http://huiimg.baidu.com/hui/5e9f9ab2d6f00acae01129a28e1fba78.jpg@s_2,w_300,h_300"
+        ],
+        "formattedRcmdRsn": "",
+        "recommendReasonWithPureText": "什么？听说狗东又要涨运费？这次自提也收钱？",
+        "recommendReasonWithRichText": "<p>什么？听说狗东又要涨运费？这次自提也收钱？</p>",
+        "stamperStatus": 0,
+        "rejectReason": "",
+        "auditStatus": 5,
+        "updateTime": "2016-04-01 14:05:06",
+        "publishTime": "2016-04-01 14:05:06",
+        "likeNum": 4,
+        "unlikeNum": 1,
+        "percent": 0,
+        "likeStatus": 0,
+        "favorNum": 0,
+        "favorStatus": 0,
+        "favorTime": "1970-01-01 08:00:00",
+        "commentNum": 0,
+        "highlight": false,
+        "rank": 0
+    },
       {
         "id": 115435,
         "title": "Guylian 吉利莲 贝壳巧克力礼盒 125g",

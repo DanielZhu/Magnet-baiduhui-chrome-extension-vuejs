@@ -22,16 +22,23 @@
                                         <img v-show="item.feedLogo" :src="item.feedLogo" data-src="../assets/images/img_80*35.svg" class="feed-logo">
                                         <div class="title">{{item.title}}</div>
                                     </div>
-                                    <div class="price-cut reason">
-                                        <div class="highlight-area" v-show="item.itemType === 1">
-                                            <p class="reason-item price">{{item.price}}</p>
-                                            <p class="reason-item highlight" v-show="item.priceHighlight">{{item.priceHighlight}}</p>
+                                    <div v-if="item.itemType === 1 || item.itemType === 2" class="item-normal">
+                                        <div class="price-cut reason">
+                                            <div class="highlight-area" v-if="item.itemType === 1">
+                                                <p class="reason-item price">{{item.price}}</p>
+                                                <p class="reason-item highlight" v-show="item.priceHighlight">{{item.priceHighlight}}</p>
+                                            </div>
+                                            <div class="reason-item formatted-rcmd-reason" :class="item.itemType===1 ? 'pull-right' : ''" v-html="item.formattedRcmdRsn">
+                                            </div>
                                         </div>
-                                        <div class="reason-item formatted-rcmd-reason" :class="item.itemType===1 ? 'pull-right' : ''" v-html="item.formattedRcmdRsn">
+                                        <div class="short-reason">
+                                            <p class="reason-item">{{item.shortReason}}</p>
                                         </div>
                                     </div>
-                                    <div class="short-reason">
-                                        <p class="reason-item">{{item.shortReason}}</p>
+                                    <div v-if="item.itemType === 3 || item.itemType === 4" class="item-exp">
+                                        <div class="price-cut reason">
+                                            <div class="reason-item formatted-rcmd-reason">{{item.shortReason}}</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -41,7 +48,7 @@
                                 <!-- <img src="../assets/images/qrcode.png"> -->
                             </div>
                             <div class="toolbar">
-                                <div class="open-hui-site" v-on:click="showDetail(item)">本页查看</div>
+                                <div class="open-hui-site" v-on:click="showDetail(item)" v-if="item.itemType !== 3 && item.itemType !== 4">本页查看</div>
                                 <div class="see-outside" v-on:click="sendMessage(item)"><i class="icon sd-icon-bell-o"></i></div>
                                 <div class="see-detail" v-on:click="openHuiPcDetailSite(item)"><i class="icon sd-icon-qrcode"></i>查看详情</div>
                             </div>
@@ -57,9 +64,9 @@
                                     <div class="progress-bar-active" v-bind:style="{width: item.progressAt + '%' }"></div>
                                     <div class="progress-anchor-at" v-bind:style="{left: item.progressAt + '%' }"></div>
                                 </div>
-                                <i class="icon sd-icon-thumbs-o-down"></i><span class="number">{{item.unlikeNum > 0 ? item.unlikeNum : 0}}</span>
-                                <i class="icon sd-icon-bubble-comment-streamline-talk"></i><span class="number">{{item.commentNum > 0 ? item.commentNum : 0}}</span>
-                                <i class="icon sd-icon-heart-o"></i><span class="number">{{item.favorNum > 0 ? item.favorNum : 0}}</span>
+                                <div class="sns-item"><i class="icon sd-icon-thumbs-o-down"></i><span class="number">{{item.unlikeNum > 0 ? item.unlikeNum : 0}}</span></div>
+                                <div class="sns-item"><i class="icon sd-icon-bubble-comment-streamline-talk"></i><span class="number">{{item.commentNum > 0 ? item.commentNum : 0}}</span></div>
+                                <div class="sns-item" v-if="item.itemType !== 3 && item.itemType !== 4"><i class="icon sd-icon-heart-o"></i><span class="number">{{item.favorNum > 0 ? item.favorNum : 0}}</span></div>
                             </div>
                             <div class="revealer">
                                 <span class="name">{{item.revealerName}}</span>
@@ -129,15 +136,15 @@ module.exports = {
         }
     },
     route: {
-        canReuse: false
+        canReuse: true
     },
     filters: {},
     ready: function () {
+        var self = this;
+
         console.log('[Hui] Detail Page Ready...');
-        this.configCached = this.retrieveConfigCached();
-        this.reqParam.page.pageSize = this.configCached['num-loading'];
-        this.init();
-        this.clearBadge();
+        self.init();
+        self.clearBadge();
         tj.trackPageViewTJ(tj.pageLists.handpick);
         tj.trackEventTJ(tj.category.handpick, 'pageLoaded', [{}]);
     },
@@ -185,7 +192,9 @@ module.exports = {
         },
 
         openHuiPcDetailSite: function (item) {
-            chrome.tabs.create({url: consts.host + 'detail.html?id=' + item.id + '&hmsr=staydan.com&hmmd=Baidu_Hui_Chrome_Extension&hmpl=staydan_enjoy&hmkw=staydan&hmci='});
+            var link = consts.host;
+            link += (item.itemType === 3 || item.itemType === 4) ? 'article' : 'detail';
+            chrome.tabs.create({url: link + '.html?id=' + item.id + '&hmsr=staydan.com&hmmd=Baidu_Hui_Chrome_Extension&hmpl=staydan_enjoy&hmkw=staydan&hmci='});
             tj.trackEventTJ(tj.category.handpick, 'openHuiPcDetail', [{id: item.id}], item.price);
         },
 
@@ -258,6 +267,8 @@ module.exports = {
 
         init: function () {
             console.log('[Hui] Detail Page Initing...');
+            this.configCached = this.retrieveConfigCached();
+            this.reqParam.page.pageSize = this.configCached['num-loading'];
             var huiListPersist = storage.get('hui_list');
             this.list = (huiListPersist && JSON.parse(huiListPersist.data)) || [];
 

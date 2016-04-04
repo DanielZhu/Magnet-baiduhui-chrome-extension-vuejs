@@ -105,6 +105,13 @@ module.exports = {
                     });
                     tj.trackEventTJ(tj.category.setting, 'clearCache', [{}]);
                     break;
+                case 'reset-default':
+                    chrome.runtime.sendMessage({
+                        type: 'resetToDefault'
+                    }, function(res) {
+                        self.settingValue = res.value;
+                    });
+                    break;
                 default:
                     break;
             }

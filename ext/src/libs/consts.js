@@ -11,9 +11,9 @@ var consts = {
     /**
      * 环境参数
      *
-     * dev_ext：插件内调试模式
-     * dev_html：插件外浏览器内调试模式
-     * pro_ext: 插件内发布时，编译时使用
+     * dev_ext ：插件内调试模式
+     * dev_html ：插件外浏览器内调试模式
+     * pro_ext : 插件内发布时，编译时使用
      */
     env: 'pro_ext',
 
@@ -105,6 +105,20 @@ var consts = {
                     key: 'cache-clear',
                     label: '历史缓存',
                     value: '清空缓存',
+                    type: 'btn'
+                }
+            ]
+        },
+        {
+            id: 4,
+            key: 'global',
+            label: '全局设置',
+            items: [
+                {
+                    id: 401,
+                    key: 'reset-default',
+                    label: '全局设置',
+                    value: '恢复默认设置',
                     type: 'btn'
                 }
             ]

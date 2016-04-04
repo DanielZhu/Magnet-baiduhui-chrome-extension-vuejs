@@ -66,6 +66,8 @@
                 text-align center
                 display inline-block
                 margin-left 10px
+                .sns-item
+                    display inline-block
                 .progress
                     position relative
                     width 80px
@@ -152,6 +154,10 @@
                         .feed-logo
                             height 35px
                             border 1px solid #eee
+                    .item-exp
+                        font-size 13px
+                    .item-normal
+                        font-size 16px
                     .reason
                         line-height 34px
                         padding-left 0
@@ -198,7 +204,6 @@
                             flex 1
                             padding-right 15px
                             padding-left 20px
-                            font-size 16px
                             overflow hidden
                             text-overflow ellipsis
                             position relative
@@ -249,22 +254,22 @@
                 position absolute
                 bottom 0
                 right 0
-                width $popup-width * 0.25
-                height 80px
+                width $popup-width * 0.2
+                height 70px
                 margin 0
                 padding 0
                 background-color transparent
                 display inline
                 color #fff
                 box-sizing border-box
-                line-height 40px
-                font-size 18px
+                line-height 35px
+                font-size 16px
                 cursor pointer
                 .open-hui-site
                     position: relative
                     bottom -50%
                     width 100%
-                    height 40px
+                    height 35px
                     background-color #A2B5D4
                     box-sizing border-box
                     display inline-block
@@ -275,7 +280,7 @@
                     display none
                     position: relative;
                     width 20%
-                    height 40px
+                    height 35px
                     background-color #A2B5D4
                     box-sizing border-box
                     transition left 150ms linear
@@ -285,11 +290,11 @@
                         cursor pointer
                         vertical-align -2px
                 .see-detail
-                    position: relative;
+                    position: absolute;
                     right 0
-                    top 0
+                    bottom 0
                     width 100%
-                    height 40px
+                    height 35px
                     background-color #86A4D5
                     box-sizing border-box
                     display inline-block

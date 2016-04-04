@@ -31,6 +31,27 @@ function playAudio() {
 Magnet.prototype = {
     constructor: Magnet,
 
+    resetToDefault: function (cb) {
+        var initSetting = consts.settingList;
+        var defaultSetting = {};
+
+        for (var i = 0; i < initSetting.length; i++) {
+            var setItem = initSetting[i];
+            for (var j = 0; j < setItem.items.length; j++) {
+                var item = setItem.items[j];
+                defaultSetting[item.key] = item.init;
+            }
+        }
+
+        storage.set(consts.configName, defaultSetting);
+
+        SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'resetToDefault', [{}]);
+
+        this.restartFetchingAlarm();
+
+        cb && cb({value: defaultSetting});
+    },
+
     syncConfig: function () {
         var configCached = storage.get(consts.configName) || {};
         var initSetting = consts.settingList;
@@ -346,6 +367,7 @@ Magnet.prototype = {
             }
         }
         else {
+            this.updateBadge(0);
             chrome.tabs.create({url: consts.host});
         }
 
@@ -444,6 +466,11 @@ function entryPoint () {
                     break;
                 case 'restartFetchingAlarm':
                     magnet.restartFetchingAlarm();
+                    break;
+                case 'resetToDefault':
+                    magnet.resetToDefault(function (res) {
+                        sendResponse(res);
+                    });
                     break;
                 default:
                     break;
