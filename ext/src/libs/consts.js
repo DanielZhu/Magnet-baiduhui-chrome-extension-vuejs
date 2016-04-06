@@ -28,12 +28,15 @@ var consts = {
         itemComment: 'comment/page'
     },
 
+    tjDetailRedirect: 'hmsr=Baidu_Hui_Chrome_Extension&hmmd=staydan.com&hmpl=staydan_enjoy&hmkw=staydan&hmci=',
     configName: 'magnet_config',
     cacheListName: 'hui_list',
 
     pushType: {
         1: '精选',
-        2: '特卖'
+        2: '特卖',
+        3: '晒单',
+        4: '经验'
     },
     failFunnyTips: ['', '失败乃成功之母', '事不过三', '数据在哪里啊，数据在哪里', '我有一只小毛驴，从来也不骑',
         '今天天气好晴朗，处处好风光',
@@ -66,9 +69,9 @@ var consts = {
                     id: 103,
                     key: 'push-type',
                     label: '类型',
-                    values: ['精选', '特卖'],
+                    values: ['精选', '特卖', '晒单', '经验'],
                     type: 'checkbox',
-                    init: '精选,特卖'
+                    init: '精选,特卖,晒单,经验'
                 },
                 {
                     id: 104,

@@ -53,7 +53,6 @@ var SdTJ = {
         // Removes failing protocol check. @see: http://stackoverflow.com/a/22152353/1958200
         ga('set', 'checkProtocolTask', function(){});
         ga('require', 'displayfeatures');
-        ga('send', 'pageview', '/options.html');
     },
 
    /**

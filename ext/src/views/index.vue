@@ -193,8 +193,9 @@ module.exports = {
 
         openHuiPcDetailSite: function (item) {
             var link = consts.host;
-            link += (item.itemType === 3 || item.itemType === 4) ? 'article' : 'detail';
-            chrome.tabs.create({url: link + '.html?id=' + item.id + '&hmsr=staydan.com&hmmd=Baidu_Hui_Chrome_Extension&hmpl=staydan_enjoy&hmkw=staydan&hmci='});
+
+            link += (item.itemType === 3 || item.itemType === 4) ? 'article.html?id=' + item.url : 'detail.html?id=' + item.id;
+            chrome.tabs.create({url: link + '&' + consts.tjDetailRedirect});
             tj.trackEventTJ(tj.category.handpick, 'openHuiPcDetail', [{id: item.id}], item.price);
         },
 

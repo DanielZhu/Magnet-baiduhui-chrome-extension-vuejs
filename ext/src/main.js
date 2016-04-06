@@ -7,7 +7,6 @@ import validator from 'vue-validator'
 import filters from './filters'
 import routerMap from './routers'
 import FastClick from 'fastclick'
-import SdTJ from './libs/tj'
 
 Vue.use(VueResource);
 Vue.use(VueRouter);
@@ -21,8 +20,8 @@ Object.keys(filters).forEach(k => Vue.filter(k, filters[k]))
 let router = new VueRouter({
     hashbang: true,
     history: false,
-    saveScrollPosition: true,
-    transitionOnLoad: false
+    saveScrollPosition: true
+    // transitionOnLoad: false
 });
 
 //登录中间验证，页面需要登录而没有登录的情况直接跳转登录

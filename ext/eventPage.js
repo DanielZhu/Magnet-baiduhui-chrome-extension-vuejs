@@ -180,6 +180,7 @@ Magnet.prototype = {
         var notify = {};
         var formattedReason = this.stripHtmlTag(item.formattedRcmdRsn);
         var shortReason = this.stripHtmlTag(item.shortReason);
+        var notifyId = -1;
 
         if (configCached['push-type']
             && configCached['push-type'].indexOf(consts.pushType[item.itemType]) !== -1) {
@@ -189,17 +190,26 @@ Magnet.prototype = {
                         + item.priceHighlight + ' / '
                         + item.merchantName + ' / '
                         + shortReason;
+                notifyId = 'detail_' + item.id;
             }
             else if (item.itemType === 2) {
                 title  = '#特卖 | ' + formattedReason + '# ';
                 message = item.merchantName + ' / ' + shortReason;
+                notifyId = 'detail_' + item.id;
+            }
+            else if (item.itemType === 3) {
+                title  = '#晒单# ';
+                message = shortReason;
+                notifyId = 'article_' + item.url;
+            }
+            else if (item.itemType === 4) {
+                title  = '#经验# ';
+                message = shortReason;
+                notifyId = 'article_' + item.url;
             }
 
             notify = {
-                // iconUrl: 'http://a4.mzstatic.com/us/r30/Purple49/v4/4d/9e/17/4d9e1766-3d9a-b609-d6fe-1d200c1b7739/icon175x175.png',
-                // imageUrl: item.imageUrl,
-                // type: 'image',
-                id: item.id,
+                id: notifyId,
                 notify: {
                     iconUrl: item.imageUrl,
                     title: title + item.title,
@@ -223,6 +233,7 @@ Magnet.prototype = {
         var title = '';
         var iconUrl = 'http://a4.mzstatic.com/us/r30/Purple49/v4/4d/9e/17/4d9e1766-3d9a-b609-d6fe-1d200c1b7739/icon175x175.png';
         var notify = {};
+        var notifyId = -1;
 
         for (var i = 0; i < list.length; i++) {
             var item = list[i];
@@ -231,9 +242,19 @@ Magnet.prototype = {
                 && configCached['push-type'].indexOf(consts.pushType[item.itemType]) !== -1) {
                 if (item.itemType === 1) {
                     title  = '#精选# ';
+                    notifyId = 'detail_' + item.id;
                 }
                 else if (item.itemType === 2) {
                     title  = '#特卖# ';
+                    notifyId = 'detail_' + item.id;
+                }
+                else if (item.itemType === 3) {
+                    title  = '#晒单# ';
+                    notifyId = 'article_' + item.url;
+                }
+                else if (item.itemType === 4) {
+                    title  = '#经验# ';
+                    notifyId = 'article_' + item.url;
                 }
 
                 formatList.push({
@@ -246,7 +267,7 @@ Magnet.prototype = {
         if (formatList.length > 0) {
             iconUrl = list[0].imageUrl;
             notify = {
-                id: item.id,
+                id: notifyId,
                 notify: {
                     iconUrl: iconUrl,
                     title: '百度惠新优惠商品更新通知',
@@ -351,24 +372,26 @@ Magnet.prototype = {
     notifyClicked: function (notifyId, btnIdx) {
         var notifyIdArr = notifyId.split('_');
         var id = notifyIdArr[notifyIdArr.length - 1];
+        var channel = notifyIdArr[notifyIdArr.length - 2];
         var actionLabel = 'clickedOnList';
+
         if (id !== -1) {
             actionLabel = 'clickedOnCertainItem';
             if (btnIdx) {
                 if (btnIdx === 0) {
-                    chrome.tabs.create({url: consts.host + '/detail.html?id=' + id});
+                    chrome.tabs.create({url: consts.host + channel + '.html?id=' + id + '&' + consts.tjDetailRedirect});
                 }
                 else {
                     // No this kind of button
                 }
             }
             else {
-                chrome.tabs.create({url: consts.host + '/detail.html?id=' + id});
+                chrome.tabs.create({url: consts.host + channel + '.html?id=' + id + '&' + consts.tjDetailRedirect});
             }
         }
         else {
             this.updateBadge(0);
-            chrome.tabs.create({url: consts.host});
+            chrome.tabs.create({url: consts.host + '?' + consts.tjDetailRedirect});
         }
 
         this.hideWarning(notifyId);

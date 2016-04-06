@@ -15,7 +15,7 @@ module.exports = {
 
         setTimeout(function () {
             self.$route.router.go({name: 'list'});
-        }, 1300);
+        }, 1100);
     }
 }
 </script>

@@ -15,7 +15,7 @@ var config = require('./webpack.config');
  *  清理生产目录文件
  */
 gulp.task('clean', function(cb) {
-    del(['./output']).then(paths => {
+    del(['./output', './dist']).then(paths => {
         console.log('Deleted files and folders:\n', paths.join('\n'));
         cb();
     });
