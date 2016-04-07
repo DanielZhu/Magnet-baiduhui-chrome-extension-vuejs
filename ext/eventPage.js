@@ -369,6 +369,14 @@ Magnet.prototype = {
         SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'updateBadge', [{bargeText: bargeText}]);
     },
 
+    updateBadgeByNotifyClicked: function () {
+        var self = this;
+        chrome.browserAction.getBadgeText({}, function (obj) {
+            var newBadge = parseInt(obj) - 1;
+            self.updateBadge(newBadge > 0 ? newBadge : '');
+        });
+    },
+
     notifyClicked: function (notifyId, btnIdx) {
         var notifyIdArr = notifyId.split('_');
         var id = notifyIdArr[notifyIdArr.length - 1];
@@ -379,14 +387,20 @@ Magnet.prototype = {
             actionLabel = 'clickedOnCertainItem';
             if (btnIdx) {
                 if (btnIdx === 0) {
-                    chrome.tabs.create({url: consts.host + channel + '.html?id=' + id + '&' + consts.tjDetailRedirect});
+                    this.updateBadgeByNotifyClicked.call(this);
+                    chrome.tabs.create({url: consts.host + channel + '.html?id=' + id + '&' + consts.tjDetailRedirect}, function (tab) {
+                        chrome.windows.update(tab.windowId, {focused: true}, function () {});
+                    });
                 }
                 else {
                     // No this kind of button
                 }
             }
             else {
-                chrome.tabs.create({url: consts.host + channel + '.html?id=' + id + '&' + consts.tjDetailRedirect});
+                this.updateBadgeByNotifyClicked.call(this);
+                chrome.tabs.create({url: consts.host + channel + '.html?id=' + id + '&' + consts.tjDetailRedirect}, function (tab) {
+                    chrome.windows.update(tab.windowId, {focused: true}, function () {});
+                });
             }
         }
         else {

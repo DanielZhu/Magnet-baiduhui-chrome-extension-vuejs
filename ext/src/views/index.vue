@@ -8,7 +8,7 @@
     <div class="home">
         <sd-toast :showing="toast.show" :msg="toast.msg" :icontype="toast.type"></sd-toast>
         <sd-head :shownav.sync="showSlideNav" :back.sync="pageSlided" :titleflied.sync="toast.show"></sd-head>
-        <div class="slide-paging" transition="page" :class="{'page-enter': pageSlided, 'page-leave': !pageSlided}">
+        <div class="slide-paging" transition="page" :class="{'page-enter': pageSlided}">
             <div class="hui-list">
                 <ul>
                     <li v-for="item in list" data-id="{{item.id}}">
@@ -103,7 +103,7 @@ module.exports = {
         var self = this;
         return {
             configCached: {},
-            pageSlided: false,
+            pageSlided: null,
             showSlideNav: false,
             isLoading: false,
             isUsingPersistData: true,
@@ -157,6 +157,7 @@ module.exports = {
             $('.item-detail').height(val ? 'initial' : $(window).height());
             $('.hui-list').height(val ? $(window).height() : 'initial');
 
+            $('.slide-paging').toggleClass('page-leave', !val);
             tj.trackPageViewTJ(val ? tj.pageLists.about : tj.pageLists.handpick);
             tj.trackEventTJ(tj.category.handpick, 'pageSlided', [{isFirstPage: !val}], !val);
         }
@@ -180,9 +181,11 @@ module.exports = {
             });
         },
 
-        refresh: function () {
-
-        },
+        // refreshList: function () {
+        //     this.reqParam.page.pageNo = 1;
+        //     this.list = [];
+        //     this.loadMore();
+        // },
 
         loadMore: function () {
             this.configCached = this.retrieveConfigCached();
@@ -218,7 +221,6 @@ module.exports = {
                 pageNo: params.page.pageNo,
                 pageSize: params.page.pageSize,
                 success: function (data) {
-                    self.reqParam.page.pageNo += 1;
                     var item = {};
                     for (var i = 0; i < data.data.result.length; i++) {
                         item = data.data.result[i];
@@ -233,6 +235,9 @@ module.exports = {
                         // 首屏翻新，不去除二次编辑更新过的项目
                         self.list = data.data.result;
                         self.isUsingPersistData = false;
+                        $('body').animate({
+                            scrollTop: 0
+                        });
                     }
                     else {
                         // 增量更新时，必须去除二次编辑更新的项目
@@ -256,12 +261,20 @@ module.exports = {
                     self.bindToolbar();
                     $('.loading-tips').removeClass('failed').addClass('loading');
                     tj.trackEventTJ(tj.category.handpick, 'loadListMore', [params.page], data.data.result.length);
+                    self.reqParam.page.pageNo += 1;
                 },
                 failure: function (data, textStatus, jqXHR) {
                     self.isLoading = false;
                     $('.loading-tips').removeClass('loading').addClass('failed');
                     self.fetchFailedTips.counter++;
                     tj.trackEventTJ(tj.category.handpick, 'loadListMore', [params.page], 0);
+                },
+                ontimeout: function (data) {
+                    console.log('timeout');
+                    self.toast.type = 'info';
+                    self.toast.show = true;
+                    self.toast.msg = '超时了，往下翻页重试';
+                    self.toast.hideToast();
                 }
             });
         },

@@ -28,6 +28,7 @@ function Ajax() {
 
 Ajax.prototype.post = function (inParams) {
     var xhr = this.loadXMLHttp();
+    xhr.timeout = 5000;
 
     xhr.open('POST', inParams.url, true);
 
@@ -52,7 +53,7 @@ Ajax.prototype.post = function (inParams) {
             });
         }
     };
-
+    xhr.ontimeout = inParams.callback.hasOwnProperty('ontimeout') && inParams.callback.ontimeout;
     xhr.send(inParams.body);
     return xhr;
 };
@@ -80,6 +81,9 @@ sdHuiCorePrototype.getHuiItemDetail = function (opts) {
             },
             failure: function (data) {
                 opts.failure(data);
+            },
+            ontimeout: function (data) {
+                opts.ontimeout && opts.ontimeout(data);
             }
         }
     });
@@ -115,6 +119,9 @@ sdHuiCorePrototype.getHuiItemComment = function (opts) {
             },
             failure: function (data) {
                 opts.failure(data);
+            },
+            ontimeout: function (data) {
+                opts.ontimeout && opts.ontimeout(data);
             }
         }
     });
@@ -148,6 +155,9 @@ sdHuiCorePrototype.getHuiList = function (opts) {
             },
             failure: function (data) {
                 opts.failure(data);
+            },
+            ontimeout: function (data) {
+                opts.ontimeout && opts.ontimeout(data);
             }
         }
     });
