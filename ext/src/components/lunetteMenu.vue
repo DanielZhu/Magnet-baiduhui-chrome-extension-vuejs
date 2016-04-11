@@ -53,11 +53,11 @@ module.exports = {
     },
     props: ['menuExpanded'],
     ready: function () {
-        // tj.trackEventTJ(tj.category.lunetteMenu, 'compLoaded', [{}]);
+        // tj.trackEventTJ(tj.category.lunetteMenu, 'compLoaded');
     },
     watch: {
         // menuExpanded: function (val, oldVal) {
-        //     tj.trackEventTJ(tj.category.lunetteMenu, 'menuExpanded', [{expanded: menuExpanded}]);
+        //     tj.trackEventTJ(tj.category.lunetteMenu, 'menuExpanded', 'expanded', menuExpanded ? 1 : 0);
         // }
     },
     methods: {

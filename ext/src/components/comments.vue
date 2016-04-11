@@ -105,7 +105,7 @@ module.exports = {
         };
     },
     ready: function () {
-        // tj.trackEventTJ(tj.category.itemComment, 'compLoaded', [{}]);
+        // tj.trackEventTJ(tj.category.itemComment, 'compLoaded');
     },
     methods: {
 

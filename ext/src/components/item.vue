@@ -72,7 +72,7 @@ module.exports = {
     props: ['activeId', 'coverImg'],
     data: function () {
         return {
-            id: [],
+            id: -1,
             reqDone: false,
             item: {},
             commentList: {},
@@ -82,7 +82,7 @@ module.exports = {
     ready: function () {
         this.init();
         // tj.trackPageViewTJ(tj.pageLists.itemDetail);
-        // tj.trackEventTJ(tj.category.itemDetail, 'pageLoaded', [{}]);
+        // tj.trackEventTJ(tj.category.itemDetail, 'pageLoaded');
     },
     watch: {
         activeId: function (val, oldVal) {
@@ -95,7 +95,7 @@ module.exports = {
     methods: {
         goMerchantSite: function (url) {
             if (url) {
-                tj.trackEventTJ(tj.category.itemDetail, 'redirectOut', [{url: url}]);
+                tj.trackEventTJ(tj.category.itemDetail, 'redirectOut', 'id', this.id);
                 chrome.tabs.create({url: url});
             }
         },
@@ -109,10 +109,10 @@ module.exports = {
                 success: function (data) {
                     self.item = data.data.result;
                     self.progressAt = self.item.likeNum / (self.item.likeNum + self.item.unlikeNum) * 100;
-                    tj.trackEventTJ(tj.category.itemDetail, 'getItemDetailSuccess', [{itemId: itemId}]);
+                    tj.trackEventTJ(tj.category.itemDetail, 'getItemDetailSuccess', 'itemId', parseInt(itemId, 10));
                 },
                 failure: function (data, textStatus, jqXHR) {
-                    tj.trackEventTJ(tj.category.itemDetail, 'getItemDetailFail', [{itemId: itemId}]);
+                    tj.trackEventTJ(tj.category.itemDetail, 'getItemDetailFail', 'itemId', parseInt(itemId, 10));
                 }
             });
         },
@@ -129,7 +129,7 @@ module.exports = {
                 if (link.indexOf('http://') === 0 || link.indexOf('https://') === 0) {
                     chrome.tabs.create({url: link});
                 }
-                tj.trackEventTJ(tj.category.itemDetail, 'redirectOutDesc', [{url: link}]);
+                tj.trackEventTJ(tj.category.itemDetail, 'redirectOutDesc');
             })
         },
 
@@ -140,10 +140,10 @@ module.exports = {
                 id: itemId,
                 success: function (data) {
                     self.commentList = data.data.result;
-                    tj.trackEventTJ(tj.category.itemDetail, 'getItemCommentSuccess', [{itemId: itemId}]);
+                    tj.trackEventTJ(tj.category.itemDetail, 'getItemCommentSuccess', 'itemId', parseInt(itemId, 10));
                 },
                 failure: function (data, textStatus, jqXHR) {
-                    tj.trackEventTJ(tj.category.itemDetail, 'getItemCommentFail', [{itemId: itemId}]);
+                    tj.trackEventTJ(tj.category.itemDetail, 'getItemCommentFail', 'itemId', parseInt(itemId, 10));
                 }
             });
         },

@@ -45,7 +45,7 @@ Magnet.prototype = {
 
         storage.set(consts.configName, defaultSetting);
 
-        SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'resetToDefault', [{}]);
+        SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'resetToDefault');
 
         this.restartFetchingAlarm();
 
@@ -76,7 +76,7 @@ Magnet.prototype = {
         var finalConfig = configCached.hasOwnProperty('data') ? configCached.data : configCached;
         storage.set(consts.configName, finalConfig);
 
-        SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'syncConfig', [{}]);
+        SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'syncConfig', '');
 
         return finalConfig;
         // chrome.runtime.getPlatformInfo(function (platformInfo) {
@@ -112,12 +112,13 @@ Magnet.prototype = {
 
     setAlarm: function () {
         var configCached = this.retrieveConfigCached();
+        var period = configCached['push-frequency'] || 5;
 
         configCached['push-switch'] && chrome.alarms.create(this.alarmNameFetchList, {
-            periodInMinutes: configCached['push-frequency'] || 5
+            periodInMinutes: period
         });
 
-        SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'setFetchingAlarm', [{}]);
+        SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'setFetchingAlarm', 'periodInMinutes', period);
     },
 
     /**
@@ -144,7 +145,7 @@ Magnet.prototype = {
             });
         }
 
-        SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'updateFetchingAlarm', [{flag: flag}]);
+        SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'updateFetchingAlarm', 'flag', flag ? 1 : 0);
     },
 
     restartFetchingAlarm: function (cb) {
@@ -153,7 +154,7 @@ Magnet.prototype = {
             self.setAlarm();
         });
 
-        SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'restartFetchingAlarm', [{}]);
+        SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'restartFetchingAlarm');
     },
 
     hideWarning: function (id) {
@@ -320,14 +321,17 @@ Magnet.prototype = {
         }
 
         if (notifyList.length > 0) {
+            var audioPlayDone = false;
             for (var j = 0; j < notifyList.length; j++) {
                 chrome.notifications.create(this.itemNotifyId + notifyList[j].id, notifyList[j].notify, function () {
-                    configCached['push-audio'] && playAudio();
-
+                    if (!audioPlayDone && configCached['push-audio']) {
+                        playAudio();
+                        audioPlayDone = true;
+                    }
                 });
                 this.hideWarningWithDelay(this.itemNotifyId + notifyList[j].id);
             }
-            SdTJ.trackEventTJ(SdTJ.category.pushNotify, 'push', [{count: notifyList.length}]);
+            SdTJ.trackEventTJ(SdTJ.category.pushNotify, 'push', 'count', notifyList.length);
         }
     },
 
@@ -349,24 +353,25 @@ Magnet.prototype = {
                 var key = pairs[i].key;
                 configCached.data[key] = pairs[i].value;
                 updatedFlag = true;
+                var optValue = (typeof pairs[i].value === 'boolean' ? (pairs[i].value ? 1 : 0) : pairs[i].value);
+                SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'updateStorge', key, optValue);
             }
             updatedFlag && storage.set(consts.configName, configCached.data, opts);
         }
         else {
             this.syncConfig();
         }
-
-        SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'updateStorge', [pairs]);
     },
 
     updateBadge: function (bargeText) {
+        SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'updateBadge', 'bargeText', parseInt(bargeText, 10));
+
         var bargeOption = {};
         if (bargeText === 0) {
             bargeText = '';
         }
         bargeOption.text = bargeText.toString();
         chrome.browserAction.setBadgeText(bargeOption);
-        SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'updateBadge', [{bargeText: bargeText}]);
     },
 
     updateBadgeByNotifyClicked: function () {
@@ -409,7 +414,7 @@ Magnet.prototype = {
         }
 
         this.hideWarning(notifyId);
-        SdTJ.trackEventTJ(SdTJ.category.pushNotify, actionLabel, [{notifyId: notifyId, btnIdx: btnIdx, id: id}]);
+        SdTJ.trackEventTJ(SdTJ.category.pushNotify, actionLabel, 'notifyId', +id);
     },
 
     fetchingAlarmTrigger: function () {
@@ -437,18 +442,22 @@ Magnet.prototype = {
                 console.log('%c[Magnet] freshItemCount - ' + now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate() + ' ' + now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds() + ': ' + freshItemCount, 'color: #E69B95; font-weight: bold;');
 
                 // v1.0.1 - 使用筛选后的增量更新列表，而不再继续截取靠前部分
-                self.freshCount += freshItemCount;
-                self.updateBadge(self.freshCount);
+                // v1.0.8 - Fix: sometime the Badge Text will be update to empty
+                chrome.browserAction.getBadgeText({}, function (obj) {
+                    var currentBadge = parseInt(obj, 10) || 0;
+                    var newBadge = currentBadge + freshItemCount;
+                    self.updateBadge(newBadge > 0 ? newBadge : '');
+                });
 
                 if (freshItemCount < self.notifySizePerPage && cachedList.length !== 0 ) {
                     self.pushNotification(freshList);
                 }
 
-                SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'fetchListAlarm', [{count: freshItemCount}]);
+                SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'fetchListAlarm', 'count', freshItemCount);
             },
             failure: function (data, textStatus, jqXHR) {
-                console.log('[Magnet] Failed Fetching: '/* + JSON.stringify(data)*/);
-                SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'fetchListAlarm', [{count: -1}]);
+                console.log('[Magnet] Failed Fetching: ' + JSON.stringify(data));
+                SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'fetchListAlarm', 'count', -1);
             }
         });
     }

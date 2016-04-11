@@ -204,14 +204,15 @@ module.exports = {
     },
     ready: function () {
         tj.trackPageViewTJ(tj.pageLists.about);
-        tj.trackEventTJ(tj.category.about, 'pageLoaded', [{}]);
+        tj.trackEventTJ(tj.category.about, 'pageLoaded');
         this.updateView();
     },
     methods: {
         updateView: function () {
             $('.sec-item').toggleClass('hidden', true);
             $('.sec-about-' + this.seQuery.tab).toggleClass('hidden', false);
-            tj.trackEventTJ(tj.category.about, 'view', [{tab: this.seQuery.tab}]);
+            var navs = ['hui', 'extension', 'donate', 'feedback', 'other'];
+            tj.trackEventTJ(tj.category.about, 'view', 'tab', navs.indexOf(this.seQuery.tab));
         }
     },
     components: {

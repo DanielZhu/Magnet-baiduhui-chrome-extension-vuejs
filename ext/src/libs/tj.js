@@ -99,8 +99,9 @@ var SdTJ = {
             }
         }
 
-        // console.log("%csend: " + category + " " + action + " " + JSON.stringify(label), "color: #333;font-size:0.6em");
 
+        // console.log("%csend: " + category + " " + action + " " + JSON.stringify(label), "color: #333;font-size:0.6em");
+        // ga('send', 'event', [eventCategory], [eventAction], [eventLabel], [eventValue], [fieldsObject]);
         // patch: seems arguments isn't really an array so let's create one from it
         var argumentsArray = [].splice.call(arguments, 0);
 

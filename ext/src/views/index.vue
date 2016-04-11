@@ -146,7 +146,7 @@ module.exports = {
         self.init();
         self.clearBadge();
         tj.trackPageViewTJ(tj.pageLists.handpick);
-        tj.trackEventTJ(tj.category.handpick, 'pageLoaded', [{}]);
+        tj.trackEventTJ(tj.category.handpick, 'pageLoaded');
     },
     watch: {
         showSlideNav: function (val, oldVal) {
@@ -159,7 +159,7 @@ module.exports = {
 
             $('.slide-paging').toggleClass('page-leave', !val);
             tj.trackPageViewTJ(val ? tj.pageLists.about : tj.pageLists.handpick);
-            tj.trackEventTJ(tj.category.handpick, 'pageSlided', [{isFirstPage: !val}], !val);
+            tj.trackEventTJ(tj.category.handpick, 'pageSlided', 'isFirstPage', !val ? 1 : 0);
         }
     },
     methods:{
@@ -199,7 +199,7 @@ module.exports = {
 
             link += (item.itemType === 3 || item.itemType === 4) ? 'article.html?id=' + item.url : 'detail.html?id=' + item.id;
             chrome.tabs.create({url: link + '&' + consts.tjDetailRedirect});
-            tj.trackEventTJ(tj.category.handpick, 'openHuiPcDetail', [{id: item.id}], item.price);
+            tj.trackEventTJ(tj.category.handpick, 'openHuiPcDetail', 'id', item.id);
         },
 
         sendMessage: function (item) {
@@ -260,14 +260,14 @@ module.exports = {
                     self.isLoading = false;
                     self.bindToolbar();
                     $('.loading-tips').removeClass('failed').addClass('loading');
-                    tj.trackEventTJ(tj.category.handpick, 'loadListMore', [params.page], data.data.result.length);
+                    tj.trackEventTJ(tj.category.handpick, 'loadListMore', 'pageNo', params.page.pageNo);
                     self.reqParam.page.pageNo += 1;
                 },
                 failure: function (data, textStatus, jqXHR) {
                     self.isLoading = false;
                     $('.loading-tips').removeClass('loading').addClass('failed');
                     self.fetchFailedTips.counter++;
-                    tj.trackEventTJ(tj.category.handpick, 'loadListMore', [params.page], 0);
+                    tj.trackEventTJ(tj.category.handpick, 'loadListMore', 'pageNo', 0);
                 },
                 ontimeout: function (data) {
                     console.log('timeout');
@@ -302,8 +302,7 @@ module.exports = {
                 var viewportHeight = $(window).height();
 
                 if (scrollH + viewportHeight >= $('body').height()) {
-                    console.log('[Magnet] Loading more');
-                    tj.trackEventTJ(tj.category.handpick, 'pageFlipping', [{listLength: self.list.length}], self.list.length);
+                    tj.trackEventTJ(tj.category.handpick, 'pageFlipping', 'listLength', self.list.length);
                     self.loadMore();
                 }
             });
@@ -339,7 +338,7 @@ module.exports = {
                 left: offset.left
             };
 
-            tj.trackEventTJ(tj.category.handpick, 'showDetail', [{id: item.id}], item.price);
+            tj.trackEventTJ(tj.category.handpick, 'showDetail', 'id', item.id);
         }
     },
     components: {

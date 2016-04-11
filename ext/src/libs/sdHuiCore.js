@@ -28,7 +28,7 @@ function Ajax() {
 
 Ajax.prototype.post = function (inParams) {
     var xhr = this.loadXMLHttp();
-    xhr.timeout = 5000;
+    xhr.timeout = 7000;
 
     xhr.open('POST', inParams.url, true);
 
@@ -41,16 +41,19 @@ Ajax.prototype.post = function (inParams) {
     // };
 
     xhr.onreadystatechange = function (res) {
-        if (res.currentTarget.readyState == 4
-            && res.currentTarget.status == 200) {
-            inParams.callback.success && inParams.callback.success(JSON.parse(res.currentTarget.responseText));
-        }
-        else {
-            inParams.callback.failure && inParams.callback.failure({
-                responseText: res.currentTarget.responseText,
-                readyState: res.currentTarget.readyState,
-                status: res.currentTarget.status
-            });
+        if (xhr.readyState == 4) {
+            if (xhr.status >= 200 && xhr.status < 300 || xhr.status === 304) {
+                inParams.callback.success && inParams.callback.success(JSON.parse(xhr.responseText));
+            } else {
+                inParams.callback.failure && inParams.callback.failure({
+                    responseText: res.currentTarget.responseText,
+                    readyState: res.currentTarget.readyState,
+                    status: res.currentTarget.status
+                });
+            }
+
+            xhr.onreadystatechange = new Function();
+            xhr = null;
         }
     };
     xhr.ontimeout = inParams.callback.hasOwnProperty('ontimeout') && inParams.callback.ontimeout;

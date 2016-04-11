@@ -83,7 +83,7 @@ module.exports = {
     },
     ready: function () {
         tj.trackPageViewTJ(tj.pageLists.setting);
-        tj.trackEventTJ(tj.category.setting, 'pageLoaded', [{}]);
+        tj.trackEventTJ(tj.category.setting, 'pageLoaded');
     },
     methods: {
         btnHandler: function (key) {
@@ -103,7 +103,7 @@ module.exports = {
                             self.toast.hideToast();
                         }
                     });
-                    tj.trackEventTJ(tj.category.setting, 'clearCache', [{}]);
+                    tj.trackEventTJ(tj.category.setting, 'clearCache');
                     break;
                 case 'reset-default':
                     chrome.runtime.sendMessage({
@@ -135,7 +135,7 @@ module.exports = {
                     }
                 });
             }
-            tj.trackEventTJ(tj.category.setting, 'switcher-' + key, [{value: value}], value);
+            tj.trackEventTJ(tj.category.setting, 'switcher-' + key, 'value', value);
         },
         checkboxHandler: function (key, value) {
             var self = this;
@@ -160,7 +160,7 @@ module.exports = {
                     self.settingValue[key] = boxValue;
                 }
             });
-            tj.trackEventTJ(tj.category.setting, 'checkbox-' + key, [{value: boxValue}], boxValue);
+            tj.trackEventTJ(tj.category.setting, 'checkbox-' + key);
         },
         radioHandler: function (key, value) {
             var self = this;
@@ -178,7 +178,7 @@ module.exports = {
                 }
             });
 
-            tj.trackEventTJ(tj.category.setting, 'radio-' + key, [{value: value}], value);
+            tj.trackEventTJ(tj.category.setting, 'radio-' + key, 'value', value);
         }
     },
     components: {
