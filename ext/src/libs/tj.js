@@ -35,10 +35,10 @@ var SdTJ = {
     */
     deployBaiduTJ: function () {
         // (function() {
-            var hm = document.createElement("script");
-            hm.src = "https://hm.baidu.com/hm.js?cb10d3b9969d265707399889df18284d";
-            var s = document.getElementsByTagName("script")[0];
-            s.parentNode.insertBefore(hm, s);
+            // var hm = document.createElement("script");
+            // hm.src = "https://hm.baidu.com/hm.js?cb10d3b9969d265707399889df18284d";
+            // var s = document.getElementsByTagName("script")[0];
+            // s.parentNode.insertBefore(hm, s);
         // })();
     },
 
@@ -61,7 +61,7 @@ var SdTJ = {
     * @param {string} pageUrl 页面URL
     */
     trackPageViewTJ: function (pageUrl) {
-        window._hmt.push(['_trackPageview', pageUrl]);
+        // window._hmt.push(['_trackPageview', pageUrl]);
         if (window && window.ga) {
             ga('send', 'pageview', pageUrl);
         }
@@ -86,18 +86,18 @@ var SdTJ = {
     * opt_value：事件的一些数值信息，比如权重、时长、价格等等，在报表中可以看到其平均值等数据。该项可选。
     */
     trackEventTJ: function (category, action, label, value) {
-        var params = [];
+        // var params = [];
 
-        if (label) {
-            for (var i = 0; i < label.length; ++i) {
-                var eventParam = label[i];
-                for (var key in eventParam) {
-                    if (eventParam.hasOwnProperty(key)) {
-                        params.push(key + '=' + eventParam[key]);
-                    }
-                }
-            }
-        }
+        // if (label) {
+        //     for (var i = 0; i < label.length; ++i) {
+        //         var eventParam = label[i];
+        //         for (var key in eventParam) {
+        //             if (eventParam.hasOwnProperty(key)) {
+        //                 params.push(key + '=' + eventParam[key]);
+        //             }
+        //         }
+        //     }
+        // }
 
 
         // console.log("%csend: " + category + " " + action + " " + JSON.stringify(label), "color: #333;font-size:0.6em");
@@ -114,13 +114,13 @@ var SdTJ = {
             window.ga.apply(this, gaArgs);
         }
 
-        window._hmt.push(['_trackEvent', category, action, params.join('&'), value]);
+        // window._hmt.push(['_trackEvent', category, action, params.join('&'), value]);
     }
 };
 
-if (_hmt.length === 0) {
-    SdTJ.deployBaiduTJ();
-}
+// if (_hmt.length === 0) {
+    // SdTJ.deployBaiduTJ();
+// }
 
 if (typeof window.ga === 'undefined') {
     SdTJ.deployGA();
