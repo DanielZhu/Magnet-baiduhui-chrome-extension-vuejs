@@ -127,7 +127,7 @@ storagePrototype.get = function (key) {
  *
  * @param  {Array} pairs 更新的配置项
  */
-storagePrototype.updateStorge = function (pairs, opts) {
+storagePrototype.updateStorage = function (pairs, opts) {
     if (pairs.length === 0) {
         return;
     }

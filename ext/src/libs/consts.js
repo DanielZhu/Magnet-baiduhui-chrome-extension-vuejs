@@ -80,6 +80,14 @@ var consts = {
                     values: [3, 5, 10, 20, 30, 60],
                     type: 'radio',
                     init: 5
+                },
+                {
+                    id: 105,
+                    key: 'dnd-expired-at',
+                    label: '勿扰',
+                    values: ['false', 30, 60, 120, 240, 'today'],
+                    type: 'hidden',
+                    init: false
                 }
             ]
         },

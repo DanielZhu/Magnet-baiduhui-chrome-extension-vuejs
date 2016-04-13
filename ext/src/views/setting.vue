@@ -9,17 +9,18 @@
         <aside class="setting-nav">
             <div v-for="set in setting" class="nav-item">
                 <div data-id="set.id">
-                <p v-text="set.label"></p>
-                <div v-for="value in set.items" class="nav-item-sub">
-                    <div v-text="value.label" data-subid="value.id" class="nav-item-sub-label"></div>
+                    <p v-text="set.label"></p>
+                    <div v-for="value in set.items" class="nav-item-sub" v-if="value.type !== 'hidden'">
+                        <div v-text="value.label" data-subid="value.id" class="nav-item-sub-label"></div>
+                    </div>
                 </div>
             </div>
         </aside>
         <section class="setting-area">
             <div v-for="set in setting" class="item">
                 <div data-id="{{set.id}}">
-                <p v-text="set.label" class="item-lable"></p>
-                <div v-for="subitem in set.items" data-key="{{set.key}}" class="item-sub">
+                    <p v-text="set.label" class="item-lable"></p>
+                    <div v-for="subitem in set.items" data-key="{{set.key}}" class="item-sub" v-if="subitem.type !== 'hidden'">
                     <div class="item-sub-label">
                         {{subitem.label}}
                         <span v-if="subitem.type === 'singleradio'">（点击激活或失效）</span>
@@ -41,6 +42,7 @@
                         <div v-if="subitem.type == 'radio'" class="radio item-sub-value" data-key="{{subitem.key}}"  v-for="value in subitem.values" :class="{'active': value == settingValue[subitem.key]}" v-text="value" v-on:click="radioHandler(subitem.key, value)">
                         </div>
 
+                    </div>
                     </div>
                 </div>
             </div>
@@ -129,7 +131,7 @@ module.exports = {
             }
             else {
                 // 其余单选设置立即更新即可
-                storage.updateStorge([{key: key, value: value}], {
+                storage.updateStorage([{key: key, value: value}], {
                     success: function () {
                         self.settingValue[key] = value;
                     }
@@ -155,7 +157,7 @@ module.exports = {
                 boxValue = boxValueArr.join(',');
             }
 
-            storage.updateStorge([{key: key, value: boxValue}], {
+            storage.updateStorage([{key: key, value: boxValue}], {
                 success: function () {
                     self.settingValue[key] = boxValue;
                 }
@@ -165,7 +167,7 @@ module.exports = {
         radioHandler: function (key, value) {
             var self = this;
 
-            storage.updateStorge([{key: key, value: value}], {
+            storage.updateStorage([{key: key, value: value}], {
                 success: function () {
                     self.settingValue[key] = value;
 
