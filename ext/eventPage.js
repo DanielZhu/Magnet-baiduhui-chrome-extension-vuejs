@@ -16,9 +16,11 @@ function Magnet() {
     this.platform = null;
     this.itemNotifyId = 'notify.hui_info_';
     this.alarmNameFetchList = 'fetch-list-alarm';
+    this.alarmNameDND = 'dnd-alarm';
     this.notifyPairsList = [];
     this.freshCount = 0;
     this.notifySizePerPage = 10;
+    this.unreadCount = 0;
     this.cxtMenu = [
         {key: 'open_pc_site', label: '打开PC站'},
         {key: 'user_tipoff', label: '我要爆料'},
@@ -223,7 +225,10 @@ Magnet.prototype = {
             && configCached['push-type'].indexOf(consts.pushType[item.itemType]) !== -1) {
             if (item.itemType === 1) {
                 title  = '【' + item.price + '元】';
-                message = item.priceHighlight + '，' + shortReason;
+                if (item.priceHighlight.trim().length !== 0) {
+                    message = item.priceHighlight + '，';
+                }
+                message += shortReason;
                 notifyId = 'detail_' + item.id;
             }
             else if (item.itemType === 2) {
@@ -399,25 +404,45 @@ Magnet.prototype = {
     },
 
     updateBadge: function (bargeText, bgColor) {
-        SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'updateBadge', 'bargeText', parseInt(bargeText, 10));
-
+        // 先勿扰断言
+        var configCached = this.retrieveConfigCached();
+        var dndExpiredAt = configCached['dnd-expired-at'];
+        var now = new Date();
         var bargeOption = {};
-        if (bargeText === 0) {
-            bargeText = '';
+
+        if (typeof bargeText === 'number' && bargeText >= 0) {
+            this.unreadCount = bargeText;
+        }
+
+        if (dndExpiredAt && now <= dndExpiredAt) {
+            bargeText = 'DND';
+            bgColor = '#000';
+        }
+        else {
+            if (bargeText === 0) {
+                bargeText = '';
+            }
+            if (!bgColor) {
+                bgColor = '#d00';
+            }
+            SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'updateBadge', 'bargeText', parseInt(bargeText, 10));
         }
         bargeOption.text = bargeText.toString();
+
         chrome.browserAction.setBadgeText(bargeOption);
-        if (!bgColor) {
-            bgColor = '#d00';
-        }
         chrome.browserAction.setBadgeBackgroundColor({color: bgColor});
     },
 
     updateBadgeByNotifyClicked: function () {
         var self = this;
         chrome.browserAction.getBadgeText({}, function (obj) {
-            var newBadge = parseInt(obj) - 1;
-            self.updateBadge(newBadge > 0 ? newBadge : '');
+            if (obj === 'DND') {
+                self.unreadCount -= 1;
+            }
+            else {
+                self.unreadCount = parseInt(obj, 10) - 1;
+            }
+            self.updateBadge(self.unreadCount > 0 ? self.unreadCount : 0);
         });
     },
 
@@ -457,7 +482,7 @@ Magnet.prototype = {
     fetchingAlarmTrigger: function (oldBadge) {
         var self = this;
         // 抓取百度惠精选商品列表定时器
-        this.updateBadge('...', '#eee');
+        this.updateBadge('...');
         sdHuiCore.getHuiList({
             pageNo: 1,
             pageSize: self.notifySizePerPage,
@@ -482,14 +507,19 @@ Magnet.prototype = {
                 // v1.0.1 - 使用筛选后的增量更新列表，而不再继续截取靠前部分
                 // v1.0.8 - Fix: sometime the Badge Text will be update to empty
                 if (oldBadge) {
-                    var newBadge = oldBadge + freshItemCount;
-                    self.updateBadge(newBadge > 0 ? newBadge : '');
+                    self.unreadCount = oldBadge + freshItemCount;
+                    self.updateBadge(self.unreadCount > 0 ? self.unreadCount : 0);
                 }
                 else {
                     chrome.browserAction.getBadgeText({}, function (obj) {
-                        var currentBadge = parseInt(obj, 10) || 0;
-                        var newBadge = currentBadge + freshItemCount;
-                        self.updateBadge(newBadge > 0 ? newBadge : '');
+                        if (obj === 'DND') {
+                            self.unreadCount += freshItemCount;
+                        }
+                        else {
+                            self.unreadCount = (parseInt(obj, 10) || 0) + freshItemCount;
+                        }
+
+                        self.updateBadge(self.unreadCount > 0 ? self.unreadCount : 0);
                     });
                 }
 
@@ -506,7 +536,7 @@ Magnet.prototype = {
             },
             failure: function (data, textStatus, jqXHR) {
                 if (oldBadge) {
-                    self.updateBadge(oldBadge > 0 ? oldBadge : '');
+                    self.updateBadge(oldBadge > 0 ? oldBadge : 0);
                 }
                 else {
                     self.updateBadge(0);
@@ -521,6 +551,28 @@ Magnet.prototype = {
         chrome.tabs.create({url: url}, function (tab) {
             chrome.windows.update(tab.windowId, {focused: true}, function () {});
         });
+    },
+
+    draw: function () {
+        var canvas = document.createElement('canvas'); // Create the canvas
+        canvas.width = 19;
+        canvas.height = 19;
+
+        var ctx = canvas.getContext('2d');
+
+        var huiIcon = new Image();
+        huiIcon.src = './src/assets/images/icon19x19.png';
+        // huiIcon.style.position = 'relative';
+        // huiIcon.style.width = '100%';
+        // huiIcon.style.height = '100%';
+
+        huiIcon.onload = function () {
+            ctx.drawImage(huiIcon, 0, 0);
+            chrome.browserAction.setIcon({
+                imageData: ctx.getImageData(0, 0, 19, 19)
+            });
+        };
+
     }
 };
 
@@ -531,14 +583,27 @@ function entryPoint () {
         magnet.syncConfig();
         magnet.setUpContextMenus();
         magnet.fetchingAlarmTrigger();
+        // magnet.draw();
     });
 
     chrome.alarms.onAlarm.addListener(function (alarm) {
-        if (alarm.name === magnet.alarmNameFetchList) {
-            chrome.browserAction.getBadgeText({}, function (obj) {
-                var oldBadge = parseInt(obj, 10) > 0 ? parseInt(obj, 10) : '';
-                magnet.fetchingAlarmTrigger(oldBadge);
-            });
+        switch (alarm.name) {
+            // 拉取定时器
+            case magnet.alarmNameFetchList:
+                chrome.browserAction.getBadgeText({}, function (obj) {
+                    if (obj !== 'DND') {
+                        magnet.unreadCount = parseInt(obj, 10) || 0;
+                    }
+                    magnet.fetchingAlarmTrigger(magnet.unreadCount);
+                });
+                break;
+            // DND定时器
+            case magnet.alarmNameDND:
+                magnet.updateStorage([{key: 'dnd-expired-at', value: false}]);
+                magnet.updateBadge(magnet.unreadCount);
+                break;
+            default:
+                break;
         }
     });
 
@@ -552,12 +617,16 @@ function entryPoint () {
                 break;
             case 'check_latest':
                 chrome.browserAction.getBadgeText({}, function (obj) {
-                    var oldBadge = parseInt(obj, 10) > 0 ? parseInt(obj, 10) : '';
-                    magnet.fetchingAlarmTrigger(oldBadge);
+                    if (obj !== 'DND') {
+                        magnet.unreadCount = parseInt(obj, 10) || 0;
+                    }
+                    magnet.fetchingAlarmTrigger(magnet.unreadCount);
                 });
                 break;
             case 'do_not_disturb':
                 // Leave this to the ParentMenuItemId Switch Handler
+                break;
+            default:
                 break;
         }
 
@@ -571,6 +640,7 @@ function entryPoint () {
                 now.setDate(now.getDate() + 1);
                 now.setHours(0).setMinutes(0).setSeconds(0);
                 dndExpireTime = now.getTime();
+                dndTimeMinutes = (now.getTime() - nowTime) / 1000 / 60;
             }
             else if (dndTimeMinutes === '0') {
                 dndExpireTime = false;
@@ -582,6 +652,18 @@ function entryPoint () {
             switch (info.parentMenuItemId) {
                 case 'do_not_disturb':
                     magnet.updateStorage([{key: 'dnd-expired-at', value: dndExpireTime}]);
+                    if (dndExpireTime) {
+                        magnet.updateBadge('DND', '#000');
+                        chrome.alarms.clear(magnet.alarmNameDND, function () {
+                            chrome.alarms.create(magnet.alarmNameDND, {
+                                delayInMinutes: +dndTimeMinutes
+                            });
+                        });
+                    }
+                    else {
+                        magnet.updateBadge(magnet.unreadCount);
+                        chrome.alarms.clear(magnet.alarmNameDND, function () {});
+                    }
                     break;
             }
         }
@@ -611,7 +693,6 @@ function entryPoint () {
                     sendResponse(magnet.retrieveConfigCached());
                     break;
                 case 'clearBadge':
-                    magnet.freshCount = 0;
                     magnet.updateBadge(0);
                     break;
                 case 'updateFetchingAlarm':
