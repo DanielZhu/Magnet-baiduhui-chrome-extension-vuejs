@@ -5,7 +5,7 @@
     @import '../assets/styl/list.styl'
 </style>
 <template>
-    <div class="home">
+    <div class="home" style="display: none;">
         <sd-toast :showing="toast.show" :msg="toast.msg" :icontype="toast.type"></sd-toast>
         <sd-head :shownav.sync="showSlideNav" :back.sync="pageSlided" :titleflied.sync="toast.show"></sd-head>
         <div class="slide-paging" transition="page" :class="{'page-enter': pageSlided}">
@@ -104,7 +104,7 @@ module.exports = {
         return {
             configCached: {},
             pageSlided: null,
-            showSlideNav: false,
+            showSlideNav: null,
             isLoading: false,
             isUsingPersistData: true,
             list: [],
@@ -142,18 +142,16 @@ module.exports = {
     ready: function () {
         var self = this;
 
-        console.log('[Hui] Detail Page Ready...');
         self.init();
-        self.clearBadge();
+        ['dev_ext', 'pro_ext'].indexOf(consts.env) !== -1 && self.clearBadge();
+        $('.home').fadeIn();
         tj.trackPageViewTJ(tj.pageLists.handpick);
         tj.trackEventTJ(tj.category.handpick, 'pageLoaded');
     },
     watch: {
-        showSlideNav: function (val, oldVal) {
-            console.log('showSlideNav: ' + val);
-        },
+        // showSlideNav: function (val, oldVal) {
+        // },
         pageSlided: function (val, oldVal) {
-            console.log('pageSlided: ' + val);
             $('.item-detail').height(val ? 'initial' : $(window).height());
             $('.hui-list').height(val ? $(window).height() : 'initial');
 
@@ -270,7 +268,6 @@ module.exports = {
                     tj.trackEventTJ(tj.category.handpick, 'loadListMore', 'pageNo', 0);
                 },
                 ontimeout: function (data) {
-                    console.log('timeout');
                     self.toast.type = 'info';
                     self.toast.show = true;
                     self.toast.msg = '超时了，往下翻页重试';
@@ -280,7 +277,6 @@ module.exports = {
         },
 
         init: function () {
-            console.log('[Hui] Detail Page Initing...');
             this.configCached = this.retrieveConfigCached();
             this.reqParam.page.pageSize = this.configCached['num-loading'];
             var huiListPersist = storage.get('hui_list');
@@ -294,7 +290,6 @@ module.exports = {
             var self = this;
 
             $(window).on('scroll',function() {
-                // console.log($(window).scrollTop());
                 if (self.pageSlided || self.isLoading) {
                     return;
                 }
