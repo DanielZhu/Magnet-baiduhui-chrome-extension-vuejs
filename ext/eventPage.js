@@ -2,6 +2,7 @@
 /* global SdHuiCore:false */
 /* global consts:false */
 /* global SdTJ:false */
+/* global isObjEmpty:false */
 // Copyright (c) 2016 Zhu Meng-Dan(Daniel). All rights reserved.
 'use strict';
 
@@ -18,6 +19,19 @@ function Magnet() {
     this.notifyPairsList = [];
     this.freshCount = 0;
     this.notifySizePerPage = 10;
+    this.cxtMenu = [
+        {key: 'open_pc_site', label: '打开PC站'},
+        {key: 'user_tipoff', label: '我要爆料'},
+        {key: 'check_latest', label: '检查优惠'},
+        {key: 'do_not_disturb', label: '勿扰', children: [
+            {key: 'do_not_disturb_0', label: '关闭'},
+            {key: 'do_not_disturb_30', label: '30分钟'},
+            {key: 'do_not_disturb_60', label: '1小时'},
+            {key: 'do_not_disturb_120', label: '2小时'},
+            {key: 'do_not_disturb_240', label: '4小时'},
+            {key: 'do_not_disturb_today', label: '今天'}
+        ]}
+    ];
 
     this.syncConfig();
     this.setAlarm();
@@ -30,6 +44,28 @@ function playAudio() {
 
 Magnet.prototype = {
     constructor: Magnet,
+
+    setUpContextMenus: function () {
+        this.cxtMenu.forEach(function (command) {
+            chrome.contextMenus.create({
+                title: command.label,
+                id: command.key,
+                contexts: ['browser_action'],
+                type: 'normal'
+            });
+            if (command.hasOwnProperty('children')) {
+                command.children.forEach(function (childCommand) {
+                    chrome.contextMenus.create({
+                        parentId: command.key,
+                        title: childCommand.label,
+                        id: childCommand.key,
+                        contexts: ['browser_action'],
+                        type: 'normal'
+                    });
+                });
+            }
+        });
+    },
 
     resetToDefault: function (cb) {
         var initSetting = consts.settingList;
@@ -130,7 +166,7 @@ Magnet.prototype = {
     updateFetchingAlarm: function (flag, cb) {
         var self = this;
         if (flag) {
-            storage.updateStorge([{key: 'push-switch', value: flag}], {
+            storage.updateStorage([{key: 'push-switch', value: flag}], {
                 success: function () {
                     self.setAlarm();
                     cb && cb({value: flag});
@@ -141,7 +177,7 @@ Magnet.prototype = {
             // Todo - 放在clear的回调函数里popup接收不到回参
             cb && cb({value: flag});
             chrome.alarms.clear(this.alarmNameFetchList, function () {
-                storage.updateStorge([{key: 'push-switch', value: flag}]);
+                storage.updateStorage([{key: 'push-switch', value: flag}]);
             });
         }
 
@@ -186,25 +222,15 @@ Magnet.prototype = {
         if (configCached['push-type']
             && configCached['push-type'].indexOf(consts.pushType[item.itemType]) !== -1) {
             if (item.itemType === 1) {
-                title  = '#精选# ';
-                message = item.price + '元 / '
-                        + item.priceHighlight + ' / '
-                        + item.merchantName + ' / '
-                        + shortReason;
+                title  = '【' + item.price + '元】';
+                message = item.priceHighlight + '，' + shortReason;
                 notifyId = 'detail_' + item.id;
             }
             else if (item.itemType === 2) {
-                title  = '#特卖 | ' + formattedReason + '# ';
-                message = item.merchantName + ' / ' + shortReason;
+                message = formattedReason;
                 notifyId = 'detail_' + item.id;
             }
-            else if (item.itemType === 3) {
-                title  = '#晒单# ';
-                message = shortReason;
-                notifyId = 'article_' + item.url;
-            }
-            else if (item.itemType === 4) {
-                title  = '#经验# ';
+            else if (item.itemType === 3 || item.itemType === 4) {
                 message = shortReason;
                 notifyId = 'article_' + item.url;
             }
@@ -239,27 +265,18 @@ Magnet.prototype = {
         for (var i = 0; i < list.length; i++) {
             var item = list[i];
 
+            // type: 1: 精选, 2: 特卖, 3: 晒单, 4: 经验
             if (configCached['push-type']
                 && configCached['push-type'].indexOf(consts.pushType[item.itemType]) !== -1) {
-                if (item.itemType === 1) {
-                    title  = '#精选# ';
+                if (item.itemType === 1 || item.itemType === 2) {
                     notifyId = 'detail_' + item.id;
                 }
-                else if (item.itemType === 2) {
-                    title  = '#特卖# ';
-                    notifyId = 'detail_' + item.id;
-                }
-                else if (item.itemType === 3) {
-                    title  = '#晒单# ';
-                    notifyId = 'article_' + item.url;
-                }
-                else if (item.itemType === 4) {
-                    title  = '#经验# ';
+                else if (item.itemType === 3 || item.itemType === 4) {
                     notifyId = 'article_' + item.url;
                 }
 
                 formatList.push({
-                    title: title + item.title,
+                    title: item.title,
                     message: item.title + ' / ' + this.stripHtmlTag(item.shortReason)
                 });
             }
@@ -271,10 +288,10 @@ Magnet.prototype = {
                 id: notifyId,
                 notify: {
                     iconUrl: iconUrl,
-                    title: '百度惠新优惠商品更新通知',
+                    title: '其它' + formatList.length + '个优惠商品和活动',
                     type: 'list',
                     // message: chrome.i18n.getMessage('name') + ' is obsolete ' +
-                    message: '其它' + formatList.length + '个优惠商品和活动',
+                    message: '百度惠新优惠商品更新通知',
                     buttons: [{title: '查看详情', iconUrl: './src/assets/images/icon29x29.png'}],
                     isClickable: true,
                     priority: 2,
@@ -292,15 +309,6 @@ Magnet.prototype = {
         var notifyList = [];
         var notify = {};
         switch (itemList.length) {
-            case 0:
-                // notifyList.push({
-                //     iconUrl: 'http://a4.mzstatic.com/us/r30/Purple49/v4/4d/9e/17/4d9e1766-3d9a-b609-d6fe-1d200c1b7739/icon175x175.png',
-                //     title: '百度惠新优惠商品更新通知',
-                //     type: 'basic',
-                //     message: '暂时更多优惠商品和活动',
-                //     priority: 2
-                // });
-                break;
             case 1:
                 notify = this.getNotifySingleItem(itemList[0]);
                 !isObjEmpty(notify) && notifyList.push(notify);
@@ -322,15 +330,42 @@ Magnet.prototype = {
 
         if (notifyList.length > 0) {
             var audioPlayDone = false;
+            var listNotifyItem = false;
             for (var j = 0; j < notifyList.length; j++) {
-                chrome.notifications.create(this.itemNotifyId + notifyList[j].id, notifyList[j].notify, function () {
-                    if (!audioPlayDone && configCached['push-audio']) {
-                        playAudio();
-                        audioPlayDone = true;
-                    }
-                });
-                this.hideWarningWithDelay(this.itemNotifyId + notifyList[j].id);
+                if (notifyList[j].notify.type === 'list') {
+                    listNotifyItem = notifyList[j];
+                }
+                else {
+                    chrome.notifications.create(
+                        this.itemNotifyId + notifyList[j].id,
+                        notifyList[j].notify,
+                        function () {
+                            if (!audioPlayDone && configCached['push-audio']) {
+                                playAudio();
+                                audioPlayDone = true;
+                            }
+                        }
+                    );
+                    this.hideWarningWithDelay(this.itemNotifyId + notifyList[j].id);
+                }
             }
+            // 聚合推送延时到末尾发送
+            if (listNotifyItem) {
+                setTimeout(function () {
+                    chrome.notifications.create(
+                        self.itemNotifyId + listNotifyItem.id,
+                        listNotifyItem.notify,
+                        function () {
+                            if (!audioPlayDone && configCached['push-audio']) {
+                                playAudio();
+                                audioPlayDone = true;
+                            }
+                        }
+                    );
+                    self.hideWarningWithDelay(self.itemNotifyId + listNotifyItem.id);
+                }, 500);
+            }
+
             SdTJ.trackEventTJ(SdTJ.category.pushNotify, 'push', 'count', notifyList.length);
         }
     },
@@ -340,7 +375,7 @@ Magnet.prototype = {
      *
      * @param  {Array} pairs 更新的配置项
      */
-    updateStorge: function (pairs, opts) {
+    updateStorage: function (pairs, opts) {
         if (pairs.length === 0) {
             return;
         }
@@ -354,7 +389,7 @@ Magnet.prototype = {
                 configCached.data[key] = pairs[i].value;
                 updatedFlag = true;
                 var optValue = (typeof pairs[i].value === 'boolean' ? (pairs[i].value ? 1 : 0) : pairs[i].value);
-                SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'updateStorge', key, optValue);
+                SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'updateStorage', key, optValue);
             }
             updatedFlag && storage.set(consts.configName, configCached.data, opts);
         }
@@ -363,7 +398,7 @@ Magnet.prototype = {
         }
     },
 
-    updateBadge: function (bargeText) {
+    updateBadge: function (bargeText, bgColor) {
         SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'updateBadge', 'bargeText', parseInt(bargeText, 10));
 
         var bargeOption = {};
@@ -372,6 +407,10 @@ Magnet.prototype = {
         }
         bargeOption.text = bargeText.toString();
         chrome.browserAction.setBadgeText(bargeOption);
+        if (!bgColor) {
+            bgColor = '#d00';
+        }
+        chrome.browserAction.setBadgeBackgroundColor({color: bgColor});
     },
 
     updateBadgeByNotifyClicked: function () {
@@ -393,9 +432,7 @@ Magnet.prototype = {
             if (btnIdx) {
                 if (btnIdx === 0) {
                     this.updateBadgeByNotifyClicked.call(this);
-                    chrome.tabs.create({url: consts.host + channel + '.html?id=' + id + '&' + consts.tjDetailRedirect}, function (tab) {
-                        chrome.windows.update(tab.windowId, {focused: true}, function () {});
-                    });
+                    this.openTabForUrl(consts.host + channel + '.html?id=' + id + '&' + consts.tjDetailRedirect);
                 }
                 else {
                     // No this kind of button
@@ -417,9 +454,10 @@ Magnet.prototype = {
         SdTJ.trackEventTJ(SdTJ.category.pushNotify, actionLabel, 'notifyId', +id);
     },
 
-    fetchingAlarmTrigger: function () {
+    fetchingAlarmTrigger: function (oldBadge) {
         var self = this;
         // 抓取百度惠精选商品列表定时器
+        this.updateBadge('...', '#eee');
         sdHuiCore.getHuiList({
             pageNo: 1,
             pageSize: self.notifySizePerPage,
@@ -443,22 +481,45 @@ Magnet.prototype = {
 
                 // v1.0.1 - 使用筛选后的增量更新列表，而不再继续截取靠前部分
                 // v1.0.8 - Fix: sometime the Badge Text will be update to empty
-                chrome.browserAction.getBadgeText({}, function (obj) {
-                    var currentBadge = parseInt(obj, 10) || 0;
-                    var newBadge = currentBadge + freshItemCount;
+                if (oldBadge) {
+                    var newBadge = oldBadge + freshItemCount;
                     self.updateBadge(newBadge > 0 ? newBadge : '');
-                });
+                }
+                else {
+                    chrome.browserAction.getBadgeText({}, function (obj) {
+                        var currentBadge = parseInt(obj, 10) || 0;
+                        var newBadge = currentBadge + freshItemCount;
+                        self.updateBadge(newBadge > 0 ? newBadge : '');
+                    });
+                }
 
-                if (freshItemCount < self.notifySizePerPage && cachedList.length !== 0 ) {
-                    self.pushNotification(freshList);
+                if (freshItemCount < self.notifySizePerPage && cachedList.length !== 0) {
+                    var configCached = self.retrieveConfigCached();
+                    var dndExpiredAt = configCached['dnd-expired-at'];
+                    if (!dndExpiredAt || (dndExpiredAt && now > dndExpiredAt)) {
+                        self.updateStorage([{key: 'dnd-expired-at', value: false}]);
+                        self.pushNotification(freshList);
+                    }
                 }
 
                 SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'fetchListAlarm', 'count', freshItemCount);
             },
             failure: function (data, textStatus, jqXHR) {
+                if (oldBadge) {
+                    self.updateBadge(oldBadge > 0 ? oldBadge : '');
+                }
+                else {
+                    self.updateBadge(0);
+                }
                 console.log('[Magnet] Failed Fetching: ' + JSON.stringify(data));
                 SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'fetchListAlarm', 'count', -1);
             }
+        });
+    },
+
+    openTabForUrl: function (url) {
+        chrome.tabs.create({url: url}, function (tab) {
+            chrome.windows.update(tab.windowId, {focused: true}, function () {});
         });
     }
 };
@@ -468,13 +529,61 @@ function entryPoint () {
 
     chrome.runtime.onInstalled.addListener(function () {
         magnet.syncConfig();
+        magnet.setUpContextMenus();
         magnet.fetchingAlarmTrigger();
-        console.log('installed');
     });
 
     chrome.alarms.onAlarm.addListener(function (alarm) {
-        if (alarm.name === 'fetch-list-alarm') {
-            magnet.fetchingAlarmTrigger();
+        if (alarm.name === magnet.alarmNameFetchList) {
+            chrome.browserAction.getBadgeText({}, function (obj) {
+                var oldBadge = parseInt(obj, 10) > 0 ? parseInt(obj, 10) : '';
+                magnet.fetchingAlarmTrigger(oldBadge);
+            });
+        }
+    });
+
+    chrome.contextMenus.onClicked.addListener(function (info, tab) {
+        switch (info.menuItemId) {
+            case 'open_pc_site':
+                magnet.openTabForUrl(consts.host);
+                break;
+            case 'user_tipoff':
+                magnet.openTabForUrl(consts.host + 'tipoff.html');
+                break;
+            case 'check_latest':
+                chrome.browserAction.getBadgeText({}, function (obj) {
+                    var oldBadge = parseInt(obj, 10) > 0 ? parseInt(obj, 10) : '';
+                    magnet.fetchingAlarmTrigger(oldBadge);
+                });
+                break;
+            case 'do_not_disturb':
+                // Leave this to the ParentMenuItemId Switch Handler
+                break;
+        }
+
+        if (info.hasOwnProperty('parentMenuItemId')) {
+            var menuItemArr = info.menuItemId.split('_');
+            var dndTimeMinutes = menuItemArr[menuItemArr.length - 1];
+            var now = new Date();
+            var nowTime = now.getTime();
+            var dndExpireTime = null;
+            if (dndTimeMinutes === 'today') {
+                now.setDate(now.getDate() + 1);
+                now.setHours(0).setMinutes(0).setSeconds(0);
+                dndExpireTime = now.getTime();
+            }
+            else if (dndTimeMinutes === '0') {
+                dndExpireTime = false;
+            }
+            else {
+                dndExpireTime = nowTime + dndTimeMinutes * 60 * 1000;
+            }
+
+            switch (info.parentMenuItemId) {
+                case 'do_not_disturb':
+                    magnet.updateStorage([{key: 'dnd-expired-at', value: dndExpireTime}]);
+                    break;
+            }
         }
     });
 
@@ -495,7 +604,7 @@ function entryPoint () {
                     break;
                 case 'updateStorage':
                     // Todo - Consider move storage related into eventpage
-                    magnet.updateStorge([request.set]);
+                    magnet.updateStorage([request.set]);
                     break;
                 case 'getMagnetConfig':
                     // Todo - it'll cost too much time and waste
