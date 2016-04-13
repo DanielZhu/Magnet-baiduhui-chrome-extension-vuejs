@@ -4,7 +4,7 @@
   "name": "__MSG_appName__",
   "short_name": "Manget · 百度惠Chrome插件（非官方）",
   "description": "__MSG_appDesc__",
-  "version": "1.0.7",
+  "version": "1.0.8",
 
   "default_locale": "zh_CN",
   "author": "Daniel Zhu(zhumengdan)",
@@ -28,6 +28,7 @@
     "tabs",
     "alarms",
     "background",
+    "contextMenus",
     "http://*.baidu.com/"
   ],
   "web_accessible_resources": [
