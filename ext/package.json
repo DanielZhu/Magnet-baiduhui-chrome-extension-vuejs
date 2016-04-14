@@ -1,6 +1,6 @@
 {
   "name": "BaiduHui_Chrome_Extension(Not_Official)",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "百度惠：实时推送优惠",
   "main": "popup.html",
   "scripts": {

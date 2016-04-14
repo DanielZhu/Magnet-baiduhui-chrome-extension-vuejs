@@ -551,28 +551,6 @@ Magnet.prototype = {
         chrome.tabs.create({url: url}, function (tab) {
             chrome.windows.update(tab.windowId, {focused: true}, function () {});
         });
-    },
-
-    draw: function () {
-        var canvas = document.createElement('canvas'); // Create the canvas
-        canvas.width = 19;
-        canvas.height = 19;
-
-        var ctx = canvas.getContext('2d');
-
-        var huiIcon = new Image();
-        huiIcon.src = './src/assets/images/icon19x19.png';
-        // huiIcon.style.position = 'relative';
-        // huiIcon.style.width = '100%';
-        // huiIcon.style.height = '100%';
-
-        huiIcon.onload = function () {
-            ctx.drawImage(huiIcon, 0, 0);
-            chrome.browserAction.setIcon({
-                imageData: ctx.getImageData(0, 0, 19, 19)
-            });
-        };
-
     }
 };
 
@@ -583,7 +561,6 @@ function entryPoint () {
         magnet.syncConfig();
         magnet.setUpContextMenus();
         magnet.fetchingAlarmTrigger();
-        // magnet.draw();
     });
 
     chrome.alarms.onAlarm.addListener(function (alarm) {

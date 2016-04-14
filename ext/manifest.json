@@ -4,12 +4,12 @@
   "name": "__MSG_appName__",
   "short_name": "Manget · 百度惠Chrome插件（非官方）",
   "description": "__MSG_appDesc__",
-  "version": "1.0.8",
+  "version": "1.0.9",
 
   "default_locale": "zh_CN",
   "author": "Daniel Zhu(zhumengdan)",
   "browser_action": {
-    "default_icon": "./src/assets/images/icon65x65.png",
+    "default_icon": "./src/assets/images/icon29x29.png",
     "default_popup": "popup.html"
   },
   "background": {
