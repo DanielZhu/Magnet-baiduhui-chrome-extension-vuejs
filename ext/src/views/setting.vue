@@ -61,9 +61,6 @@ var storage = require('../libs/storage');
 var tj = require('../libs/tj');
 var consts = require('../libs/consts');
 module.exports = {
-    route: {
-        canReuse: false
-    },
     data: function () {
         var self = this;
         return {

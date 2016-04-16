@@ -18,7 +18,6 @@ function Magnet() {
     this.alarmNameFetchList = 'fetch-list-alarm';
     this.alarmNameDND = 'dnd-alarm';
     this.notifyPairsList = [];
-    this.freshCount = 0;
     this.notifySizePerPage = 10;
     this.unreadCount = 0;
     this.cxtMenu = [
