@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 
 /**
@@ -93,11 +93,26 @@ var consts = {
         },
         {
             id: 2,
+            key: 'anim',
+            label: '徽标',
+            items: [
+                {
+                    id: 201,
+                    key: 'anim-ba-badge-new',
+                    label: '有新优惠时的动画',
+                    values: ['随机', '快旋', '飞入'],
+                    type: 'radio',
+                    init: '随机'
+                }
+            ]
+        },
+        {
+            id: 3,
             key: 'loading',
             label: '加载项',
             items: [
                 {
-                    id: 201,
+                    id: 301,
                     key: 'num-loading',
                     label: '每页条数',
                     values: [10, 20, 30],
@@ -107,12 +122,12 @@ var consts = {
             ]
         },
         {
-            id: 3,
+            id: 4,
             key: 'cache',
             label: '缓存项',
             items: [
                 {
-                    id: 301,
+                    id: 401,
                     key: 'cache-clear',
                     label: '历史缓存',
                     value: '清空缓存',
@@ -121,12 +136,12 @@ var consts = {
             ]
         },
         {
-            id: 4,
+            id: 5,
             key: 'global',
             label: '全局设置',
             items: [
                 {
-                    id: 401,
+                    id: 501,
                     key: 'reset-default',
                     label: '全局设置',
                     value: '恢复默认设置',
