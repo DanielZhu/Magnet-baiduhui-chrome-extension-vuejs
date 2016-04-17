@@ -45,7 +45,6 @@
                         </div>
                         <div class="sns">
                             <div class="qr-preview">
-                                <!-- <img src="../assets/images/qrcode.png"> -->
                             </div>
                             <div class="toolbar">
                                 <div class="open-hui-site" v-on:click="showDetail(item)" v-if="item.itemType !== 3 && item.itemType !== 4">本页查看</div>
