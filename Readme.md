@@ -24,19 +24,19 @@ One More Thing：插件藏有彩蛋哦，欢迎戳小丹我
 ### 预览图
 
 ##### - 品宣图
-<img width="480px" src="https://lh3.googleusercontent.com/m5l1PeOIv39hH8jorc5WQmWdqVBc5Q2lnfu92uMfxWRSqd2r8nMdFdlyP8GB2SISOUq7Jx3OSXM=s1280-h800-e365-rw">
+<img width="480px" src="https://lh3.googleusercontent.com/OB_wWy41i5D5PLhvom2i3CKXywzYWJ6gZmKxp4b5va7xUgA5bfJiOL87WK-k8nDtyuYfbPTxxA=s1280-h800-e365-rw">
 
 ##### - 首页
-<img width="480px" src="https://lh3.googleusercontent.com/bAJoKjuVesTl7SwaQL8KwMM_28oCPh3H71JxkCsv2G9NgX9-_jdsrzrWcEfHaXuzP60u1fFv=s1280-h800-e365-rw">
+<img width="480px" src="https://lh3.googleusercontent.com/ETeZ5_5O_9PAr4KS7T3UNYHpBfTLpJcBlEtpd-1oM7cJSvcT-snPWUTqp-JRwQYmVLgr4moL=s1280-h800-e365-rw">
 
 ##### - 详情页
-<img width="480px" src="https://lh3.googleusercontent.com/wfeCYyyek9vuWsXJOZUbmx8dkNMv7U_WBZxWzSvXo8coqLbB2uEM0BxS1SYIgKgGTARgxulOyQ=s1280-h800-e365-rw">
+<img width="480px" src="https://lh3.googleusercontent.com/oapiy4bWnYxlGdJquro9gWGwBUvi9qt1QnahMcxr4zR1zwlUQ9jQL4qhUJxvy1lDJvXfMon8CA=s1280-h800-e365-rw">
 
 ##### - 设置页
-<img width="480px" src="https://lh3.googleusercontent.com/-LM42dvYFXLbOCvUT4FHy50ldVEtLrzBScxrMFAo7NWHHrLejM57M2qa5cubcqY-a_U-iftjXw=s1280-h800-e365-rw">
+<img width="480px" src="https://lh3.googleusercontent.com/8rI6a7uXnXIPaoknrrYGvXdo5c_DC9Un5ff79k4tzNsuuPF9bc_pY0R8eo9aAYPRlt-jjGZM=s1280-h800-e365-rw">
 
 ##### - 实时推送
-<img width="480px" src="https://lh3.googleusercontent.com/N7CEikaJaaul8cUQARvjtGwhJnXhtmbVmHIuEykiORLZwtN9-0p6hTWGOWW8eWHCj9nEKtLF=s1280-h800-e365-rw">
+<img width="480px" src="https://lh3.googleusercontent.com/3u7cR1Tt3Z5dDD9x_luG_COVX4KqCYbVUQ2NFMHbD2AG9QYJWTH0BBlQ_UX_SFhTNuMnjJm9mVo=s1280-h800-e365-rw">
 
 ----
 
