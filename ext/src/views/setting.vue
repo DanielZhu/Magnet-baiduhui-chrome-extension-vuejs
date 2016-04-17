@@ -23,9 +23,9 @@
                     <div v-for="subitem in set.items" data-key="{{set.key}}" class="item-sub" v-if="subitem.type !== 'hidden'">
                     <div class="item-sub-label">
                         {{subitem.label}}
-                        <span v-if="subitem.type === 'singleradio'">（点击激活或失效）</span>
-                        <span v-if="subitem.type === 'checkbox'">（多选）</span>
-                        <span v-if="subitem.type === 'radio'">（单选）</span>
+                        <span v-if="subitem.type === 'singleradio'">点击激活或取消</span>
+                        <span v-if="subitem.type === 'checkbox'">多选</span>
+                        <span v-if="subitem.type === 'radio'">单选</span>
                     </div>
                     <div class="item-sub-wrapper" data-key="{{subitem.key}}">
 
@@ -169,7 +169,7 @@ module.exports = {
                     self.settingValue[key] = value;
 
                     if (key === 'push-frequency') {
-                        // 推送开关需要单独向后端推送更新，以便让eventpage立即关闭alarm
+                        // 推送频率需要单独向后端推送更新，以便让eventpage更新频率
                         chrome.runtime.sendMessage({
                             type: 'restartFetchingAlarm'
                         }, function() {});
