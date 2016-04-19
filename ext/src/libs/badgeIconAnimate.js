@@ -11,7 +11,7 @@ var BadgeIconAnimate = function () {
         width: 19,
         height: 19
     };
-    var animCostTime = 1000;
+    var animCostTime = 2500;
     var animPerRound = 50;
     var canvas = document.createElement('canvas');
     canvas.width = this.size.width;
@@ -32,7 +32,7 @@ var BadgeIconAnimate = function () {
     this.flyStartX = 0;
     this.flyStartY = 0;
     this.direct = 'up';
-    this.flyStep = this.size.width * 5 / animCostTime * animPerRound;
+    this.flyStep = this.size.width * 7 / animCostTime * animPerRound;
     // 每50ms增加x px的距离，在1200ms内要完成38px
 
     this.image = document.createElement('img');
