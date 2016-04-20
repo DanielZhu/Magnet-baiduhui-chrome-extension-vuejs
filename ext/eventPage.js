@@ -14,9 +14,17 @@ var sdHuiCore = new SdHuiCore(storage, consts);
 var itemNotifyId = 'notify.hui_info_';
 var alarmNameFetchList = 'fetch-list-alarm';
 var alarmNameDND = 'dnd-alarm';
+var checkingUserTimer = null;
 var notifyPairsList = [];
 var notifySizePerPage = 10;
 var unreadCount = 0;
+var userStatus = 99;
+var USER_STATUS = {
+    VALID: 1,
+    INVALID: -1,
+    TIMEOUT: 0
+};
+
 var cxtMenu = [
     {key: 'check_latest', label: '更新优惠'},
     {key: 'user_tipoff', label: '我要爆料'},
@@ -145,7 +153,7 @@ function retrieveConfigCached() {
     return config;
 }
 
-function setAlarm() {
+function setFetchAlarm() {
     var configCached = retrieveConfigCached();
     var period = configCached['push-frequency'] || 5;
 
@@ -154,6 +162,54 @@ function setAlarm() {
     });
 
     SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'setFetchingAlarm', 'periodInMinutes', period);
+}
+
+function setCheckUserAlarm() {
+    // Because the period will be less than 1 minute, so use setInterval instead
+    checkingUserTimer = setInterval(fetchUserInfo, 30 * 1000);
+
+    SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'checkingUserTimer', 'isAuthed', 1);
+}
+
+function fetchUserInfo() {
+    sdHuiCore.sendPost({
+        apiName: 'myInfo',
+        params: {deviceType: 1},
+        success: function (data) {
+            console.log(JSON.stringify(data));
+            userStatusChanged((data.status === 0 && data.msg === '未登录用户!') ? USER_STATUS.VALID : USER_STATUS.INVALID);
+            // SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'fetchListAlarm', 'count', freshItemCount);
+        },
+        failure: function (data, textStatus, jqXHR) {
+            console.log(JSON.stringify(data));
+            userStatusChanged(USER_STATUS.INVALID);
+            // SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'fetchListAlarm', 'count', -1);
+        },
+        ontimeout: function (data) {
+            console.log(JSON.stringify(data));
+            userStatusChanged(USER_STATUS.TIMEOUT);
+        }
+    });
+}
+
+function userStatusChanged(status) {
+    if (userStatus !== status) {
+        userStatus = status;
+        var iconPath = '';
+        switch (userStatus) {
+            case USER_STATUS.VALID:
+                iconPath = consts.extIcons.active;
+                break;
+            case USER_STATUS.INVALID:
+            case USER_STATUS.TIMEOUT:
+                iconPath = consts.extIcons.inactive;
+                break;
+            default:
+                iconPath = consts.extIcons.inactive;
+                break;
+        }
+        chrome.browserAction.setIcon({path: iconPath}, function () {});
+    }
 }
 
 /**
@@ -166,7 +222,7 @@ function updateFetchingAlarm(flag, cb) {
     if (flag) {
         storage.updateStorage([{key: 'push-switch', value: flag}], {
             success: function () {
-                setAlarm();
+                setFetchAlarm();
                 cb && cb({value: flag});
             }
         });
@@ -184,7 +240,7 @@ function updateFetchingAlarm(flag, cb) {
 
 function restartFetchingAlarm(cb) {
     chrome.alarms.clear(alarmNameFetchList, function () {
-        setAlarm();
+        setFetchAlarm();
     });
 
     SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'restartFetchingAlarm');
@@ -243,7 +299,7 @@ function getNotifySingleItem(item) {
                 type: 'basic',
                 message: message,
                 contextMessage: '',
-                buttons: [{title: '查看详情', iconUrl: './src/assets/images/icon29x29.png'}],
+                buttons: [{title: '查看详情', iconUrl: './src/assets/images/icon-29x29.png'}],
                 isClickable: true,
                 priority: 2
             }
@@ -291,7 +347,7 @@ function getNotifyItem4List(list) {
                 type: 'list',
                 // message: chrome.i18n.getMessage('name') + ' is obsolete ' +
                 message: '百度惠新优惠商品更新通知',
-                buttons: [{title: '查看详情', iconUrl: './src/assets/images/icon29x29.png'}],
+                buttons: [{title: '查看详情', iconUrl: './src/assets/images/icon-29x29.png'}],
                 isClickable: true,
                 priority: 2,
                 items: formatList
@@ -470,9 +526,15 @@ function notifyClicked(notifyId, btnIdx) {
 function fetchingAlarmTrigger(oldBadge) {
     // 抓取百度惠精选商品列表定时器
     updateBadge('...');
-    sdHuiCore.getHuiList({
-        pageNo: 1,
-        pageSize: notifySizePerPage,
+    sdHuiCore.sendPost({
+        apiName: 'recmdList',
+        params: {
+            page: {
+                pageNo: 1,
+                pageSize: notifySizePerPage || 10
+            },
+            condition: {}
+        },
         success: function (data) {
             var item = {};
             for (var i = 0; i < data.data.result.length; i++) {
@@ -518,7 +580,7 @@ function fetchingAlarmTrigger(oldBadge) {
                     pushNotification(freshList);
                 }
                 if (freshItemCount > 0) {
-                    var badgeIconAnimate = new BadgeIconAnimate();
+                    var badgeIconAnimate = new BadgeIconAnimate(consts.extIcons.active);
                     var animBaBadgeNew = configCached['anim-ba-badge-new'];
                     switch (animBaBadgeNew) {
                         case '随机':
@@ -558,6 +620,23 @@ function openTabForUrl(url) {
     });
 }
 
+// function getCookie() {
+//     chrome.cookies.getAll({}, function(cookies) {
+//         for (var i in cookies) {
+//             console.log(JSON.stringify(cookies[i]));
+//         }
+//     });
+//     // chrome.cookies.get({
+//     //     url: '.baidu.com',
+//     //     name: 'BDUSS'
+//     // }, function (cookie) {
+//     // });
+// }
+
+// chrome.cookies.onChanged.addListener(function(info) {
+//     console.log("onChanged" + JSON.stringify(info));
+// });
+
 // 注册各种事件
 chrome.runtime.onInstalled.addListener(function () {
     syncConfig();
@@ -569,6 +648,7 @@ chrome.alarms.onAlarm.addListener(function (alarm) {
     switch (alarm.name) {
         // 拉取定时器
         case alarmNameFetchList:
+            // getCookie();
             chrome.browserAction.getBadgeText({}, function (obj) {
                 if (obj !== 'DND') {
                     unreadCount = parseInt(obj, 10) || 0;
@@ -697,4 +777,5 @@ chrome.runtime.onMessage.addListener(
 );
 
 syncConfig();
-setAlarm();
+setFetchAlarm();
+setCheckUserAlarm();
