@@ -104,8 +104,9 @@ module.exports = {
             var self = this;
             self.id = itemId;
 
-            sdHuiCore.getHuiItemDetail({
-                id: itemId,
+            sdHuiCore.sendPost({
+                apiName: 'itemDetail',
+                params: {id: itemId}
                 success: function (data) {
                     self.item = data.data.result;
                     self.progressAt = self.item.likeNum / (self.item.likeNum + self.item.unlikeNum) * 100;
@@ -136,8 +137,18 @@ module.exports = {
         getHuiItemDetailComment: function (itemId) {
             var self = this;
 
-            sdHuiCore.getHuiItemComment({
-                id: itemId,
+            sdHuiCore.sendPost({
+                apiName: 'itemComment',
+                params: {
+                    targetType: 1,
+                    targetId: itemId,
+                    page: {
+                        pageNo: 1,
+                        pageSize: 30,
+                        order: 'desc',
+                        orderBy: 'ctime'
+                    }
+                },
                 success: function (data) {
                     self.commentList = data.data.result;
                     tj.trackEventTJ(tj.category.itemDetail, 'getItemCommentSuccess', 'itemId', parseInt(itemId, 10));

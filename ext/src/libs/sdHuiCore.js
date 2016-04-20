@@ -28,7 +28,7 @@ function Ajax() {
 
 Ajax.prototype.post = function (inParams) {
     var xhr = this.loadXMLHttp();
-    xhr.timeout = 7000;
+    xhr.timeout = inParams.timeout || 7000;
 
     xhr.open('POST', inParams.url, true);
 
@@ -61,97 +61,13 @@ Ajax.prototype.post = function (inParams) {
     return xhr;
 };
 
-/**
- * 根据id获取优惠详情
- *
- * @param {Object} opts = {   //可选参数
- *    success : function(){} ,   //操作成功时的操作
- *    error : function(){}     //操作失败时的操作
- *  }
- */
-sdHuiCorePrototype.getHuiItemDetail = function (opts) {
+sdHuiCorePrototype.sendPost = function (opts) {
     var self = this;
     var ajax = new Ajax();
     ajax.post({
-        url: self.consts.getApiHost() + self.consts.getApiPath('itemDetail'),
-        body: JSON.stringify({
-            id: opts.id
-        }),
-        timeout: 5000,
-        callback: {
-            success: function (data) {
-                opts.success(data);
-            },
-            failure: function (data) {
-                opts.failure(data);
-            },
-            ontimeout: function (data) {
-                opts.ontimeout && opts.ontimeout(data);
-            }
-        }
-    });
-};
-
-/**
- * 根据id获取优惠详情
- *
- * @param {Object} opts = {   //可选参数
- *    success : function(){} ,   //操作成功时的操作
- *    error : function(){}     //操作失败时的操作
- *  }
- */
-sdHuiCorePrototype.getHuiItemComment = function (opts) {
-    var self = this;
-    var ajax = new Ajax();
-    ajax.post({
-        url: self.consts.getApiHost() + self.consts.getApiPath('itemComment'),
-        body: JSON.stringify({
-            targetType: 1,
-            targetId: opts.id,
-            page: {
-                pageNo: 1,
-                pageSize: 30,
-                order: 'desc',
-                orderBy: 'ctime'
-            }
-        }),
-        timeout: 5000,
-        callback: {
-            success: function (data) {
-                opts.success(data);
-            },
-            failure: function (data) {
-                opts.failure(data);
-            },
-            ontimeout: function (data) {
-                opts.ontimeout && opts.ontimeout(data);
-            }
-        }
-    });
-};
-
-/**
- * 根据key删除缓存项
- *
- * @param {string} key     [description]
- * @param {Object} options = {   //可选参数
- *    success : function(){} ,   //操作成功时的操作
- *    error : function(){}     //操作失败时的操作
- *  }
- */
-sdHuiCorePrototype.getHuiList = function (opts) {
-    var self = this;
-    var ajax = new Ajax();
-    ajax.post({
-        url: self.consts.getApiHost() + self.consts.getApiPath('recmdList'),
-        body: JSON.stringify({
-            page: {
-                pageNo: opts.pageNo || 1,
-                pageSize: opts.pageSize || 10
-            },
-            condition: {}
-        }),
-        timeout: 5000,
+        url: self.consts.getApiHost() + self.consts.getApiPath(opts.apiName),
+        body: JSON.stringify(opts.params),
+        timeout: opts.timeout || 7000,
         callback: {
             success: function (data) {
                 opts.success(data);

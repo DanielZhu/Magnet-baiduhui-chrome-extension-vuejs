@@ -214,9 +214,15 @@ module.exports = {
             $('.loading-tips').removeClass('failed').addClass('loading');
 
             // 抓取百度惠精选商品列表定时器
-            sdHuiCore.getHuiList({
-                pageNo: params.page.pageNo,
-                pageSize: params.page.pageSize,
+            sdHuiCore.sendPost({
+                apiName: 'recmdList',
+                params: {
+                    page: {
+                        pageNo: params.page.pageNo,
+                        pageSize: params.page.pageSize
+                    },
+                    condition: {}
+                },
                 success: function (data) {
                     var item = {};
                     for (var i = 0; i < data.data.result.length; i++) {
