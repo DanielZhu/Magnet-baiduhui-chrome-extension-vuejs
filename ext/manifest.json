@@ -9,7 +9,7 @@
     "default_locale": "zh_CN",
     "author": "Daniel Zhu(zhumengdan)",
     "browser_action": {
-        "default_icon": "./src/assets/images/icon29x29.png",
+        "default_icon": "./src/assets/images/icon-29x29.png",
         "default_popup": "popup.html"
     },
     "background": {
@@ -17,10 +17,10 @@
         "persistent": false
     },
     "icons": {
-        "16": "./src/assets/images/icon29x29.png",
-        "32": "./src/assets/images/icon65x65.png",
-        "48": "./src/assets/images/icon65x65.png",
-        "128": "./src/assets/images/icon175x175.png"
+        "16": "./src/assets/images/icon-29x29.png",
+        "32": "./src/assets/images/icon-65x65.png",
+        "48": "./src/assets/images/icon-65x65.png",
+        "128": "./src/assets/images/icon-175x175.png"
     },
     "options_page": "options.html",
     "permissions": [

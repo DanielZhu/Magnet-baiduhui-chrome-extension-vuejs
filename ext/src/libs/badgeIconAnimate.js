@@ -5,7 +5,7 @@
  *
  * @author Daniel Zhu<enterzhu@gmail.com>
 */
-var BadgeIconAnimate = function () {
+var BadgeIconAnimate = function (iconPath) {
     var self = this;
     this.size = {
         width: 19,
@@ -17,6 +17,7 @@ var BadgeIconAnimate = function () {
     canvas.width = this.size.width;
     canvas.height = this.size.height;
 
+    this.iconPath = iconPath;
     this.ctx = canvas.getContext('2d');
 
     // Shake config
@@ -39,7 +40,7 @@ var BadgeIconAnimate = function () {
     this.image.onload = function () {
         self.ctx.drawImage(self.image, 0, 0, 19, 19);
     };
-    this.image.src = './src/assets/images/icon29x29.png';
+    this.image.src = this.iconPath;
 
     // Need to be overide
     this.playIcon = function () {};

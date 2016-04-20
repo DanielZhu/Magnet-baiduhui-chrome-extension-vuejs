@@ -25,12 +25,19 @@ var consts = {
     apiList: {
         recmdList: 'hui/rcmdse/list',
         itemDetail: 'hui/detail/get',
-        itemComment: 'comment/page'
+        itemComment: 'comment/page',
+        myInfo: 'hui/my/info',
+        myLoginGet: 'my/login/get'
     },
 
     tjDetailRedirect: 'hmsr=Baidu_Hui_Chrome_Extension&hmmd=staydan.com&hmpl=staydan_enjoy&hmkw=staydan&hmci=',
     configName: 'magnet_config',
     cacheListName: 'hui_list',
+
+    extIcons: {
+        active: './src/assets/images/icon-29x29.png',
+        inactive: './src/assets/images/icon-gray-29x29.png'
+    },
 
     pushType: {
         1: '精选',
