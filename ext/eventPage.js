@@ -14,7 +14,8 @@ var sdHuiCore = new SdHuiCore(storage, consts);
 var itemNotifyId = 'notify.hui_info_';
 var alarmNameFetchList = 'fetch-list-alarm';
 var alarmNameDND = 'dnd-alarm';
-var checkingUserTimer = null;
+var alarmNameCheckingUserFirst = 'checking-user-alarm-1';
+var alarmNameCheckingUserSecond = 'checking-user-alarm-2';
 var notifyPairsList = [];
 var notifySizePerPage = 10;
 var unreadCount = 0;
@@ -166,9 +167,15 @@ function setFetchAlarm() {
 
 function setCheckUserAlarm() {
     // Because the period will be less than 1 minute, so use setInterval instead
-    checkingUserTimer = setInterval(fetchUserInfo, 30 * 1000);
+    chrome.alarms.create(alarmNameCheckingUserFirst, {
+        periodInMinutes: 1
+    });
 
-    SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'checkingUserTimer', 'isAuthed', 1);
+    chrome.alarms.create(alarmNameCheckingUserSecond, {
+        periodInMinutes: 1.5
+    });
+
+    // SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'checkingUserTimer', 'isAuthed', 1);
 }
 
 function fetchUserInfo() {
@@ -177,7 +184,7 @@ function fetchUserInfo() {
         params: {deviceType: 1},
         success: function (data) {
             console.log(JSON.stringify(data));
-            userStatusChanged((data.status === 0 && data.msg === '未登录用户!') ? USER_STATUS.VALID : USER_STATUS.INVALID);
+            userStatusChanged((data.status === 0 && data.msg !== '未登录用户!') ? USER_STATUS.VALID : USER_STATUS.INVALID);
             // SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'fetchListAlarm', 'count', freshItemCount);
         },
         failure: function (data, textStatus, jqXHR) {
@@ -661,6 +668,10 @@ chrome.alarms.onAlarm.addListener(function (alarm) {
             updateStorage([{key: 'dnd-expired-at', value: false}]);
             updateBadge(unreadCount);
             break;
+        case alarmNameCheckingUserFirst:
+        case alarmNameCheckingUserSecond:
+            fetchUserInfo();
+            break;
         default:
             break;
     }
@@ -779,3 +790,6 @@ chrome.runtime.onMessage.addListener(
 syncConfig();
 setFetchAlarm();
 setCheckUserAlarm();
+
+// Show the instant user status as soon as the extension was installed
+fetchUserInfo()
