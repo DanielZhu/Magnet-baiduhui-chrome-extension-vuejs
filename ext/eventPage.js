@@ -171,52 +171,54 @@ function setCheckUserAlarm() {
         periodInMinutes: 1
     });
 
-    chrome.alarms.create(alarmNameCheckingUserSecond, {
-        periodInMinutes: 1.5
-    });
+    setTimeout(function () {
+        chrome.alarms.create(alarmNameCheckingUserSecond, {
+            periodInMinutes: 1
+        });
+    }, 30 * 1000);
 
     // SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'checkingUserTimer', 'isAuthed', 1);
 }
 
-function fetchUserInfo() {
+function checkUserInfo() {
     sdHuiCore.sendPost({
         apiName: 'myInfo',
         params: {deviceType: 1},
         success: function (data) {
-            console.log(JSON.stringify(data));
             userStatusChanged((data.status === 0 && data.msg !== '未登录用户!') ? USER_STATUS.VALID : USER_STATUS.INVALID);
-            // SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'fetchListAlarm', 'count', freshItemCount);
+            SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'checkUserInfo', 'result', USER_STATUS.VALID);
         },
         failure: function (data, textStatus, jqXHR) {
-            console.log(JSON.stringify(data));
             userStatusChanged(USER_STATUS.INVALID);
-            // SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'fetchListAlarm', 'count', -1);
+            SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'checkUserInfo', 'result', USER_STATUS.INVALID);
         },
         ontimeout: function (data) {
-            console.log(JSON.stringify(data));
+            SdTJ.trackEventTJ(SdTJ.category.bgNotify, 'checkUserInfo', 'result', USER_STATUS.TIMEOUT);
             userStatusChanged(USER_STATUS.TIMEOUT);
         }
     });
 }
 
 function userStatusChanged(status) {
-    if (userStatus !== status) {
-        userStatus = status;
-        var iconPath = '';
-        switch (userStatus) {
-            case USER_STATUS.VALID:
-                iconPath = consts.extIcons.active;
-                break;
-            case USER_STATUS.INVALID:
-            case USER_STATUS.TIMEOUT:
-                iconPath = consts.extIcons.inactive;
-                break;
-            default:
-                iconPath = consts.extIcons.inactive;
-                break;
-        }
-        chrome.browserAction.setIcon({path: iconPath}, function () {});
+    var iconPath = '';
+    switch (status) {
+        case USER_STATUS.VALID:
+            iconPath = consts.extIcons.active;
+            break;
+        case USER_STATUS.INVALID:
+        case USER_STATUS.TIMEOUT:
+            iconPath = consts.extIcons.inactive;
+            break;
+        default:
+            iconPath = consts.extIcons.inactive;
+            break;
     }
+
+    // chrome.browserAction.getBadgeText({}, function (obj) {
+        // if (obj !== iconPath) {
+            chrome.browserAction.setIcon({path: iconPath}, function () {});
+        // }
+    // });
 }
 
 /**
@@ -516,14 +518,12 @@ function notifyClicked(notifyId, btnIdx) {
         else {
             updateBadgeByNotifyClicked.call(this);
             var outerLink = consts.host + channel + '.html?id=' + id + '&' + consts.tjDetailRedirect;
-            chrome.tabs.create({url: outerLink}, function (tab) {
-                chrome.windows.update(tab.windowId, {focused: true}, function () {});
-            });
+            openTabForUrl(outerLink);
         }
     }
     else {
         updateBadge(0);
-        chrome.tabs.create({url: consts.host + '?' + consts.tjDetailRedirect});
+        openTabForUrl(consts.host + '?' + consts.tjDetailRedirect);
     }
 
     hideWarning(notifyId);
@@ -670,7 +670,7 @@ chrome.alarms.onAlarm.addListener(function (alarm) {
             break;
         case alarmNameCheckingUserFirst:
         case alarmNameCheckingUserSecond:
-            fetchUserInfo();
+            checkUserInfo(alarm);
             break;
         default:
             break;
@@ -792,4 +792,4 @@ setFetchAlarm();
 setCheckUserAlarm();
 
 // Show the instant user status as soon as the extension was installed
-fetchUserInfo()
+checkUserInfo();
