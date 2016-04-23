@@ -1,4 +1,5 @@
 <style lang="stylus">
+    @import '../assets/styl/common.styl'
     @import '../assets/styl/sd-icons.css'
     @import '../assets/styl/components/toast.styl'
     @import '../assets/styl/list.styl'

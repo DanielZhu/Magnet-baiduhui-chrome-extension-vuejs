@@ -1,13 +1,3 @@
-
-$popup-width = 600px
-$popup-height = 550px
-$graya = #aaa
-$gray9 = #999
-$gray6 = #666
-$gray3 = #333
-$hui-pink = #EA6591
-$hui-danger = #F54F4F
-
 html, body
     border 0
     font-family "Helvetica-Neue", "Helvetica", Arial, sans-serif
@@ -78,13 +68,15 @@ body, html
     // overflow hidden /* this is important to prevent the whole page to bounce */
     margin 0 auto
 
+@import '../assets/styl/color.styl'
+@import '../assets/styl/variables.styl'
+
 #app
     position relative
     width $popup-width
     min-height $popup-height
     overflow-x hidden
     background-color #fff
-    margin-top 60px
 .home
     position relative
     width 100%
