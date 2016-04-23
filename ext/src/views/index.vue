@@ -1,11 +1,10 @@
 <style lang="stylus">
-    @import '../assets/styl/normalize.css'
     @import '../assets/styl/sd-icons.css'
     @import '../assets/styl/components/toast.styl'
     @import '../assets/styl/list.styl'
 </style>
 <template>
-    <div class="home" style="display: none;">
+    <div class="home">
         <sd-toast :showing="toast.show" :msg="toast.msg" :icontype="toast.type"></sd-toast>
         <sd-head :shownav.sync="showSlideNav" :back.sync="pageSlided" :titleflied.sync="toast.show"></sd-head>
         <div class="slide-paging" transition="page" :class="{'page-enter': pageSlided}">
@@ -135,7 +134,12 @@ module.exports = {
         }
     },
     route: {
-        canReuse: true
+        data: function (transition) {
+            this.configCached = this.retrieveConfigCached();
+            var huiListPersist = storage.get('hui_list');
+            var result = (huiListPersist && JSON.parse(huiListPersist.data)) || [];
+            return {list: result};
+        }
     },
     filters: {},
     ready: function () {
@@ -143,13 +147,10 @@ module.exports = {
 
         self.init();
         ['dev_ext', 'pro_ext'].indexOf(consts.env) !== -1 && self.clearBadge();
-        $('.home').fadeIn();
         tj.trackPageViewTJ(tj.pageLists.handpick);
         tj.trackEventTJ(tj.category.handpick, 'pageLoaded');
     },
     watch: {
-        // showSlideNav: function (val, oldVal) {
-        // },
         pageSlided: function (val, oldVal) {
             $('.item-detail').height(val ? 'initial' : $(window).height());
             $('.hui-list').height(val ? $(window).height() : 'initial');
@@ -284,8 +285,6 @@ module.exports = {
         init: function () {
             this.configCached = this.retrieveConfigCached();
             this.reqParam.page.pageSize = this.configCached['num-loading'];
-            var huiListPersist = storage.get('hui_list');
-            this.list = (huiListPersist && JSON.parse(huiListPersist.data)) || [];
 
             this.getHuiItems(this.reqParam);
             this.bindEvents();

@@ -1,3 +1,7 @@
+<style lang="stylus">
+    @import '../assets/styl/welcome.styl'
+</style>
+
 <template>
     <div class="welcome">
         <img src="../assets/images/trans_logo.png" class="logo">
@@ -19,8 +23,3 @@ module.exports = {
     }
 }
 </script>
-
-<style lang="stylus">
-    @import '../assets/styl/normalize.css'
-    @import '../assets/styl/welcome.styl'
-</style>

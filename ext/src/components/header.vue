@@ -6,7 +6,6 @@
 
 <template>
     <header id="header">
-        <sd-nav-drawer transition='slide' :class="{'slide-enter': shownav}"></sd-nav-drawer>
         <div class="title-bar" transition='header-slide' :class="{'header-slide-enter': shownav, 'header-slide-leave': !shownav}">
             <div class="left-btn">
                 <i class="icon sd-icon-bars" v-on:click="shownav = !shownav"></i>
@@ -21,6 +20,7 @@
                 <p class="nickname">{{nickname}}</p>
             </div>
         </div>
+        <sd-nav-drawer transition='slide' :class="{'slide-enter': shownav}"></sd-nav-drawer>
     </header>
 </template>
 
@@ -48,7 +48,7 @@ module.exports = {
     watch: {
         shownav: function (val, oldVal) {
             $('#sideBar').toggleClass('slide-leave', !val);
-            tj.trackEventTJ(tj.category.navDrawerMenu, 'shownav', 'showing', val ? 1 : 0);
+            // tj.trackEventTJ(tj.category.navDrawerMenu, 'shownav', 'showing', val ? 1 : 0);
         }
     },
     methods: {

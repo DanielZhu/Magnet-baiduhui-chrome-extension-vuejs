@@ -1,0 +1,25 @@
+{
+  "status": 0,
+  "msg": "未登录用户!",
+  "data": {
+    "result": {
+      "passportId": 0,
+      "isLogin": 0,
+      "passportName": "未登录用户",
+      "passportDisplayName": null,
+      "headImageUrl": null,
+      "mobileNo": null,
+      "email": null,
+      "blocked": 0,
+      "hasSigned": 0,
+      "level": 0,
+      "pointsToday": 0,
+      "expToday": 0,
+      "unreadMsgNum": 0,
+      "totalMsgNum": 0,
+      "unreadReplyNum": 0
+    },
+    "page": null,
+    "condition": null
+  }
+}

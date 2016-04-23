@@ -4,32 +4,22 @@ export default function (router) {
     router.map({
         '/': {				//首页
             name: 'home',
-            component: function (resolve) {
-                require(['./views/welcome.vue'], resolve);
-            }
+            component: require('./views/welcome.vue')
         },
         '*': {
-            component: function (resolve) {
-                require(['./views/welcome.vue'], resolve);
-            }
+            component: require('./views/welcome.vue')
         },
         '/list': {               //首页
             name: 'list',
-            component: function (resolve) {
-                require(['./views/index.vue'], resolve);
-            }
+            component: require('./views/index.vue')
         },
         '/setting': {               //首页
             name: 'setting',
-            component: function (resolve) {
-                require(['./views/setting.vue'], resolve);
-            }
+            component: require('./views/setting.vue')
         },
         '/about': {               //关于
             name: 'about',
-            component: function (resolve) {
-                require(['./views/about.vue'], resolve);
-            }
+            component: require('./views/about.vue')
         },
         // '/topic/:id': {               //专题
         //     name: 'topic',

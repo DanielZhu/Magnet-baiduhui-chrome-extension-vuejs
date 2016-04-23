@@ -1,5 +1,4 @@
 <style lang="stylus">
-    @import '../assets/styl/normalize.css'
     @import '../assets/styl/sd-icons.css'
     @import '../assets/styl/components/item.styl'
 </style>
@@ -106,7 +105,7 @@ module.exports = {
 
             sdHuiCore.sendPost({
                 apiName: 'itemDetail',
-                params: {id: itemId}
+                params: {id: itemId},
                 success: function (data) {
                     self.item = data.data.result;
                     self.progressAt = self.item.likeNum / (self.item.likeNum + self.item.unlikeNum) * 100;

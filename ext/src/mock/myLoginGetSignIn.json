@@ -1,0 +1,25 @@
+{
+  "status": 0,
+  "msg": "执行成功",
+  "data": {
+    "result": {
+      "passportId": 0,
+      "isLogin": 1,
+      "passportName": "OKIJUP",
+      "passportDisplayName": "OKIJUP",
+      "headImageUrl": "http://himg.bdimg.com/sys/portrait/item/3f394f4b494a5550f215.jpg",
+      "mobileNo": "15601720622",
+      "email": "enterzhu@gmail.com",
+      "blocked": 0,
+      "hasSigned": 0,
+      "level": 6,
+      "pointsToday": 1,
+      "expToday": 1,
+      "unreadMsgNum": 0,
+      "totalMsgNum": 31,
+      "unreadReplyNum": 0
+    },
+    "page": null,
+    "condition": null
+  }
+}
