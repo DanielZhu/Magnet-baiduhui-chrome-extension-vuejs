@@ -1,5 +1,4 @@
 <style lang="stylus">
-    @import '../assets/styl/normalize.css'
     @import '../assets/styl/sd-icons.css'
     @import '../assets/styl/components/item.styl'
 </style>
