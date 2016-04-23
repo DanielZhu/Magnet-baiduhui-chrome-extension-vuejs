@@ -19,7 +19,7 @@ var alarmNameCheckingUserSecond = 'checking-user-alarm-2';
 var notifyPairsList = [];
 var notifySizePerPage = 10;
 var unreadCount = 0;
-var userStatus = 99;
+var checkUserInfoAfterInstalled = false;
 var USER_STATUS = {
     VALID: 1,
     INVALID: -1,
@@ -214,11 +214,11 @@ function userStatusChanged(status) {
             break;
     }
 
-    // chrome.browserAction.getBadgeText({}, function (obj) {
-        // if (obj !== iconPath) {
-            chrome.browserAction.setIcon({path: iconPath}, function () {});
-        // }
-    // });
+    if (status !== storage.get('status').data || !checkUserInfoAfterInstalled) {
+        chrome.browserAction.setIcon({path: iconPath}, function () {});
+        storage.set('status', status);
+        checkUserInfoAfterInstalled = true;
+    }
 }
 
 /**
