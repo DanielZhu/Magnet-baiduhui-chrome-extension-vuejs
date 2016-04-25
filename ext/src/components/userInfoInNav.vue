@@ -29,6 +29,7 @@
                 <p class="label">等级</p>
                 <p class="value">Lv.<span>{{myInfo.level}}</span></p>
             </div>
+            <div class="v-separator"></div>
            <div class="lvl-block points-info">
                 <p class="label">积分</p>
                 <p class="value">{{myInfo.pointsTotal}}</p>
@@ -38,24 +39,29 @@
                 <div class="right-hyphen"></div>
             </div>
         </div>
-        <div class="drag-to-signin-guide" v-show="isLoginIn && (readyDrag || signiningNow || showSignInResult)">
-            <div class="drag-to-signin-guide-dest" :class="{'show-result': signiningNow || showSignInResult, loading: signiningNow}" v-bind:style="{right: dragToSignInGuideDestPosX + 'px', boxShadow: shadowX + 'px 0px 2px 2px #dd3066'}">
+        <div class="drag-to-signin-guide" v-show="isLoginIn && (readyDrag || signInNow || showSignInResult)">
+            <div class="drag-to-signin-guide-dest" :class="{'show-result': signInNow || showSignInResult, loading: signInNow}" v-bind:style="{right: dragToSignInGuideDestPosX + 'px', boxShadow: shadowX + 'px 0px 2px 2px #dd3066'}">
                 <i class="sd-icon-cancel"></i>
                 <i class="sd-icon-check-1"></i>
             </div>
-            <div class="avatar-area" v-show="!myInfo.signed && !signiningNow && !showSignInResult">
+            <div class="avatar-area" v-show="!myInfo.signed && !signInNow && !showSignInResult">
                 <img src="{{myInfo.portrait}}" class="avatar-img" v-bind:style="{marginLeft: draggedDist +'px'}">
             </div>
         </div>
         <div class="login-bar" v-show="!isLoginIn">
-            <div class="login-btn" v-on:click="gotoLogin">登录</div>
+            <div class="login-btn" v-on:click="gotoLogin" data-highlight="gray">登录</div>
         </div>
         <div class="signin-bar" v-show="isLoginIn">
             <div class="drag-to-signin" v-show="!myInfo.signed">
                 <div class="sd-icon-right-open-big drag-to-signin-guide-arrow highlight"><i class="sd-icon-right-open-big"></i><i class="sd-icon-right-open-big"></i></div>
                 <div class="swiper-btn" v-bind:style="{marginLeft: draggedDist +'px'}" v-on:mousedown="readyToDrag" v-on:mousemove="inDragging" v-on:mouseleave="endDragging" v-on:mouseup="endDragging">滑动签到</div>
             </div>
-            <div class="today-has-signed" v-show="myInfo.signed"><i class="icon sd-icon-check-1"></i>今日已签到</div>
+            <div class="today-has-signed" v-show="myInfo.signed && !showSignInResult"><i class="icon sd-icon-check-1"></i>今日已签到</div>
+            <div class="signed-message" v-show="showSignInResult">
+                <i class="sd-icon-cancel"></i>
+                <i class="sd-icon-check-1"></i>
+                <span class="signed-message-text"></span>
+            </div>
         </div>
     </div>
 </template>
@@ -77,7 +83,7 @@ module.exports = {
     data: function () {
         return {
             msg: '',
-            signiningNow: false,
+            signInNow: false,
             isLoginIn:false,
             draggedDist: 0,
             isSignInDragging: false,
@@ -92,61 +98,7 @@ module.exports = {
         }
     },
     ready: function () {
-        var self = this;
-        sdHuiCore.sendPost({
-            apiName: 'myInfo',
-            params: {
-                deviceType: 1
-            },
-            success: function (data) {
-                data = {
-                    "status": 0,
-                    "msg": "",
-                    "data": {
-                        "result": {
-                            "userId": 368195903,
-                            "userName": "OKIJUP",
-                            "portrait": "http://himg.bdimg.com/sys/portrait/item/3f394f4b494a5550f215.jpg",
-                            "signed": 0,
-                            "pointsToday": 1,
-                            "pointsTotal": 7523,
-                            "experienceToday": 1,
-                            "experienceTotal": 15023,
-                            "level": 6,
-                            "expForNextLevel": 2977,
-                            "schedule": "50%",
-                            "days": 0,
-                            "blocked": 0,
-                            "unreadMsgNum": 0,
-                            "totalMsgNum": 31,
-                            "commentsCount": 19,
-                            "tipoffCount": 45,
-                            "storeCount": 4,
-                            "hasSigned": 0,
-                            "bonusPointsForSignup": 0,
-                            "nextDays": 3,
-                            "nextPoints": 10,
-                            "medal": []
-                        },
-                        "page": null,
-                        "condition": null
-                    }
-                };
-                self.isLoginIn = !(data.status === 1 || data.msg === '用户未登录');
-                if (self.isLoginIn) {
-                    self.myInfo = data.data.result;
-                }
-                else {
-                    self.menuExpanded = false;
-                }
-            },
-            failure: function (data, textStatus, jqXHR) {
-
-            },
-            ontimeout: function (data) {
-
-            }
-        });
+        this.fetchUserInfo();
     },
     watch: {
         draggedDist: function (val, oldVal) {
@@ -163,6 +115,32 @@ module.exports = {
         }
     },
     methods: {
+
+        fetchUserInfo: function () {
+            var self = this;
+            sdHuiCore.sendPost({
+                apiName: 'myInfo',
+                params: {
+                    deviceType: 1
+                },
+                success: function (data) {
+                    self.isLoginIn = !(data.status === 1 && data.msg === '用户未登录');
+                    if (self.isLoginIn) {
+                        self.myInfo = data.data.result;
+                        $('.today-has-signed .sd-icon-check-1').show();
+                    }
+                    else {
+                        self.menuExpanded = false;
+                    }
+                },
+                failure: function (data, textStatus, jqXHR) {
+                    self.isLoginIn = false;
+                },
+                ontimeout: function (data) {
+                    self.isLoginIn = false;
+                }
+            });
+        },
 
         inDragging: function (e) {
             if (this.readyDrag) {
@@ -219,62 +197,54 @@ module.exports = {
 
         signInToday: function () {
             var self = this;
-            this.signiningNow = true
+            this.signInNow = true
             this.dragToSignInGuideDestPosX = 100;
             sdHuiCore.sendPost({
                 apiName: 'mySignInToday',
                 params: {deviceType: 1},
                 success: function (data) {
-                    self.showSignInResult = true;
-                    var isLoginIn = !(data.status === 1 || data.msg === '用户未登录');
-                    if (isLoginIn) {
-                        self.msg = '签到成功';
-                        $('.sd-icon-cancel').hide();
-                        $('.sd-icon-check-1').show();
+                    if (data.msg === '今日已经签到，不能重复签到。\n') {
+                        self.fetchUserInfo();
                     }
                     else {
-                        self.msg = '签到失败';
-                        $('.sd-icon-cancel').show();
-                        $('.sd-icon-check-1').hide();
+                        self.showSignInResult = true;
+                        $('.signed-message').fadeIn();
+                        $('.signed-message-text').text(data.status === 0 ? '' : data.msg);
+                        setTimeout(function () {
+                            self.showSignInResult = false;
+                            self.fetchUserInfo();
+                        }, 2500);
                     }
 
-                    self.signiningNow = false;
+                    $('.sd-icon-cancel').toggleClass('el-hidden', data.status === 0);
+                    $('.sd-icon-check-1').toggleClass('el-hidden', data.status !== 0);
+
+                    self.signInNow = false;
                     self.readyDrag = false;
                     self.isSignInDragging = false;
                     self.shadowX = 0;
                     self.draggedDist = 0;
-                    setTimeout(function () {
-                        self.showSignInResult = false;
-                    }, 2000);
                 },
                 failure: function (data, textStatus, jqXHR) {
                     self.showSignInResult = true;
 
                     $('.sd-icon-cancel').show();
                     $('.sd-icon-check-1').hide();
-                    self.msg = '签到失败';
-                    self.signiningNow = false;
+                    $('.signed-message').fadeIn();
+
+                    $('.signed-message-text').text('签到失败');
+                    self.signInNow = false;
                     self.readyDrag = false;
                     self.isSignInDragging = false;
                     self.shadowX = 0;
                     self.draggedDist = 0;
                     setTimeout(function () {
                         self.showSignInResult = false;
-                    }, 2000);
+                        $('.signed-message').fadeOut();
+                    }, 2500);
                 },
                 ontimeout: function (data) {
-                    $('.sd-icon-cancel').show();
-                    $('.sd-icon-check-1').hide();
-                    self.showSignInResult = true;
-                    self.msg = '签到失败';
-                    self.signiningNow = false;
-                    self.readyDrag = false;
-                    self.isSignInDragging = false;
-                    self.shadowX = 0;
-                    self.draggedDist = 0;
-                    setTimeout(function () {
-                        self.showSignInResult = false;
-                    }, 2000);
+                    $('.signed-message-text').text('通讯超时');
                 }
             });
         },

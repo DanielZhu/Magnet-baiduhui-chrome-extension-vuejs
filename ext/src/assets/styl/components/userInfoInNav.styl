@@ -27,6 +27,16 @@ $menu-height = 10px
   }
 }
 
+.el-hidden
+    display: none
+
+.sd-icon-cancel
+    color: #ddd
+    display: none
+.sd-icon-check-1
+    color: #7ED321
+    display: none
+
 #user-info-in-nav
     position: relative
     top: 0
@@ -155,6 +165,13 @@ $menu-height = 10px
         transition: all .4s ease-out
         &.active
             top: 0
+        .v-separator
+            position: absolute
+            left: 50%
+            top: 30%
+            width: 0.5px
+            height: 40%
+            background-color: #EFEFEF
         .lvl-block
             position: relative
             display: inline-block
@@ -174,8 +191,6 @@ $menu-height = 10px
                 text-align: center
                 display: block
                 width: 100%
-        .lvl-info
-            border-right: 0.5px dashed #EFEFEF
     .drag-to-signin-guide
         position: absolute
         top: 0
@@ -199,12 +214,6 @@ $menu-height = 10px
             padding: 0
             text-align: center
             font-size: 30px
-            .sd-icon-cancel
-                color: #ddd
-                display: none
-            .sd-icon-check-1
-                color: lightgreen
-                display: none
             &.highlight
                 border: 1px solid $hui-pink
             &.loading
@@ -216,7 +225,7 @@ $menu-height = 10px
     .signin-bar
         position: relative
         width: 100%
-        .today-has-signed
+        .today-has-signed, .signed-message
             border-top: 0.5px solid #EFEFEF
             border-bottom: 0.5px solid #E8E8E8
             height: 45px
@@ -224,11 +233,11 @@ $menu-height = 10px
             color: #D9A548
             text-align: center
             font-size: 16px
-        .sd-icon-check-1
-            color: #7ED321
+        .sd-icon-check-1, .sd-icon-cancel
+            top: 3px
             font-size: 16px
             margin-right: 10px
-            top: 3px
+            position: relative
          .drag-to-signin
             border-bottom: 0.5px solid #E8E8E8
             height: 45px
@@ -271,6 +280,7 @@ $menu-height = 10px
             text-align: center
             font-size: 16px
             letter-spacing: 5px
+            cursor: pointer
 
 @keyframes highlight-moving {
     0% {

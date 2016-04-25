@@ -1,3 +1,6 @@
+@import '../assets/styl/color.styl'
+@import '../assets/styl/variables.styl'
+
 html, body
     border 0
     font-family "Helvetica-Neue", "Helvetica", Arial, sans-serif
@@ -68,9 +71,6 @@ body, html
     // overflow hidden /* this is important to prevent the whole page to bounce */
     margin 0 auto
 
-@import '../assets/styl/color.styl'
-@import '../assets/styl/variables.styl'
-
 #app
     position relative
     width $popup-width
@@ -110,3 +110,6 @@ body, html
     overflow hidden
 .clearfixafter
     clear both
+
+[data-highlight=gray]:hover
+    background-color: #f2f2f2 !important
