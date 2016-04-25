@@ -41,8 +41,8 @@
         </div>
         <div class="drag-to-signin-guide" v-show="isLoginIn && (readyDrag || signInNow || showSignInResult)">
             <div class="drag-to-signin-guide-dest" :class="{'show-result': signInNow || showSignInResult, loading: signInNow}" v-bind:style="{right: dragToSignInGuideDestPosX + 'px', boxShadow: shadowX + 'px 0px 2px 2px #dd3066'}">
-                <i class="sd-icon-cancel"></i>
-                <i class="sd-icon-check-1"></i>
+                <i class="el-hidden sd-icon-cancel"></i>
+                <i class="el-hidden sd-icon-check-1"></i>
             </div>
             <div class="avatar-area" v-show="!myInfo.signed && !signInNow && !showSignInResult">
                 <img src="{{myInfo.portrait}}" class="avatar-img" v-bind:style="{marginLeft: draggedDist +'px'}">

@@ -15,11 +15,10 @@
                 <!-- <i class="icon sd-icon-cw" v-on:click="refreshList"></i> -->
             </div>
             <div class="personal-info" v-show="false">
-                <!-- <img class="avatar" data-src="{{avatar_src}}" src="../assets/images/img_35*35.svg"> -->
                 <p class="nickname">{{nickname}}</p>
             </div>
         </div>
-        <sd-nav-drawer transition='slide' :class="{'slide-enter': shownav}"></sd-nav-drawer>
+        <sd-nav-drawer transition='slide' :class="{'slide-enter': shownav}" v-if="!inOptionPanel"></sd-nav-drawer>
     </header>
 </template>
 
@@ -38,7 +37,8 @@ module.exports = {
     data: function () {
         return {
             title: 'Checker For 百度惠',
-            nickname: 'Staydan.com'
+            nickname: 'Staydan.com',
+            inOptionPanel: window.inOptionPanel
         };
     },
     ready: function () {
