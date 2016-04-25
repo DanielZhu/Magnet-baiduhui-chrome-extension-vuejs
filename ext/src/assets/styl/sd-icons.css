@@ -125,3 +125,6 @@
 .sd-icon-check-1:before {
   content: "\44";
 }
+.sd-icon-cancel:before {
+  content: "\43";
+}

@@ -27,7 +27,8 @@ var consts = {
         itemDetail: 'hui/detail/get',
         itemComment: 'comment/page',
         myInfo: 'hui/my/info',
-        myLoginGet: 'my/login/get'
+        myLoginGet: 'my/login/get',
+        mySignInToday: 'hui/my/signIn'
     },
 
     tjDetailRedirect: 'hmsr=Baidu_Hui_Chrome_Extension&hmmd=staydan.com&hmpl=staydan_enjoy&hmkw=staydan&hmci=',
