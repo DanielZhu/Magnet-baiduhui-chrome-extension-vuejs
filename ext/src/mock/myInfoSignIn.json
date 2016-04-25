@@ -1,33 +1,33 @@
 {
-  "status": 0,
-  "msg": "",
-  "data": {
-    "result": {
-      "userId": 368195903,
-      "userName": "OKIJUP",
-      "portrait": "http://himg.bdimg.com/sys/portrait/item/3f394f4b494a5550f215.jpg",
-      "signed": 1,
-      "pointsToday": 0,
-      "pointsTotal": 7523,
-      "experienceToday": 0,
-      "experienceTotal": 15023,
-      "level": 6,
-      "expForNextLevel": 2977,
-      "schedule": "50%",
-      "days": 1,
-      "blocked": 0,
-      "unreadMsgNum": 0,
-      "totalMsgNum": 31,
-      "commentsCount": 19,
-      "tipoffCount": 45,
-      "storeCount": 4,
-      "hasSigned": 1,
-      "bonusPointsForSignup": 0,
-      "nextDays": 2,
-      "nextPoints": 10,
-      "medal": []
-    },
-    "page": null,
-    "condition": null
-  }
+    "status": 0,
+    "msg": "",
+    "data": {
+        "result": {
+            "userId": 368195903,
+            "userName": "OKIJUP",
+            "portrait": "http://himg.bdimg.com/sys/portrait/item/3f394f4b494a5550f215.jpg",
+            "signed": 0,
+            "pointsToday": 1,
+            "pointsTotal": 7523,
+            "experienceToday": 1,
+            "experienceTotal": 15023,
+            "level": 6,
+            "expForNextLevel": 2977,
+            "schedule": "50%",
+            "days": 0,
+            "blocked": 0,
+            "unreadMsgNum": 0,
+            "totalMsgNum": 31,
+            "commentsCount": 19,
+            "tipoffCount": 45,
+            "storeCount": 4,
+            "hasSigned": 0,
+            "bonusPointsForSignup": 0,
+            "nextDays": 3,
+            "nextPoints": 10,
+            "medal": []
+        },
+        "page": null,
+        "condition": null
+    }
 }
