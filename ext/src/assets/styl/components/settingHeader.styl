@@ -1,4 +1,22 @@
-@import './color.styl'
+@import '../color.styl'
+
+.options-body, .options-html
+    background-color #fff
+    width: 100%
+
+#app
+    width: 100%
+    padding: 0 60px
+
+.setting-header
+    position fixed
+    top 0
+    left: 0
+    width: 100%
+    height 100px
+    z-index 100
+    background-color: rgba(234, 101, 145, 0.68)
+    box-shadow 0 2px 2px 2px #ddd
 
 .setting-container
     position: relative
@@ -7,7 +25,7 @@
     padding-top: 10px
     font-size: 14px
     color: $gray9
-    margin-top: 60px
+    margin-top: 100px
     .setting-nav
         width: 160px
         margin-right: 20px

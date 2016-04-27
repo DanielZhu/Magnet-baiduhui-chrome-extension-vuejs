@@ -42,12 +42,10 @@ module.exports = {
         };
     },
     ready: function () {
-        // tj.trackEventTJ(tj.category.navDrawerMenu, 'compLoaded');
     },
     watch: {
         shownav: function (val, oldVal) {
             $('#sideBar').toggleClass('slide-leave', !val);
-            // tj.trackEventTJ(tj.category.navDrawerMenu, 'shownav', 'showing', val ? 1 : 0);
         }
     },
     methods: {

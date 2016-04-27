@@ -29,7 +29,7 @@ export default function (router) {
         }
     };
 
-    if (window.inOpionPanel) {
+    if (window.inOptionPanel) {
         routers['/'] = {
             name: 'setting',
             component: require('./views/setting.vue')
