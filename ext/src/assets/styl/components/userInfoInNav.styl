@@ -1,0 +1,293 @@
+@import "../color.styl"
+
+$menu-width = 10px
+$menu-height = 10px
+
+@keyframes breathing {
+  0% {
+    opacity: 0
+  }
+  50% {
+    opacity: 1
+  }
+  100% {
+    opacity: 0
+  }
+}
+
+@keyframes signin-breathing {
+  0% {
+    background-color: #fff
+  }
+  50% {
+    background-color: #DA9BAF
+  }
+  100% {
+    background-color: #fff
+  }
+}
+
+.el-hidden
+    display: none
+
+.sd-icon-cancel
+    color: #ddd
+.sd-icon-check-1
+    color: #7ED321
+
+#user-info-in-nav
+    position: relative
+    top: 0
+    bottom: 0
+    width: 200px
+    height: 135px
+    background-color: #fff
+    color: #313131
+    transition: all .3s ease
+    .menu-switch
+        position: relative
+        width: 100%
+        height: $menu-height
+        z-index: 50
+        text-align: center
+        box-sizing: border-box
+        .left-hyphen, .right-hyphen
+            animation: breathing 2s both
+            animation-iteration-count: infinite
+            display: inline-block
+            position: absolute
+            height: 2px
+            text-align: center
+            bottom: 5px
+            width: $menu-width
+            background-color: #F55858
+            margin-top: 0
+            transition: all .15s linear
+        .left-hyphen
+            margin-left: $menu-width * -.75
+            transform-origin: 0% 50%
+            transform: rotateZ(15deg)
+        .right-hyphen
+            margin-right: $menu-width * .75
+            transform-origin: 100% 50%
+            transform: rotateZ(-15deg)
+        &.active
+            bottom: 10px
+            .left-hyphen
+                transform: rotateZ(-15deg)
+            .right-hyphen
+                transform: rotateZ(15deg)
+    .user-login-wrap
+        position: relative
+        width: 100%
+    .avatar-area
+        position: relative
+        height: 90px
+        text-align: center
+        .avatar-img
+            width: 50px
+            height: 50px
+            border-radius: 50%
+            margin-top: 20px
+    .user-info-signed-wrap
+        position: relative
+        width: 100%
+        height: 90px
+        font-size: 0
+        .avatar-area
+            position: relative
+            float: left
+            display: inline-block
+            width: 70px
+            text-align: center
+            line-height: 1
+            height: 100%
+            .avatar-img
+                width: 50px
+                height: 50px
+                border-radius: 50%
+                margin-top: 20px
+        .user-info-area
+            position: relative
+            display: inline-block
+            float: right
+            width: 125px
+            line-height: 1
+            height: 100%
+            .nickname
+                font-size: 14px
+                color: #B4B4B3
+                margin-top: 24px
+            .progress
+                position: relative
+                width: 77px
+                height: 2px
+                margin: 21px 0 0 12px
+                border-radius: 2px
+                display: inline-block
+                background-color: lightgray
+                .podium-start, .podium-end
+                    position: absolute
+                    display: inline-block
+                    background-color: $hui-pink
+                    color: #fff
+                    top: 0
+                    font-size: 12px
+                    text-align: center
+                    padding: 1px 2px
+                    min-width: 24px
+                .podium-start
+                    left: -12px
+                .podium-end
+                    right: -12px
+                    background-color: #DED7D9
+                .progress-bar-active
+                    position relative
+                    background-color #EA6591
+                    height 2px
+                    width 50%
+                    transition all .5s ease-out
+                .progress-anchor-at
+                    position: absolute
+                    bottom: 2px
+                    width: 13px
+                    margin-left: -6.5px
+    .user-lvl-wrap
+        position: absolute
+        width: 100%
+        height: 90px
+        font-size: 0
+        top: -90px
+        left: 0
+        background-color: #fff
+        transition: all .4s ease-out
+        &.active
+            top: 0
+        .v-separator
+            position: absolute
+            left: 50%
+            top: 30%
+            width: 0.5px
+            height: 40%
+            background-color: #EFEFEF
+        .lvl-block
+            position: relative
+            display: inline-block
+            width: 50%
+            text-align: center
+            line-height: 1
+            height: 100%
+            .label
+                font-size: 14px
+                color: #B4B4B3
+                margin-top: 25px
+            .value
+                position: absolute
+                font-size: 16px
+                color: $hui-pink
+                bottom: 20px
+                text-align: center
+                display: block
+                width: 100%
+    .drag-to-signin-guide
+        position: absolute
+        top: 0
+        left: 0
+        background-color: #D8D8D8
+        width: 100%
+        height: 100%
+        .avatar-area
+            text-align: left
+            margin-left: 20px
+        .drag-to-signin-guide-dest
+            position: absolute
+            top: 20px
+            right: 20px
+            width: 50px
+            height: 50px
+            border-radius: 50%
+            background-color: #fff
+            transition: all .2s ease-out
+            box-shadow: 1px 0px 2px 2px #dd3066
+            padding: 0
+            text-align: center
+            font-size: 30px
+            &.highlight
+                border: 1px solid $hui-pink
+            &.loading
+                animation: signin-breathing 1.5s ease-in
+                animation-iteration-count: infinite
+            &.show-result
+                right: 50%
+                margin-right: -25px
+    .signin-bar
+        position: relative
+        width: 100%
+        .today-has-signed, .signed-message
+            border-top: 0.5px solid #EFEFEF
+            border-bottom: 0.5px solid #E8E8E8
+            height: 45px
+            line-height: 45px
+            color: #D9A548
+            text-align: center
+            font-size: 16px
+        .sd-icon-check-1, .sd-icon-cancel
+            top: 3px
+            font-size: 16px
+            margin-right: 10px
+            position: relative
+         .drag-to-signin
+            border-bottom: 0.5px solid #E8E8E8
+            height: 45px
+            line-height: 45px
+            color: #D9A548
+            background-color: #FFEEEE
+            text-align: center
+            font-size: 16px
+            .swiper-btn
+                position: absolute
+                padding: 0 10px
+                background-color: #FBD9D9
+                color: #D9A548
+                cursor: pointer
+                user-select: none
+                min-width: 85px
+                margin-left: 0
+            .drag-to-signin-guide-arrow
+                position: relative
+                float: right
+                color: #F9BBBB
+                margin: 0 25px
+                font-size: 20px
+                &.highlight
+                    background-image: -webkit-linear-gradient(0deg, $hui-pink 0%, white 50%, $hui-pink 100%)
+                    -webkit-background-clip: text
+                    -webkit-text-fill-color: transparent
+                    display: block
+                    animation: highlight-moving 4s both
+                    animation-iteration-count: infinite
+    .login-bar
+        position: relative
+        width: 100%
+        background-color: #fff
+        .login-btn
+            background-color: #EFEFEF
+            height: 45px
+            line-height: 45px
+            color: #A4A4A4
+            text-align: center
+            font-size: 16px
+            letter-spacing: 5px
+            cursor: pointer
+
+@keyframes highlight-moving {
+    0% {
+        background-position: 0 0
+    }
+    50% {
+        background-position: 150px 0
+    }
+    100% {
+        background-position: 0 0
+    }
+}

@@ -1,8 +1,10 @@
 'use strict'
 
 export default function (router) {
-    router.map({
-        '/': {				//首页
+    var routers = {};
+
+    var commonRouters = {
+        '/': {              //首页
             name: 'home',
             component: require('./views/welcome.vue')
         },
@@ -13,14 +15,37 @@ export default function (router) {
             name: 'list',
             component: require('./views/index.vue')
         },
-        '/setting': {               //首页
-            name: 'setting',
-            component: require('./views/setting.vue')
-        },
         '/about': {               //关于
             name: 'about',
             component: require('./views/about.vue')
-        },
+        }
+    };
+
+    var routerForSetting = {
+        router: '/setting',
+        map: {
+            name: 'setting',
+            component: require('./views/setting.vue')
+        }
+    };
+
+    if (window.inOptionPanel) {
+        routers['/'] = {
+            name: 'setting',
+            component: require('./views/setting.vue')
+        };
+        routers['*'] = {
+            component: require('./views/setting.vue')
+        };
+    }
+    else {
+        routers = commonRouters;
+    }
+
+    routers[routerForSetting.router] = routerForSetting.map;
+
+    router.map(routers)
+
         // '/topic/:id': {               //专题
         //     name: 'topic',
         //     component: function (resolve) {
@@ -54,5 +79,4 @@ export default function (router) {
         //         require(['./views/user.vue'], resolve);
         //     }
         // }
-    })
 }

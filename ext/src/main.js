@@ -6,7 +6,7 @@ import VueResource from 'vue-resource'
 import validator from 'vue-validator'
 import filters from './filters'
 import routerMap from './routers'
-import FastClick from 'fastclick'
+// import FastClick from 'fastclick'
 
 Vue.use(VueResource);
 Vue.use(VueRouter);

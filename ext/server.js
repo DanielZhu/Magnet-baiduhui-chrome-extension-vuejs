@@ -29,6 +29,7 @@ var app = new WebpackDevServer(webpack(config), {
         '/facade/*': {
             target: 'http://hui.baidu.com/',
             secure: false,
+            host: 'baidu.com',
             changeOrigin: true
         }
     }

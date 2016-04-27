@@ -4,7 +4,8 @@
 
 <template>
     <sd-toast :showing="toast.show" :msg="toast.msg" :icontype="toast.type"></sd-toast>
-    <sd-head :shownav.sync="showSlideNav" :titleflied.sync="toast.show"></sd-head>
+    <sd-header :shownav.sync="showSlideNav" :titleflied.sync="toast.show" v-if="!inOptionPanel"></sd-header>
+    <sd-setting-header v-if="inOptionPanel"></sd-setting-header>
     <div class="setting-container">
         <aside class="setting-nav">
             <div v-for="set in setting" class="nav-item">
@@ -66,6 +67,7 @@ module.exports = {
         return {
             setting: consts.settingList,
             settingValue: storage.get(consts.configName).data,
+            inOptionPanel: window.inOptionPanel,
             toast: {
                 show: false,
                 msg: '加载中',
@@ -182,7 +184,8 @@ module.exports = {
     },
     components: {
         sdToast: require('../components/toast.vue'),
-        sdHead: require('../components/header.vue')
+        sdHeader: require('../components/header.vue'),
+        sdSettingHeader: require('../components/settingHeader.vue')
     }
 };
 </script>

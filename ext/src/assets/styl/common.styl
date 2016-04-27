@@ -1,12 +1,5 @@
-
-$popup-width = 600px
-$popup-height = 550px
-$graya = #aaa
-$gray9 = #999
-$gray6 = #666
-$gray3 = #333
-$hui-pink = #EA6591
-$hui-danger = #F54F4F
+@import '../assets/styl/color.styl'
+@import '../assets/styl/variables.styl'
 
 html, body
     border 0
@@ -84,7 +77,6 @@ body, html
     min-height $popup-height
     overflow-x hidden
     background-color #fff
-    margin-top 60px
 .home
     position relative
     width 100%
@@ -118,3 +110,6 @@ body, html
     overflow hidden
 .clearfixafter
     clear both
+
+[data-highlight=gray]:hover
+    background-color: #f2f2f2 !important
