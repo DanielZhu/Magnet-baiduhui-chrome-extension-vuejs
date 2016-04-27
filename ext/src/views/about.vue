@@ -56,18 +56,12 @@
                 <p>- 有新优惠时，徽标随机动画提醒，更特别的吸引您的余光（随机、快旋、飞入）</p>
                 <p>- 酷炫闪屏动画</p><br/>
 
-                <strong>v1.0.10 / 2016.04.17</strong><br/><br/>
-
-                <p>新功能</p><br/>
-
-                <p>- 支持在有新优惠时徽标根据配置加入相应动画（随机、快旋、飞入）</p>
+                <strong>v1.0.11 / 2016.04.27</strong><br/><br/>
 
                 <p>优化</p><br/>
 
-                <p>- 改善设置页样式</p>
-                <p>- 勿扰选项中加入分割线</p>
-                <p>- 加入新的icon动画库，可扩展</p><br/>
-                <p>- eventPage重构，简化该文件结构</p><br/>
+                <p>- 兼容百度惠接口调整（OMG，突然发现推送罢工了）</p>
+                <p>- Logo徽标动画优化</p><br/>
 
                 <p>历史版本记录请戳此处 >> <a href="https://github.com/DanielZhu/Magnet-baiduhui-chrome-extension/blob/master/ReleaseNote.md">戳我戳我</a></p><br/>
             </article>

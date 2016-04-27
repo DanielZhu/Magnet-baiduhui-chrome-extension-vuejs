@@ -235,10 +235,12 @@ function getNotifySingleItem(item) {
             notifyId = 'article_' + item.url;
         }
 
+        var defaultIconUrl = 'http://a4.mzstatic.com/us/r30/Purple49/v4/4d/9e/17/4d9e1766-3d9a-b609-d6fe-1d200c1b7739/icon175x175.png';
+        var iconUrl = item.imgUrls.length > 0 && item.imgUrls[0];
         notify = {
             id: notifyId,
             notify: {
-                iconUrl: item.imageUrl,
+                iconUrl: iconUrl || defaultIconUrl,
                 title: title + item.title,
                 type: 'basic',
                 message: message,
@@ -257,7 +259,7 @@ function getNotifyItem4List(list) {
     var configCached = retrieveConfigCached();
 
     var formatList = [];
-    var iconUrl = 'http://a4.mzstatic.com/us/r30/Purple49/v4/4d/9e/17/4d9e1766-3d9a-b609-d6fe-1d200c1b7739/icon175x175.png';
+    var defaultIconUrl = 'http://a4.mzstatic.com/us/r30/Purple49/v4/4d/9e/17/4d9e1766-3d9a-b609-d6fe-1d200c1b7739/icon175x175.png';
     var notify = {};
     var notifyId = -1;
 
@@ -282,7 +284,7 @@ function getNotifyItem4List(list) {
     }
 
     if (formatList.length > 0) {
-        iconUrl = list[0].imageUrl;
+        var iconUrl = (list[0].imgUrls.length > 0 && list[0].imgUrls[0]) || defaultIconUrl;
         notify = {
             id: notifyId,
             notify: {
