@@ -1,5 +1,5 @@
 ### 百度惠：实时推送-专业推荐优惠
----
+[![Chrome Web Store][version-image]][package-url] [![Chrome Web Store][rating-image]][package-url] [![Chrome Web Store][rating-count-image]][package-url] [![Chrome Web Store][download-image]][package-url]
 
 > 本插件为非官方『百度惠』谷歌浏览器插件，可便捷浏览百度惠推荐的商品和活动，即时推送更新优惠内容，欢迎使用
 
@@ -62,3 +62,10 @@ One More Thing：插件藏有彩蛋哦，欢迎戳小丹我
 ---
 All the data is copyright to BaiduHui Team & Baidu CO., Ltd.
 MIT @Staydan.com
+
+
+[rating-count-image]: https://img.shields.io/chrome-web-store/rating-count/blcmlhpbpimcnifnkgkfjhhmoolbidik.svg?maxAge=2592000&style=flat-square
+[rating-image]: https://img.shields.io/chrome-web-store/rating/blcmlhpbpimcnifnkgkfjhhmoolbidik.svg?maxAge=2592000&style=flat-square
+[download-image]: https://img.shields.io/chrome-web-store/d/blcmlhpbpimcnifnkgkfjhhmoolbidik.svg?maxAge=2592000&style=flat-square
+[version-image]: https://img.shields.io/chrome-web-store/v/blcmlhpbpimcnifnkgkfjhhmoolbidik.svg?maxAge=2592000&style=flat-square
+[package-url]: https://chrome.google.com/webstore/detail/blcmlhpbpimcnifnkgkfjhhmoolbidik
